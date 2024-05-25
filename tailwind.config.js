@@ -22,6 +22,9 @@ export default {
         "second-text-color": "#737373",
         "dark-text-color": "#000000",
       },
+      fontFamily: {
+        sans: ["Danfo", "sans-serif"],
+      },
     },
   },
   plugins: [],
