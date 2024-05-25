@@ -23,7 +23,7 @@ export default {
         "dark-text-color": "#000000",
       },
       fontFamily: {
-        sans: ["Danfo", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
       },
     },
   },
