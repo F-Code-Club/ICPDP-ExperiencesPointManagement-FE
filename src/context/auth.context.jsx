@@ -5,6 +5,7 @@ const AuthContext = createContext({
   setAuth: () => null,
 });
 
+// eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
 
