@@ -2,9 +2,10 @@ import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
 const Header = ({ toggleSidebar, isSidebarOpen }) => {
+  
   return (
     <div
-      className={`bg-white px-6 rounded-md py-12 flex justify-between w-full ${
+      className={`bg-white px-6 rounded-lg py-12 flex h-[100px] flex-col justify-center items-center gap-2 self-stretch w-full  ${
         isSidebarOpen ? "hidden" : ""
       }`}
     >
@@ -16,8 +17,9 @@ const Header = ({ toggleSidebar, isSidebarOpen }) => {
           onClick={toggleSidebar}
           style={{
             position: "absolute",
-            top: "16px",
-            left: "16px",
+            top: "40px",
+            left: "48px",
+            padding: "8px"
           }}
         >
           <MenuIcon style={{ color: "black" }} />
