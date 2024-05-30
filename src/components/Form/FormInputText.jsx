@@ -1,17 +1,7 @@
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import PasswordField from "../PasswordField";
-
-const styles = {
-  backgroundColor: (theme) => theme.palette.secondary.light,
-  borderRadius: "5px",
-  "& .MuiInputBase-input:focus": {
-    boxShadow: (theme) => `2px 3px 15px 0px ${theme.palette.primary[900]}`,
-  },
-  "& .MuiInputBase-root::after": {
-    borderBottom: "none",
-  },
-};
+import { InputStyles } from "./style";
 
 // eslint-disable-next-line react/prop-types
 const FormInputText = ({ name, control, isPassword = false, ...rest }) => {
@@ -25,7 +15,7 @@ const FormInputText = ({ name, control, isPassword = false, ...rest }) => {
             variant="filled"
             onChange={onChange}
             value={value}
-            sx={styles}
+            sx={InputStyles}
             {...rest}
           />
         ) : (
@@ -33,7 +23,7 @@ const FormInputText = ({ name, control, isPassword = false, ...rest }) => {
             variant="filled"
             onChange={onChange}
             value={value}
-            sx={styles}
+            sx={InputStyles}
             {...rest}
           />
         )

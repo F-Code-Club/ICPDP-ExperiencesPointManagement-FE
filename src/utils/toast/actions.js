@@ -4,15 +4,15 @@ import { HTTP_STATUS } from "../../constant/core";
 export const DEFAULT_ERROR = "An error occurred, please try again later";
 
 export const errorToastHandler = (res) => {
-  if (res.data.message) {
+  if (res?.data?.message) {
     return toastError(res.data.message);
   }
-  if (res.message) {
+  if (res?.message) {
     return toastError(res.message);
   }
 
   let message = DEFAULT_ERROR;
-  switch (res.status) {
+  switch (res?.status) {
     case HTTP_STATUS.BAD_REQUEST:
       message = "No input received";
       break;

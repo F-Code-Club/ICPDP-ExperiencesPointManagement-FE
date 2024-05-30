@@ -14,7 +14,6 @@ const PasswordField = ({
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   return (
     <TextField
-      required
       fullWidth
       name={name}
       label={label}

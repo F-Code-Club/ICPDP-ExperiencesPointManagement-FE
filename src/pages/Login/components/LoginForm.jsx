@@ -20,10 +20,9 @@ const LoginForm = ({ className }) => {
           id="code"
           name="code"
           autoFocus
-          required
-          label="Identifying code"
+          label="Identifying code *"
         />
-        <FormInputText isPassword control={control} />
+        <FormInputText isPassword control={control} label="Password *" />
         <MyButton
           variant="contained"
           className="!h-10 desktop:!h-12 !p-2 !rounded-[5px]"
