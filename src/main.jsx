@@ -5,10 +5,11 @@ import { ThemeProvider } from "@emotion/react";
 import App from "./App.jsx";
 import "./index.css";
 import AuthProvider from "./context/auth.context.jsx";
-import themes from "./config/themeMUI.js";
+import theme from "./theme.js";
+import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <ThemeProvider theme={themes}>
+  <ThemeProvider theme={theme}>
     <AuthProvider>
       <React.StrictMode>
         <App />

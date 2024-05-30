@@ -1,9 +1,6 @@
 import { createTheme } from "@mui/material";
 
-const themes = createTheme({
-  typography: {
-    fontFamily: ["Inter", "sans-serif"].join(","),
-  },
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F27227",
@@ -22,11 +19,20 @@ const themes = createTheme({
       main: "#262525",
     },
     text: {
-      primary: "#fff",
-      secondary: "#737373",
-      black: "#000",
+      light: "#FFFFFF",
+      secondary: "#F737373",
+      dark: "#000000",
+    },
+    states: {
+      success: "#00C851",
+      warning: "#FFBB33",
+      error: "#FF4444",
+      info: "#33B5E5",
     },
   },
+  typography: {
+        fontFamily: ["Inter", "sans-serif"].join(","),
+  }
 });
 
-export default themes;
+export default theme;
