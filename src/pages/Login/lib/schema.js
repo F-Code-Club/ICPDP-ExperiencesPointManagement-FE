@@ -1,11 +1,12 @@
 import { z } from "zod";
 
 export const LoginFormSchema = z.object({
-  clubCode: z
+  code: z
     .string()
-    .min(1, { message: "Club Code is required" })
-    .regex(new RegExp("\\d{6}"), {
-      message: "Club Code must be 6 digit code",
-    })
-    .max(6, { message: "Club Code must be 6 digit code" }),
+    .min(1, { message: "Code is required" })
+    .max(256, { message: "Code must must not exceed 256 characters" }),
+  password: z
+    .string()
+    .min(1, { message: "Password is required" })
+    .max(128, { message: "Password must not exceed 128 characters" }),
 });

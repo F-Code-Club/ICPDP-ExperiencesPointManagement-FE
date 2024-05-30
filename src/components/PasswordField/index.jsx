@@ -7,6 +7,7 @@ const PasswordField = ({
   name = "password",
   id = "password",
   label = "Password",
+  showIcon = false,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,7 +21,7 @@ const PasswordField = ({
       type={showPassword ? "text" : "password"}
       id={id}
       InputProps={{
-        endAdornment: (
+        endAdornment: showIcon && (
           <InputAdornment position="end">
             <IconButton
               aria-label="toggle password visibility"
