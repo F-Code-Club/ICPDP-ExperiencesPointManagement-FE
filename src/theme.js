@@ -29,6 +29,9 @@ const theme = createTheme({
       error: "#FF4444",
       info: "#33B5E5",
     },
+    backgroundImage: {
+      'bg-sidebar': 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%)',
+    },
   },
   typography: {
         fontFamily: ["Inter", "sans-serif"].join(","),
