@@ -21,10 +21,9 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`w-64 bg-sidebar h-[680px] text-black fixed  flex flex-col justify-between rounded-lg ${
+        className={`w-64 bg-sidebar h-full text-black flex flex-col justify-between rounded-lg ${
           open ? "border-gray-700" : ""
         } `}
-      
       >
         <div>
           <div className="flex items-center p-4 cursor-pointer"></div>
@@ -40,9 +39,18 @@ const Sidebar = () => {
             <p className="text-primary text-xs font-medium">ADMINISTRATOR</p>
           </div>
           <ul className="flex flex-col p-2 text-sm space-y-2 mt-4 text-black">
-            <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer">
-              <HomeIcon className="mr-2" sx={{ fontSize: "20px" }} />
-              <NavLink to="/">Trang chủ</NavLink>
+            <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                    : "flex items-center p-2"
+                }
+              >
+                <HomeIcon className="mr-2" sx={{ fontSize: "20px" }} />
+                Trang chủ
+              </NavLink>
             </li>
             <li className="flex flex-col">
               <div
@@ -68,21 +76,36 @@ const Sidebar = () => {
               </div>
               {open && (
                 <ul className="pl-8 space-y-2">
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <AssignmentTurnedInIcon
-                      className="mr-2"
-                      sx={{ fontSize: "18px" }}
-                    />
-                    <NavLink to="/movement-point">
+                  <li className="border border-transparent mt-1 hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/transcripts/experience-point"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <AssignmentTurnedInIcon
+                        className="mr-2"
+                        sx={{ fontSize: "18px" }}
+                      />
                       Bảng điểm phong trào
                     </NavLink>
                   </li>
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <AssignmentIcon
-                      className="mr-2"
-                      sx={{ fontSize: "18px" }}
-                    />
-                    <NavLink to="/final-grade">
+
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/transcripts/final-point"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <AssignmentIcon
+                        className="mr-2"
+                        sx={{ fontSize: "18px" }}
+                      />
                       Bảng điểm tổng kết
                     </NavLink>
                   </li>
@@ -110,36 +133,64 @@ const Sidebar = () => {
               </div>
               {open1 && (
                 <ul className="pl-8 space-y-2">
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <PersonSearchIcon
-                      className="mr-2"
-                      sx={{ fontSize: "18px" }}
-                    />
-                    <NavLink to="/student-management">
+                  <li className="border border-transparent mt-1 hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/settings/students"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <PersonSearchIcon
+                        className="mr-2"
+                        sx={{ fontSize: "18px" }}
+                      />
                       Quản lí sinh viên
                     </NavLink>
                   </li>
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <GroupsIcon className="mr-2" sx={{ fontSize: "18px" }} />
-                    <NavLink to="/club-management">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/settings/clubs"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <GroupsIcon className="mr-2" sx={{ fontSize: "18px" }} />
                       Quản lí câu lạc bộ
                     </NavLink>
                   </li>
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <RoomPreferencesIcon
-                      className="mr-2"
-                      sx={{ fontSize: "18px" }}
-                    />
-                    <NavLink to="/department-management">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/settings/departments"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <RoomPreferencesIcon
+                        className="mr-2"
+                        sx={{ fontSize: "18px" }}
+                      />
                       Quản lí phòng ban
                     </NavLink>
                   </li>
-                  <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:text-primary-500 rounded cursor-pointer">
-                    <CalendarMonthIcon
-                      className="mr-2"
-                      sx={{ fontSize: "18px" }}
-                    />
-                    <NavLink to="/semester-management">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                    <NavLink
+                      to="/settings/semesters"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
+                          : "flex items-center p-2"
+                      }
+                    >
+                      <CalendarMonthIcon
+                        className="mr-2"
+                        sx={{ fontSize: "18px" }}
+                      />
                       Quản lí kì học
                     </NavLink>
                   </li>
@@ -150,11 +201,9 @@ const Sidebar = () => {
         </div>
         <div>
           <hr className="border-slate-950 ml-4 mr-4" />
-          <div className="flex items-center text-sm text-black p-4 cursor-pointer">
+          <div className="flex items-center text-sm text-black p-4 border border-transparent hover:bg-primary-100 hover:shadow-xl rounded cursor-pointer">
             <LogoutIcon className="mr-2" sx={{ fontSize: "18px" }} />
-            <NavLink to="/login" >
-                      Đăng xuất
-                    </NavLink>
+            <NavLink to="/login">Đăng xuất</NavLink>
           </div>
         </div>
       </div>

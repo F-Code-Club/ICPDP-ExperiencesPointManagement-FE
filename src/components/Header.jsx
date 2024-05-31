@@ -5,7 +5,7 @@ const Header = ({ toggleSidebar, isSidebarOpen }) => {
   
   return (
     <div
-      className={`bg-white px-6 rounded-lg py-12 flex h-[100px] flex-col justify-center items-center gap-2 self-stretch w-full  ${
+      className={`bg-white rounded-lg flex h-[120px] flex-col justify-center items-center gap-2 self-stretch w-full  ${
         isSidebarOpen ? "hidden" : ""
       }`}
     >
