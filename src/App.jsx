@@ -1,65 +1,17 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Main from "./components/Main";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
+
+import Layout from "./layouts/Layout";
 
 function App() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
 
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <div className="flex bg-black h-screen w-screen p-6">
-                <div className={`pr-4 ${isSidebarOpen ? "hidden" : ""}`}>
-                  <Sidebar />
-                </div>
-                <div
-                  className={`flex flex-col flex-grow ${
-                    isSidebarOpen ? "" : "ml-64"
-                  } w-full `}
-                >
-                  <div>
-                    <Header toggleSidebar={toggleSidebar} />
-                  </div>
-                  <div className="flex flex-grow mt-4">
-                    <Main />
-                  </div>
-                </div>
-              </div>
-            </>
-          }
-        />
-        <Route
-          path="movement-point"
-          element={
-            <>
-              <div className="flex bg-black h-screen w-screen p-6">
-                <div className={`pr-4 ${isSidebarOpen ? "hidden" : ""}`}>
-                  <Sidebar />
-                </div>
-                <div
-                  className={`flex flex-col flex-grow ${
-                    isSidebarOpen ? "" : "ml-64"
-                  } w-full `}
-                >
-                  <div>
-                    <Header toggleSidebar={toggleSidebar} />
-                  </div>
-                </div>
-              </div>
-            </>
-          }
-        />
+        <Route path="/" element={<Layout />} />
+        <Route path="movement-point" element={<div>Điểm phong trào</div>} />
         <Route path="final-grade" element={<div>Điểm tổng kết</div>} />
         <Route
           path="student-management"
@@ -72,7 +24,7 @@ function App() {
         />
         <Route path="semester-management" element={<div>Quản lí kì học</div>} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

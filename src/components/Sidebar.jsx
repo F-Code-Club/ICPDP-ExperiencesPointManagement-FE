@@ -42,8 +42,7 @@ const Sidebar = () => {
           <ul className="flex flex-col p-2 text-sm space-y-2 mt-4 text-black">
             <li className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer">
               <HomeIcon className="mr-2" sx={{ fontSize: "20px" }} />
-              <div>Trang chủ</div>
-              {/* <NavLink to="/">Trang chủ</NavLink> */}
+              <NavLink to="/">Trang chủ</NavLink>
             </li>
             <li className="flex flex-col">
               <div
