@@ -7,6 +7,8 @@ const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
 
   const refresh = async () => {
+    if (!auth?.accessToken) return toastError("No access token found");
+    if (!auth?.refreshToken) return toastError("No refresh token found");
     try {
       const response = await post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, false, {
         refreshToken: auth.refreshToken,
