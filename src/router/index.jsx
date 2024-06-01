@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import CircularIndeterminate from "../components/CircularIndeterminate";
 import { ROLE } from "../constant/core";
@@ -13,11 +9,11 @@ import RequireAuth from "../components/Auth/RequireAuth";
 import UnauthorizedPage from "../pages/403";
 import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
+import Home from "../pages/Home";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
-    { index: true, element: <Navigate to="login" /> },
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
@@ -29,7 +25,12 @@ const RouterComponent = () => {
           // User routes
           path: "user",
           element: <RequireAuth allowedRoles={[ROLE.USER]} />,
-          children: [],
+          children: [
+            {
+              index: true,
+              element: <Home />,
+            },
+          ],
         },
         {
           // Admin routes

@@ -9,10 +9,10 @@ const RequireAuth = ({ allowedRoles }) => {
 
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
 
-  const roles = decoded?.roles || [];
+  const role = decoded?.role || "";
 
   // eslint-disable-next-line react/prop-types
-  return roles.find((role) => allowedRoles?.includes(role)) ? (
+  return allowedRoles?.includes(role) ? (
     <Outlet />
   ) : auth?.accessToken ? (
     <Navigate to="/unauthorized" state={{ from: location }} replace />

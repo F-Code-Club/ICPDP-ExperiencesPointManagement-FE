@@ -8,6 +8,7 @@ const useLogout = () => {
 
   const logout = async () => {
     setAuth(null);
+    // TODO: Integrate API
     try {
       await axios(API_ENDPOINTS.AUTH.LOGOUT, {
         withCredentials: true,

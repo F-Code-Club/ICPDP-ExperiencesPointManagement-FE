@@ -8,7 +8,7 @@ const LoginPage = () => {
   return (
     <div className="relative flex h-[100svh] min-w-[100vw] bg-black text-white">
       <LoginBackground containerClassName="absolute overflow-hidden h-[60%] min-w-full z-0" />
-      <main className="!font-roboto w-full flex flex-col gap-6 desktop:gap-4 items-center justify-end desktop:justify-center px-4">
+      <main className="!font-roboto w-full flex flex-col gap-6 desktop:gap-4 items-center justify-end justify-center px-4">
         <div className="flex items-center gap-2 justify-center w-full px-10 z-50">
           <Box
             component="img"

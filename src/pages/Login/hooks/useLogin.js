@@ -9,12 +9,12 @@ import { post } from "../../../utils/apiCaller";
 import { API_ENDPOINTS } from "../../../utils/api";
 import { errorToastHandler } from "../../../utils/toast/actions";
 import useAuth from "../../../hooks/useAuth";
+import { getRoles } from "../../../utils/jwt";
 
 export default function useLogin() {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const {
     handleSubmit,
@@ -33,14 +33,30 @@ export default function useLogin() {
     }
 
     try {
-      const res = await post(API_ENDPOINTS.AUTH.LOGIN, false, result.data);
+      const res = await post(API_ENDPOINTS.AUTH.LOGIN, false, {
+        username: result.data.code,
+        password: result.data.password,
+      });
       const { data } = res;
-      const accessToken = data.accessToken;
-      if (!accessToken) {
+      const resData = data.data;
+      if (!resData) {
         return toastError(data.message);
       }
-      setAuth({ accessToken, refreshToken: data.refreshToken });
-      navigate(from, { replace: true });
+      const { access_token, refresh_token } = resData;
+      setAuth({ accessToken: access_token, refreshToken: refresh_token });
+
+      // unauthenticated user is redirected to the page they were trying to access
+      const from = location.state?.from?.pathname;
+      if (from) {
+        return navigate(from, { replace: true });
+      }
+
+      const resRoles = getRoles(access_token);
+      if (!resRoles.success) {
+        return;
+      }
+
+      navigate("/" + resRoles.data);
     } catch (error) {
       errorToastHandler(error);
     }
