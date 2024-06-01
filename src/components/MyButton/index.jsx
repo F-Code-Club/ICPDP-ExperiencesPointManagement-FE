@@ -5,7 +5,7 @@ const MyButton = ({ children, ...buttonProps }) => (
   <Button
     {...buttonProps}
     sx={{
-      color: (theme) => theme.palette.text.primary,
+      color: (theme) => theme.palette.text.light,
       textTransform: "none",
       border: (theme) => `2px solid ${theme.palette.primary.main}`,
       ":hover": {

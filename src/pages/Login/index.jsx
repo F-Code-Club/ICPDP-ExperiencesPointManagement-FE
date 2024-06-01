@@ -14,7 +14,6 @@ const LoginPage = () => {
             component="img"
             src={logoUrl}
             alt="logo ICPDP Voting System"
-            fetchPriority="high"
             className="w-[119px] h-[120px] sm:w-[150px] sm:h-[150px] desktop:w-[201px] desktop:h-52"
           />
           <div className="text-3xl desktop:text-[52px] desktop:leading-[57px] font-semibold">
