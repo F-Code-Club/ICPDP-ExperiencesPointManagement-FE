@@ -21,177 +21,177 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`w-64 bg-sidebar h-full text-black flex flex-col justify-between rounded-lg ${
-          open ? "border-gray-700" : ""
-        } `}
+        className={`w-[339px] p-6 bg-sidebar h-full text-black flex flex-col justify-between rounded-lg `}
       >
-        <div>
+        <div className="flex flex-col gap-6 h-[876px] w-[291px]">
           <div className="flex items-center p-4 cursor-pointer"></div>
-          <div className="flex flex-col items-center pt-8 pb-2">
+          <div className="flex flex-col justify-center items-center gap-2 py-6 self-stretch">
             <AccountCircleIcon
-              sx={{ fontSize: "5rem" }}
+              sx={{ fontSize: "100px" }}
               alt="User Avatar"
               src="/static/images/avatar/1.jpg"
               className="mb-2"
               style={{ color: "black" }}
             />
+            <div className="flex flex-col justify-center items-center gap-0.5">
             <h2 className="text-base font-bold text-black">Admin's name</h2>
             <p className="text-primary text-xs font-medium">ADMINISTRATOR</p>
+            </div>
+           
           </div>
-          <ul className="flex flex-col p-2 text-sm space-y-2 mt-4 text-black">
-            <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer">
+          <ul className="flex flex-col justify-center gap-3 text-sm text-black">
+            <li className=" border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 ">
               <NavLink
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                    : "flex items-center p-2"
+                    ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                    : "flex items-center p-3"
                 }
               >
-                <HomeIcon className="mr-2" sx={{ fontSize: "20px" }} />
-                Trang chủ
+                <HomeIcon className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}/>
+                <span className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Trang chủ</span>
               </NavLink>
             </li>
-            <li className="flex flex-col">
+            <li className="flex flex-col gap-2 self-stretch">
               <div
-                className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer"
+                className="flex items-center justify-between p-3 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
                 onClick={() => setOpen(!open)}
               >
                 <SpaceDashboardIcon
                   className="mr-2"
-                  sx={{ fontSize: "18px" }}
+                  sx={{ fontSize: "19px" }}
                 />
-                <div>Bảng điểm</div>
+                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Bảng điểm</div>
                 {open ? (
                   <ArrowDropDownIcon
                     className="ml-auto"
-                    sx={{ fontSize: "18px" }}
+                    sx={{ fontSize: "19px" }}
                   />
                 ) : (
                   <ArrowRightIcon
                     className="ml-auto"
-                    sx={{ fontSize: "18px" }}
+                    sx={{ fontSize: "19px" }}
                   />
                 )}
               </div>
               {open && (
-                <ul className="pl-8 space-y-2">
-                  <li className="border border-transparent mt-1 hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                <ul className="flex flex-col pl-8 gap-1 self-stretch">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/transcripts/experience-point"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
                       <AssignmentTurnedInIcon
-                        className="mr-2"
-                        sx={{ fontSize: "18px" }}
+                        className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}
                       />
-                      Bảng điểm phong trào
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Bảng điểm phong trào</div>
                     </NavLink>
                   </li>
 
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/transcripts/final-point"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
                       <AssignmentIcon
-                        className="mr-2"
-                        sx={{ fontSize: "18px" }}
+                       className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}
                       />
-                      Bảng điểm tổng kết
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Bảng điểm tổng kết</div>
                     </NavLink>
                   </li>
                 </ul>
               )}
             </li>
-            <li className="flex flex-col">
+            <li className="flex flex-col gap-2 self-stretch">
               <div
-                className="flex items-center p-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer"
+                className="flex items-center justify-between p-3 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
                 onClick={() => setOpen1(!open1)}
               >
-                <SettingsIcon className="mr-2" sx={{ fontSize: "18px" }} />
-                <div>Cấu hình</div>
+                <SettingsIcon className="mr-2"
+                  sx={{ fontSize: "19px" }} />
+                 <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Cấu hình</div>
                 {open1 ? (
                   <ArrowDropDownIcon
                     className="ml-auto"
-                    sx={{ fontSize: "18px" }}
+                    sx={{ fontSize: "19px" }}
                   />
                 ) : (
                   <ArrowRightIcon
                     className="ml-auto"
-                    sx={{ fontSize: "18px" }}
+                    sx={{ fontSize: "19px" }}
                   />
                 )}
               </div>
               {open1 && (
-                <ul className="pl-8 space-y-2">
-                  <li className="border border-transparent mt-1 hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                <ul className="flex flex-col pl-8 gap-1 self-stretch">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/settings/students"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
                       <PersonSearchIcon
                         className="mr-2"
-                        sx={{ fontSize: "18px" }}
+                        sx={{ fontSize: "19px" }}
                       />
-                      Quản lí sinh viên
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí sinh viên</div>
                     </NavLink>
                   </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/settings/clubs"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
-                      <GroupsIcon className="mr-2" sx={{ fontSize: "18px" }} />
-                      Quản lí câu lạc bộ
+                      <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí câu lạc bộ</div>
                     </NavLink>
                   </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/settings/departments"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
                       <RoomPreferencesIcon
                         className="mr-2"
-                        sx={{ fontSize: "18px" }}
+                        sx={{ fontSize: "19px" }}
                       />
-                      Quản lí phòng ban
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí phòng ban</div>
                     </NavLink>
                   </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer transition-all duration-200">
+                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="/settings/semesters"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-2"
-                          : "flex items-center p-2"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
+                          : "flex items-center p-3"
                       }
                     >
                       <CalendarMonthIcon
                         className="mr-2"
-                        sx={{ fontSize: "18px" }}
+                        sx={{ fontSize: "19px" }}
                       />
-                      Quản lí kì học
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí kì học</div>
                     </NavLink>
                   </li>
                 </ul>
@@ -199,11 +199,14 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
-        <div>
-          <hr className="border-slate-950 ml-4 mr-4" />
-          <div className="flex items-center text-sm text-black p-4 border border-transparent hover:bg-primary-100 hover:shadow-xl rounded cursor-pointer">
-            <LogoutIcon className="mr-2" sx={{ fontSize: "18px" }} />
-            <NavLink to="/login">Đăng xuất</NavLink>
+        <div class="flex flex-col gap-2 self-stretch">
+          <hr className="border-slate-950 w-[291px] h-[1px]" />
+          <div className="flex py-3 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100">
+            <LogoutIcon className="mr-2"
+                        sx={{ fontSize: "19px" }} />
+            <NavLink className=" rounded cursor-pointer">
+              <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Đăng xuất</div>
+              </NavLink>
           </div>
         </div>
       </div>

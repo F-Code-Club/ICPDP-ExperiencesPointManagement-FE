@@ -18,8 +18,7 @@ const Header = ({ toggleSidebar, isSidebarOpen }) => {
           style={{
             position: "absolute",
             top: "40px",
-            left: "48px",
-            padding: "8px"
+            left: "48px"
           }}
         >
           <MenuIcon style={{ color: "black" }} />

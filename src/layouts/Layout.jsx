@@ -10,15 +10,15 @@ const Layout = () => {
     setSidebarOpen(!isSidebarOpen);
   };
   return (
-      <div className="flex bg-black h-screen w-screen p-6">
-        <div className={`pr-4 ${isSidebarOpen ? "hidden" : ""}`}>
+      <div className="flex bg-black h-full w-full p-6 gap-4">
+        <div className={`${isSidebarOpen ? "hidden" : ""}`}>
           <Sidebar />
         </div>
-        <div className={`flex flex-col flex-grow w-full `}>
+        <div className={`flex flex-col flex-grow w-full gap-4`}>
           <div>
             <Header toggleSidebar={toggleSidebar} />
           </div>
-          <div className="flex flex-grow mt-4">
+          <div className="flex flex-grow">
             <Main/> 
           </div>
         </div>
