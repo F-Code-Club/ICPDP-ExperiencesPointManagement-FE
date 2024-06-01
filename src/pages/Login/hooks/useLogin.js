@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormSchema } from "../lib/schema";
 import { toastError } from "../../../utils/toast";
@@ -7,8 +8,14 @@ import { handleSubmitForm } from "../../../usecases/handleSubmitForm";
 import { post } from "../../../utils/apiCaller";
 import { API_ENDPOINTS } from "../../../utils/api";
 import { errorToastHandler } from "../../../utils/toast/actions";
+import useAuth from "../../../hooks/useAuth";
 
 export default function useLogin() {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const {
     handleSubmit,
     reset,
@@ -27,7 +34,13 @@ export default function useLogin() {
 
     try {
       const res = await post(API_ENDPOINTS.AUTH.LOGIN, false, result.data);
-      console.log(res);
+      const { data } = res;
+      const accessToken = data.accessToken;
+      if (!accessToken) {
+        return toastError(data.message);
+      }
+      setAuth({ accessToken, refreshToken: data.refreshToken });
+      navigate(from, { replace: true });
     } catch (error) {
       errorToastHandler(error);
     }
