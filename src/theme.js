@@ -36,9 +36,6 @@ const theme = createTheme({
   typography: {
         fontFamily: ["Inter", "sans-serif"].join(","),
   },
-  height: {
-    '9/10': '90vh',
-  },
 });
 
 export default theme;

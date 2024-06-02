@@ -3,6 +3,8 @@ import Main from "../components/Main";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
+import Background from "../components/Background";
+
 const Layout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -10,15 +12,16 @@ const Layout = () => {
     setSidebarOpen(!isSidebarOpen);
   };
   return (
-      <div className="flex bg-black h-full w-full p-6 gap-4">
+      <div className="relative flex h-full w-full gap-4">
+        <Background/>
         <div className={`${isSidebarOpen ? "hidden" : ""}`}>
           <Sidebar />
         </div>
-        <div className={`flex flex-col flex-grow w-full gap-4`}>
+        <div className={`flex flex-col flex-grow w-full gap-4 z-10`}>
           <div>
-            <Header toggleSidebar={toggleSidebar} />
+          <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
           </div>
-          <div className="flex flex-grow">
+          <div className="flex flex-grow h-screen">
             <Main/> 
           </div>
         </div>
