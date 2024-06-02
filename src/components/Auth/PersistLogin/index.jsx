@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import useRefreshToken from "../../../hooks/useRefreshToken";
 import CircularIndeterminate from "../../CircularIndeterminate";
-import { toastError } from "../../../utils/toast";
+import { errorToastHandler } from "../../../utils/toast/actions";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,7 @@ const PersistLogin = () => {
       try {
         await refresh();
       } catch (err) {
-        toastError(err.message);
+        errorToastHandler(err.response);
       } finally {
         isMounted && setIsLoading(false);
       }

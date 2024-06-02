@@ -40,7 +40,7 @@ export default function useLogin() {
       const { data } = res;
       const resData = data.data;
       if (!resData) {
-        return toastError(data.message);
+        return errorToastHandler(data);
       }
       const { access_token, refresh_token } = resData;
       setAuth({ accessToken: access_token, refreshToken: refresh_token });
@@ -58,7 +58,7 @@ export default function useLogin() {
 
       navigate("/" + resRoles.data);
     } catch (error) {
-      errorToastHandler(error);
+      errorToastHandler(error.response);
     }
 
     if (isSubmitSuccessful) {

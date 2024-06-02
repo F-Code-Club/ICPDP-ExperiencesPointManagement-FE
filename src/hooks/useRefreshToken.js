@@ -1,14 +1,16 @@
 import useAuth from "./useAuth";
 import { API_ENDPOINTS } from "../utils/api";
 import { post } from "../utils/apiCaller";
-import { toastError } from "../utils/toast";
+import { errorToastHandler } from "../utils/toast/actions";
 
 const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
 
   const refresh = async () => {
-    if (!auth?.accessToken) return toastError("No access token found");
-    if (!auth?.refreshToken) return toastError("No refresh token found");
+    if (!auth?.accessToken)
+      return errorToastHandler({ message: "No access token found" });
+    if (!auth?.refreshToken)
+      return errorToastHandler({ message: "No refresh token found" });
     try {
       const response = await post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, false, {
         refreshToken: auth.refreshToken,
@@ -16,7 +18,7 @@ const useRefreshToken = () => {
       const { data } = response;
       const result = data.data;
       if (!result) {
-        return toastError(data.message);
+        return errorToastHandler(data);
       }
       setAuth((prev) => {
         return {
@@ -27,7 +29,7 @@ const useRefreshToken = () => {
       });
       return response.data.accessToken;
     } catch (error) {
-      toastError(error.message);
+      errorToastHandler(error.response);
     }
   };
   return refresh;

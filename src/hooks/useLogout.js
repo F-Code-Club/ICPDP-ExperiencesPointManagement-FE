@@ -1,7 +1,7 @@
 import useAuth from "./useAuth";
 import axios from "../config/axios";
-import { toastError } from "../utils/toast";
 import { API_ENDPOINTS } from "../utils/api";
+import { errorToastHandler } from "../utils/toast/actions";
 
 const useLogout = () => {
   const { setAuth } = useAuth();
@@ -14,7 +14,7 @@ const useLogout = () => {
         withCredentials: true,
       });
     } catch (err) {
-      toastError(err.message);
+      errorToastHandler(err.response);
     }
   };
 
