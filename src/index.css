@@ -21,6 +21,10 @@
   background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%);
 }
 
+#root {
+  height: 100vh;
+}
+
 
 
 

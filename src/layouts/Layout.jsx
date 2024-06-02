@@ -12,7 +12,7 @@ const Layout = () => {
     setSidebarOpen(!isSidebarOpen);
   };
   return (
-      <div className="relative flex h-full w-full gap-4">
+      <div className="relative flex min-h-[100%] w-full gap-4">
         <Background/>
         <div className={`${isSidebarOpen ? "hidden" : ""}`}>
           <Sidebar />
@@ -21,7 +21,7 @@ const Layout = () => {
           <div>
           <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
           </div>
-          <div className="flex h-screen">
+          <div className="flex h-full">
             <Main/> 
           </div>
         </div>

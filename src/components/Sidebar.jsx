@@ -21,9 +21,9 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`w-[339px] p-6 bg-sidebar h-full text-black flex flex-col justify-between z-10 relative `}
+        className={`w-[339px] p-6 bg-sidebar min-h-[100%] text-black flex flex-col justify-between z-10 relative gap-4`}
       >
-        <div className="flex flex-col gap-6 h-[876px] w-[291px]">
+        <div className="flex flex-col gap-6 h-full w-full">
           <div className="flex items-center p-4 cursor-pointer"></div>
           <div className="flex flex-col justify-center items-center gap-2 py-6 self-stretch">
             <AccountCircleIcon
@@ -200,7 +200,7 @@ const Sidebar = () => {
           </ul>
         </div>
         <div class="flex flex-col gap-2 self-stretch">
-          <hr className="border-slate-950 w-[291px] h-[1px]" />
+          <hr className="border-slate-950 w-full h-[1px]" />
           <div className="flex py-3 px-2 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
             <LogoutIcon className="mr-2"
                         sx={{ fontSize: "19px" }} />
