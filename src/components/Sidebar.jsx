@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`w-[339px] p-6 bg-sidebar h-full text-black flex flex-col justify-between rounded-r-lg z-10 relative `}
+        className={`w-[339px] p-6 bg-sidebar h-full text-black flex flex-col justify-between z-10 relative `}
       >
         <div className="flex flex-col gap-6 h-[876px] w-[291px]">
           <div className="flex items-center p-4 cursor-pointer"></div>
@@ -45,8 +45,8 @@ const Sidebar = () => {
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                    : "flex items-center p-3"
+                    ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                    : "flex items-center py-3 px-2"
                 }
               >
                 <HomeIcon className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}/>
@@ -55,7 +55,7 @@ const Sidebar = () => {
             </li>
             <li className="flex flex-col gap-2 self-stretch">
               <div
-                className="flex items-center justify-between p-3 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
+                className="flex items-center justify-between py-3 px-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
                 onClick={() => setOpen(!open)}
               >
                 <SpaceDashboardIcon
@@ -82,8 +82,8 @@ const Sidebar = () => {
                       to="/transcripts/experience-point"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <AssignmentTurnedInIcon
@@ -98,8 +98,8 @@ const Sidebar = () => {
                       to="/transcripts/final-point"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <AssignmentIcon
@@ -113,7 +113,7 @@ const Sidebar = () => {
             </li>
             <li className="flex flex-col gap-2 self-stretch">
               <div
-                className="flex items-center justify-between p-3 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
+                className="flex items-center justify-between py-3 px-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
                 onClick={() => setOpen1(!open1)}
               >
                 <SettingsIcon className="mr-2"
@@ -138,8 +138,8 @@ const Sidebar = () => {
                       to="/settings/students"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <PersonSearchIcon
@@ -154,8 +154,8 @@ const Sidebar = () => {
                       to="/settings/clubs"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
@@ -167,8 +167,8 @@ const Sidebar = () => {
                       to="/settings/departments"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <RoomPreferencesIcon
@@ -183,8 +183,8 @@ const Sidebar = () => {
                       to="/settings/semesters"
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded p-3"
-                          : "flex items-center p-3"
+                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                          : "flex items-center py-3 px-2"
                       }
                     >
                       <CalendarMonthIcon
@@ -201,7 +201,7 @@ const Sidebar = () => {
         </div>
         <div class="flex flex-col gap-2 self-stretch">
           <hr className="border-slate-950 w-[291px] h-[1px]" />
-          <div className="flex py-3 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
+          <div className="flex py-3 px-2 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
             <LogoutIcon className="mr-2"
                         sx={{ fontSize: "19px" }} />
             <NavLink className=" rounded cursor-pointer">

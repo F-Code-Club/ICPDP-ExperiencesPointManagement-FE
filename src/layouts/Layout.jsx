@@ -21,7 +21,7 @@ const Layout = () => {
           <div>
           <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
           </div>
-          <div className="flex flex-grow h-screen">
+          <div className="flex h-screen">
             <Main/> 
           </div>
         </div>
