@@ -1,14 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ThemeProvider } from "@emotion/react";
+
 import App from "./App.jsx";
-import theme from "./theme.js";
-import { ThemeProvider } from "@mui/material";
 import "./index.css";
+import AuthProvider from "./context/auth.context.jsx";
+import theme from "./theme.js";
+import "./index.css";
+import Toast from "./components/Toast/index.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <AuthProvider>
+      <React.StrictMode>
+        <App />
+        <Toast />
+      </React.StrictMode>
+    </AuthProvider>
+  </ThemeProvider>
 );
