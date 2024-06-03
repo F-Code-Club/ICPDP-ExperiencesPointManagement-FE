@@ -17,10 +17,11 @@ const theme = createTheme({
     },
     secondary: {
       main: "#262525",
+      light: "#F9F9F9",
     },
     text: {
       light: "#FFFFFF",
-      secondary: "#F737373",
+      secondary: "#737373",
       dark: "#000000",
     },
     states: {
@@ -34,7 +35,7 @@ const theme = createTheme({
     },
   },
   typography: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
+    fontFamily: ["Inter", "sans-serif"].join(","),
   },
 });
 

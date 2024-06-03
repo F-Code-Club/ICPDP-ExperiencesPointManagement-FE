@@ -34,10 +34,9 @@ const Sidebar = () => {
               style={{ color: "black" }}
             />
             <div className="flex flex-col justify-center items-center gap-0.5">
-            <h2 className="text-base font-bold text-black">Admin's name</h2>
-            <p className="text-primary text-xs font-medium">ADMINISTRATOR</p>
+              <h2 className="text-base font-bold text-black">Admin's name</h2>
+              <p className="text-primary text-xs font-medium">ADMINISTRATOR</p>
             </div>
-           
           </div>
           <ul className="flex flex-col justify-center gap-3 text-sm text-black">
             <li className=" border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 ">
@@ -49,8 +48,13 @@ const Sidebar = () => {
                     : "flex items-center py-3 px-2"
                 }
               >
-                <HomeIcon className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}/>
-                <span className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Trang chủ</span>
+                <HomeIcon
+                  className="flex gap-2 mr-2"
+                  sx={{ fontSize: "19px" }}
+                />
+                <span className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">
+                  Trang chủ
+                </span>
               </NavLink>
             </li>
             <li className="flex flex-col gap-2 self-stretch">
@@ -62,7 +66,9 @@ const Sidebar = () => {
                   className="mr-2"
                   sx={{ fontSize: "19px" }}
                 />
-                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Bảng điểm</div>
+                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">
+                  Bảng điểm
+                </div>
                 {open ? (
                   <ArrowDropDownIcon
                     className="ml-auto"
@@ -87,9 +93,12 @@ const Sidebar = () => {
                       }
                     >
                       <AssignmentTurnedInIcon
-                        className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}
+                        className="flex gap-2 mr-2"
+                        sx={{ fontSize: "19px" }}
                       />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Bảng điểm phong trào</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Bảng điểm phong trào
+                      </div>
                     </NavLink>
                   </li>
 
@@ -103,9 +112,12 @@ const Sidebar = () => {
                       }
                     >
                       <AssignmentIcon
-                       className="flex gap-2 mr-2" sx={{ fontSize: "19px" }}
+                        className="flex gap-2 mr-2"
+                        sx={{ fontSize: "19px" }}
                       />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Bảng điểm tổng kết</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Bảng điểm tổng kết
+                      </div>
                     </NavLink>
                   </li>
                 </ul>
@@ -116,9 +128,10 @@ const Sidebar = () => {
                 className="flex items-center justify-between py-3 px-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
                 onClick={() => setOpen1(!open1)}
               >
-                <SettingsIcon className="mr-2"
-                  sx={{ fontSize: "19px" }} />
-                 <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">Cấu hình</div>
+                <SettingsIcon className="mr-2" sx={{ fontSize: "19px" }} />
+                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">
+                  Cấu hình
+                </div>
                 {open1 ? (
                   <ArrowDropDownIcon
                     className="ml-auto"
@@ -146,7 +159,9 @@ const Sidebar = () => {
                         className="mr-2"
                         sx={{ fontSize: "19px" }}
                       />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí sinh viên</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Quản lí sinh viên
+                      </div>
                     </NavLink>
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
@@ -159,7 +174,9 @@ const Sidebar = () => {
                       }
                     >
                       <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí câu lạc bộ</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Quản lí câu lạc bộ
+                      </div>
                     </NavLink>
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
@@ -175,7 +192,9 @@ const Sidebar = () => {
                         className="mr-2"
                         sx={{ fontSize: "19px" }}
                       />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí phòng ban</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Quản lí phòng ban
+                      </div>
                     </NavLink>
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
@@ -191,7 +210,9 @@ const Sidebar = () => {
                         className="mr-2"
                         sx={{ fontSize: "19px" }}
                       />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Quản lí kì học</div>
+                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                        Quản lí kì học
+                      </div>
                     </NavLink>
                   </li>
                 </ul>
@@ -202,11 +223,12 @@ const Sidebar = () => {
         <div class="flex flex-col gap-2 self-stretch">
           <hr className="border-slate-950 w-full h-[1px]" />
           <div className="flex py-3 px-2 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
-            <LogoutIcon className="mr-2"
-                        sx={{ fontSize: "19px" }} />
-            <NavLink className=" rounded cursor-pointer">
-              <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">Đăng xuất</div>
-              </NavLink>
+            <LogoutIcon className="mr-2" sx={{ fontSize: "19px" }} />
+            <NavLink to="/login" className="rounded cursor-pointer">
+              <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                Đăng xuất
+              </div>
+            </NavLink>
           </div>
         </div>
       </div>

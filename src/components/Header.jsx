@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 const Header = ({ toggleSidebar, isSidebarOpen }) => {
   return (
     <div
-      className={`bg-black flex h-[120px] flex-col justify-center items-center p-6 gap-2 self-stretch w-full`}
+      className={`bg-transparent flex h-[120px] flex-col justify-center items-center p-6 gap-2 self-stretch w-full`}
     >
       <IconButton
         edge="start"
