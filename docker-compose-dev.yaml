@@ -9,8 +9,8 @@ services:
     ports:
       - ${FE_EXPOSED_PORT}:4000
     networks: 
-      - epm-network-${DOCKER_IMAGE_TAG}
+      - epm-fe-dev
     restart: unless-stopped
 
 networks: 
-  epm-network-${DOCKER_IMAGE_TAG}:
+  epm-fe-dev:
