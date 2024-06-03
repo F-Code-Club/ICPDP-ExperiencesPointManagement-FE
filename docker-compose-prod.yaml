@@ -11,3 +11,6 @@ services:
     networks: 
       - epm-network-${DOCKER_IMAGE_TAG}
     restart: unless-stopped
+
+networks: 
+  epm-network-${DOCKER_IMAGE_TAG}:
