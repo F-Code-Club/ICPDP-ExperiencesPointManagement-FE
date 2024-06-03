@@ -23,6 +23,12 @@ const RouterComponent = () => {
     {
       element: <PersistLogin />,
       children: [
+        { path: "transcripts/experience-point", element: <div>Điểm phong trào</div> },
+        { path: "transcripts/final-point", element: <div>Điểm tổng kết</div> },
+        { path: "settings/students", element: <div>Quản lí sinh viên</div> },
+        { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
+        { path: "settings/departments", element: <div>Quản lí phòng ban</div> },
+        { path: "settings/semesters", element: <div>Quản lí kì học</div> },
         {
           // User routes
           path: "user",
@@ -43,18 +49,13 @@ const RouterComponent = () => {
       ],
     },
     // Additional routes with Layout
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        { path: "transcripts/experience-point", element: <div>Điểm phong trào</div> },
-        { path: "transcripts/final-point", element: <div>Điểm tổng kết</div> },
-        { path: "settings/students", element: <div>Quản lí sinh viên</div> },
-        { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
-        { path: "settings/departments", element: <div>Quản lí phòng ban</div> },
-        { path: "settings/semesters", element: <div>Quản lí kì học</div> },
-      ],
-    },
+    // {
+    //   path: "/",
+    //   element: <Layout />,
+    //   children: [
+       
+    //   ],
+    // },
   ]);
   return (
     <RouterProvider

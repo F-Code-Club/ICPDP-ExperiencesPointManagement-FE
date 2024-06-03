@@ -5,6 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import useRefreshToken from "../../../hooks/useRefreshToken";
 import CircularIndeterminate from "../../CircularIndeterminate";
 import { errorToastHandler } from "../../../utils/toast/actions";
+import Layout from "../../../layouts/Layout";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +37,7 @@ const PersistLogin = () => {
     console.log(`aT: ${JSON.stringify(auth?.accessToken)}`);
   }, [isLoading, auth?.accessToken]);
 
-  return isLoading ? <CircularIndeterminate /> : <Outlet />;
+  return <Layout> {isLoading ? <CircularIndeterminate /> : <Outlet />}</Layout>;
 };
 
 export default PersistLogin;
