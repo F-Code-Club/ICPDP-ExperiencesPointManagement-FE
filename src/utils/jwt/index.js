@@ -2,7 +2,7 @@ import { decodeToken } from "react-jwt";
 import { errorToastHandler } from "../toast/actions";
 
 export const getRoles = (accessToken) => {
-  let role = decodeToken(accessToken)?.role;
+  const role = decodeToken(accessToken)?.role;
   if (!role) {
     errorToastHandler({ message: "No role found" });
     return { success: false, data: {} };

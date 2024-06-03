@@ -20,6 +20,7 @@ const useRefreshToken = () => {
       if (!result) {
         return errorToastHandler(data);
       }
+      console.log(result.accessToken, result.refreshToken);
       setAuth((prev) => {
         return {
           ...prev,

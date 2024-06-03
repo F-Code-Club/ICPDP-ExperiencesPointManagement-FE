@@ -42,8 +42,8 @@ export default function useLogin() {
       if (!resData) {
         return errorToastHandler(data);
       }
-      const { access_token, refresh_token } = resData;
-      setAuth({ accessToken: access_token, refreshToken: refresh_token });
+      const { accessToken, refreshToken } = resData;
+      setAuth({ accessToken, refreshToken });
 
       // unauthenticated user is redirected to the page they were trying to access
       const from = location.state?.from?.pathname;
@@ -51,7 +51,7 @@ export default function useLogin() {
         return navigate(from, { replace: true });
       }
 
-      const resRoles = getRoles(access_token);
+      const resRoles = getRoles(accessToken);
       if (!resRoles.success) {
         return;
       }
