@@ -7,7 +7,7 @@ services:
     environment:
       - VITE_REACT_APP_BASE_URL = ${VITE_REACT_APP_BASE_URL}
     ports:
-      - ${FE_EXPOSED_PORT}:4000
+      - ${FE_EXPOSED_PORT}:5713
     networks: 
       - epm-fe-dev
     restart: unless-stopped
