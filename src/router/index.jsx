@@ -11,13 +11,16 @@ import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
 import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
+import ClubManagement from "../pages/ClubManagement";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
+    { path: "settings/clubs", element: <ClubManagement /> },
     { path: "*", element: <ErrorPage /> },
+
     // Protected routes
     {
       element: <PersistLogin />,
@@ -49,7 +52,7 @@ const RouterComponent = () => {
               path: "settings/students",
               element: <div>Quản lí sinh viên</div>,
             },
-            { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
+            // { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
             {
               path: "settings/departments",
               element: <div>Quản lí phòng ban</div>,
