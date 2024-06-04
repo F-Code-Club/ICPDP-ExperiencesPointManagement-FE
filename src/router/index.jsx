@@ -10,7 +10,6 @@ import UnauthorizedPage from "../pages/403";
 import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
 import Home from "../pages/Home";
-import Layout from "../layouts/Layout";
 
 
 const RouterComponent = () => {
@@ -48,14 +47,6 @@ const RouterComponent = () => {
         },
       ],
     },
-    // Additional routes with Layout
-    // {
-    //   path: "/",
-    //   element: <Layout />,
-    //   children: [
-       
-    //   ],
-    // },
   ]);
   return (
     <RouterProvider

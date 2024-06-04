@@ -14,10 +14,9 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import CollapsibleItem from "./CollapsibleItem/CollapsibleItem";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
   return (
     <>
       <div
@@ -57,167 +56,115 @@ const Sidebar = () => {
                 </span>
               </NavLink>
             </li>
-            <li className="flex flex-col gap-2 self-stretch">
-              <div
-                className="flex items-center justify-between py-3 px-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
-                onClick={() => setOpen(!open)}
-              >
-                <SpaceDashboardIcon
-                  className="mr-2"
-                  sx={{ fontSize: "19px" }}
-                />
-                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">
-                  Bảng điểm
-                </div>
-                {open ? (
-                  <ArrowDropDownIcon
-                    className="ml-auto"
+            <CollapsibleItem title="Bảng điểm" icon={SpaceDashboardIcon}>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/transcripts/experience-point"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <AssignmentTurnedInIcon
+                    className="flex gap-2 mr-2"
                     sx={{ fontSize: "19px" }}
                   />
-                ) : (
-                  <ArrowRightIcon
-                    className="ml-auto"
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Bảng điểm phong trào
+                  </div>
+                </NavLink>
+              </li>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/transcripts/final-point"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <AssignmentIcon
+                    className="flex gap-2 mr-2"
                     sx={{ fontSize: "19px" }}
                   />
-                )}
-              </div>
-              {open && (
-                <ul className="flex flex-col pl-8 gap-1 self-stretch">
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/transcripts/experience-point"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <AssignmentTurnedInIcon
-                        className="flex gap-2 mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Bảng điểm phong trào
-                      </div>
-                    </NavLink>
-                  </li>
-
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/transcripts/final-point"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <AssignmentIcon
-                        className="flex gap-2 mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Bảng điểm tổng kết
-                      </div>
-                    </NavLink>
-                  </li>
-                </ul>
-              )}
-            </li>
-            <li className="flex flex-col gap-2 self-stretch">
-              <div
-                className="flex items-center justify-between py-3 px-2 border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer self-stretch"
-                onClick={() => setOpen1(!open1)}
-              >
-                <SettingsIcon className="mr-2" sx={{ fontSize: "19px" }} />
-                <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px] w-[80.667px]">
-                  Cấu hình
-                </div>
-                {open1 ? (
-                  <ArrowDropDownIcon
-                    className="ml-auto"
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Bảng điểm tổng kết
+                  </div>
+                </NavLink>
+              </li>
+            </CollapsibleItem>
+            <CollapsibleItem title="Cấu hình" icon={SettingsIcon}>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/settings/students"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <PersonSearchIcon
+                    className="mr-2"
                     sx={{ fontSize: "19px" }}
                   />
-                ) : (
-                  <ArrowRightIcon
-                    className="ml-auto"
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Quản lí sinh viên
+                  </div>
+                </NavLink>
+              </li>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/settings/clubs"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Quản lí câu lạc bộ
+                  </div>
+                </NavLink>
+              </li>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/settings/departments"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <RoomPreferencesIcon
+                    className="mr-2"
                     sx={{ fontSize: "19px" }}
                   />
-                )}
-              </div>
-              {open1 && (
-                <ul className="flex flex-col pl-8 gap-1 self-stretch">
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/settings/students"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <PersonSearchIcon
-                        className="mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí sinh viên
-                      </div>
-                    </NavLink>
-                  </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/settings/clubs"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí câu lạc bộ
-                      </div>
-                    </NavLink>
-                  </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/settings/departments"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <RoomPreferencesIcon
-                        className="mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí phòng ban
-                      </div>
-                    </NavLink>
-                  </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="/settings/semesters"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <CalendarMonthIcon
-                        className="mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí kì học
-                      </div>
-                    </NavLink>
-                  </li>
-                </ul>
-              )}
-            </li>
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Quản lí phòng ban
+                  </div>
+                </NavLink>
+              </li>
+              <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                <NavLink
+                  to="/settings/semesters"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                      : "flex items-center py-3 px-2"
+                  }
+                >
+                  <CalendarMonthIcon
+                    className="mr-2"
+                    sx={{ fontSize: "19px" }}
+                  />
+                  <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                    Quản lí kì học
+                  </div>
+                </NavLink>
+              </li>
+            </CollapsibleItem>
           </ul>
         </div>
         <div class="flex flex-col gap-2 self-stretch">
