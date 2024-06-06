@@ -16,9 +16,7 @@ export const styles = {
   },
   innerContainer: {
     display: "block",
-    margin: "auto",
     width: "100%",
-    maxWidth: "full",
   },
   toolbarContainer: {
     display: "flex",

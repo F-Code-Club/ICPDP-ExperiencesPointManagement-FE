@@ -107,7 +107,6 @@ const DataTable = ({ title, columnsSchema, initialRows }) => {
           columnHeaderHeight={48}
           disableColumnSelector={true}
           disableRowSelectionOnClick={true}
-          disable
           disableMultipleRowSelection={true}
           autoHeight={true}
           getRowId={(row) => row.id}
@@ -120,18 +119,15 @@ const DataTable = ({ title, columnsSchema, initialRows }) => {
             color: "text.light",
             width: "100%",
             overflowX: "auto",
-            "& .MuiDataGrid-root": {
-              color: "blue",
-            },
             "& .css-1jhlys9-MuiTablePagination-displayedRows": {
               //rows per page color
               color: "text.light",
             },
             //disable prev button color
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-            {
+              {
                 color: "text.secondary",
-            },
+              },
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
               //prev button color
               color: "text.light",
@@ -146,9 +142,9 @@ const DataTable = ({ title, columnsSchema, initialRows }) => {
             "& .MuiDataGrid-filler": {
               backgroundColor: "primary.main", //white space color when resize
             },
-            // "& .css-1rtad1 ": {
-            //   position: "relative", //fix scrollX
-            // },
+            "& .css-1rtad1 ": {
+              position: "relative"
+            },
           }}
         />
       </Box>
