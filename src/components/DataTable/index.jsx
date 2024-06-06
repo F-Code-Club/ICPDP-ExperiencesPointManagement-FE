@@ -173,12 +173,8 @@ const DataTable = ({ title }) => {
   ];
 
   return (
-    <Box
-      sx={styles.pageContainer}
-    >
-      <Box
-        sx={styles.innerContainer}
-      >
+    <Box sx={styles.pageContainer}>
+      <Box sx={styles.innerContainer}>
         <Box className="flex justify-end w-[1376px] h-[36px] mb-20 gap-x-[24px]">
           <TextField
             className="rounded-sm border-2"
@@ -201,47 +197,55 @@ const DataTable = ({ title }) => {
           <AddToolbar setRows={setRows} rows={rows} title={title} />
         </Box>
         <DataGrid
-          onRowClick={(row) => handleEditClick(row)}
           rows={rows}
           columns={columns}
           rowHeight={55}
+          onCellDoubleClick={(e) => e.preventDefault()}
           columnHeaderHeight={48}
           disableColumnSelector={true}
           disableRowSelectionOnClick={true}
+          disable
           disableMultipleRowSelection={true}
           autoHeight={true}
           getRowId={(row) => row.id}
+          scrollbarSize={0}
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}
-          scrollbarSize={0} //hidden scrollX
           sx={{
             ...styles.dataGrid,
             color: "text.light",
-            width: 1376,
-            overflow: "hidden",
+            width: "100%",
+            overflowX: "auto",
             "& .MuiDataGrid-root": {
               color: "blue",
             },
-            "& .css-1jhlys9-MuiTablePagination-displayedRows": { //rows per page color
+            "& .css-1jhlys9-MuiTablePagination-displayedRows": {
+              //rows per page color
               color: "text.light",
             },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled": //disable prev button color
+            //disable prev button color
+            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
               {
                 color: "text.secondary",
               },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": { //prev button color
+            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
+              //prev button color
               color: "text.light",
             },
             "& .css-1b9e9gy": {
               display: "none", //hidden scrollY
             },
-            "& .css-1w53k9d-MuiDataGrid-overlay ": { //no rows color
-              backgroundColor: "transparent "
+            "& .css-1w53k9d-MuiDataGrid-overlay ": {
+              //no rows color
+              backgroundColor: "transparent ",
             },
             "& .MuiDataGrid-filler": {
-              backgroundColor: "primary.main",
-            }
+              backgroundColor: "primary.main", //white space color when resize
+            },
+            "& .css-1rtad1 ": {
+              position: "relative"
+            },
           }}
         />
       </Box>
