@@ -1,7 +1,7 @@
 import useAuth from "./useAuth";
-import axios from "../config/axios";
 import { API_ENDPOINTS } from "../utils/api";
 import { errorToastHandler } from "../utils/toast/actions";
+import { get } from "../utils/apiCaller";
 
 const useLogout = () => {
   const { setAuth } = useAuth();
@@ -10,9 +10,7 @@ const useLogout = () => {
     setAuth(null);
     // TODO: Integrate API
     try {
-      await axios(API_ENDPOINTS.AUTH.LOGOUT, {
-        withCredentials: true,
-      });
+      await get(API_ENDPOINTS.AUTH.LOGOUT);
     } catch (err) {
       errorToastHandler(err.response);
     }
