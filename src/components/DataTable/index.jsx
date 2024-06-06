@@ -153,6 +153,7 @@ const DataTable = ({ title }) => {
     {
       field: "actions",
       type: "actions",
+      flex: 1,
       headerClassName: "header",
       headerName: "Hành động",
       width: 137,
