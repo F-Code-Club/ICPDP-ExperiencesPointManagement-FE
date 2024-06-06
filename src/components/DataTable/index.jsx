@@ -136,6 +136,7 @@ const DataTable = ({ title }) => {
       ),
       type: "string",
       width: 539,
+      flex: 1,
       align: "left",
       headerAlign: "left",
       editable: true,
@@ -146,6 +147,7 @@ const DataTable = ({ title }) => {
       headerClassName: "header",
       type: "string",
       width: 560,
+      flex: 1,
       editable: true,
     },
     {
@@ -210,7 +212,7 @@ const DataTable = ({ title }) => {
           columnHeaderHeight={48}
           disableColumnSelector={true}
           disableRowSelectionOnClick={true}
-          disableColumnResize={true}
+          // disableColumnResize={true}
           disableMultipleRowSelection={true}
           autoHeight={true}
           getRowId={(row) => row.id}
