@@ -1,151 +1,98 @@
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import EditToolbar from "./EditToolbar";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
-import { InputAdornment } from "@mui/material";
-import { TextField, IconButton } from "@mui/material";
 import {
-  DataGrid,
-  GridRowModes,
-  GridToolbarContainer,
-  GridActionsCellItem,
-  GridRowEditStopReasons,
-} from "@mui/x-data-grid";
-import {
-  randomCreatedDate,
-  randomTraderName,
-  randomId,
-  randomArrayItem,
-} from "@mui/x-data-grid-generator";
-
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => randomArrayItem(roles);
+  TextField,
+  IconButton,
+  InputAdornment,
+  Avatar,
+  Typography,
+} from "@mui/material";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import WarningForm from "../Form/WarningModal";
+import ManagementForm from "../Form/ManagementForm";
+import { styles } from "./style";
 
 const initialRows = [
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 25,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 36,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 19,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 28,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 23,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
+  { id: 1, name: "test1", email: `test1@gmail.com` },
+  { id: 2, name: "test2", email: `test2@gmail.com` },
+  { id: 3, name: "test3", email: `test3@gmail.com` },
+  { id: 4, name: "test1", email: `test1@gmail.com` },
+  { id: 5, name: "test2", email: `test2@gmail.com` },
+  { id: 6, name: "test3", email: `test3@gmail.com` },
+  { id: 7, name: "test1", email: `test1@gmail.com` },
+  { id: 8, name: "test2", email: `test2@gmail.com` },
+  { id: 9, name: "test3", email: `test3@gmail.com` },
+  { id: 10, name: "Fcode", email: `test1@gmail.com` },
 ];
 
-function EditToolbar({ setRows, setRowModesModel }) {
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-    }));
-  };
-
-  return (
-    <Button
-      onClick={handleClick}
-      sx={{
-        borderRadius: 1,
-        backgroundColor: "primary.main",
-        color: "text.light",
-        height: 36,
-        width: 73,
-        padding: '10px',
-        fontSize: 12,
-        textTransform: 'none',
-      }}
-    >
-      Thêm
-      <AddIcon sx={{ color: "text.light", width: 15, height: 15 }}/>
-    </Button>
-  );
-}
-
-function DataTable() {
+const DataTable = ({ title }) => {
   const [rows, setRows] = useState(initialRows);
-  const [rowModesModel, setRowModesModel] = useState({}); //define useState
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
+  const [rowToEdit, setRowToEdit] = useState(null);
 
-  const handleRowEditStop = (params, event) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
+  const handleEditClick = (id) => {
+    setRowToEdit(id);
+    setShowEditForm(true);
   };
 
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } }); //turn to edit mode
+  const handleSaveClick = (formData) => {
+    const updatedRow = {
+      ...formData,
+      id: rowToEdit,
+      avatar: rows.find((row) => row.id === rowToEdit)?.avatar,
+      isNew: false,
+    };
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === rowToEdit ? updatedRow : row))
+    );
+    setRowToEdit(null);
+    setShowEditForm(false);
   };
 
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } }); //turn to view mode
+  const handleClose = () => {
+    setShowDeleteForm(false);
+    setShowEditForm(false);
+    setRowToDelete(null);
   };
 
   const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id)); //delete row
+    setRowToDelete(id);
+    setShowDeleteForm(true);
   };
 
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true }, //cancel edit mode
+  const handleDelete = (id) => {
+    const newRows = rows.filter((row) => row.id !== id);
+    setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
+    setShowDeleteForm(false);
+    setRowToDelete(null);
+  };
+
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.trim().toLowerCase();
+    const newRows = initialRows.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(searchValue) ||
+        row.email.toLowerCase().includes(searchValue)
+      );
     });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  }; //get the row that is being edited
-
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+    setRows(newRows);
   };
 
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
-
-  //configure columns
   const columns = [
     {
       field: "id",
       headerName: "ID",
       headerClassName: "header",
-      type: "string",
+      headerAlign: "left",
+      type: "number",
       width: 137,
       align: "left",
       editable: false,
@@ -154,11 +101,25 @@ function DataTable() {
       field: "name",
       headerName: "Tên",
       headerClassName: "header",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            padding: "12px 18px 12px 0px",
+            gap: "18px",
+          }}
+        >
+          <Avatar src={params.row.avatar} alt="Avatar" sx={styles.avatar} />
+          <Typography variant="body1" className="ml-[12px]">
+            {params.value}
+          </Typography>
+        </Box>
+      ),
       type: "string",
       width: 539,
       align: "left",
       headerAlign: "left",
-
       editable: true,
     },
     {
@@ -176,77 +137,52 @@ function DataTable() {
       headerName: "Hành động",
       width: 137,
       cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{ color: "primary.main" }}
-              onClick={handleSaveClick(id)} //save the row
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)} //cancel the edit
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
+      getActions: ({ id }) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={() => handleEditClick(id)}
+          color="inherit"
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={handleDeleteClick(id)}
+          color="inherit"
+        />,
+      ],
     },
   ];
 
   return (
-    <>
-      <Box className="py-[24px] px-[20px]">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        padding: "24px 20px",
+        margin: "0 auto",
+        position: "relative",
+        top: "-10%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "block",
+          margin: "auto",
+          width: "100%",
+          maxWidth: "1376px",
+        }}
+      >
         <Box className="flex justify-end w-[1376px] h-[36px] mb-20 gap-x-[24px]">
           <TextField
             className="rounded-sm border-2"
             placeholder="Tìm kiếm"
             variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "text.light",
-                },
-                "&:hover fieldset": {
-                  borderColor: "text.light",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "text.light",
-                },
-                color: "text.light",
-              },
-              "& .MuiOutlinedInput-input::placeholder": {
-                color: "text.light",
-                fontSize: 12,
-              },
-              "& .MuiOutlinedInput-input": {
-                padding: "6px",      
-              },
-              width: 247,
-
-            }}
+            onChange={handleSearch}
+            sx={styles.searchBar}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -259,46 +195,55 @@ function DataTable() {
               ),
             }}
           />
-          <EditToolbar setRows={setRows} setRowModesModel={setRowModesModel} />
+          <EditToolbar setRows={setRows} rows={rows} title={title} />
         </Box>
-        <Box
-          sx={{
-            height: 650,
-            width: 1376,
-            overflow: "hidden",
-            "& .MuiPaginationItem-page.Mui-selected": {
-              color: "text.light",
-            },
-            "& .actions": { color: "text.light" },
-            "& .textPrimary": { color: "text.light" },
-            "& .header": {
-              backgroundColor: "primary.main",
-              color: "text.light",
-            },
-
-            border: "1px solid",
-            borderRadius: 1,
-          }}
-        >
+        <Box sx={styles.dataContainer}>
           <DataGrid
             rows={rows}
             columns={columns}
+            rowHeight={55}
+            columnHeaderHeight={48}
             editMode="row"
-            rowModesModel={rowModesModel}
-            onRowModesModelChange={handleRowModesModelChange}
-            onRowEditStop={handleRowEditStop}
-            processRowUpdate={processRowUpdate}
-            slotProps={{
-              toolbar: { setRows, setRowModesModel },
+            getRowId={(row) => row.id}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 10 } },
             }}
-            pageSizeOptions={20}
-            rowsPerPageOptions={[20]}
-            sx={{ color: "text.light", width: 1376, overflow: "hidden" }}
+            scrollbarSize={0} //hidden scorllX
+            sx={{
+              color: "text.light",
+              width: 1376,
+              overflow: "hidden",
+              "& .MuiDataGrid-root": {
+                color: "blue",
+              },
+              "& .css-1jhlys9-MuiTablePagination-displayedRows": {
+                color: "text.light",
+              },
+              "& .css-i4bv87-MuiSvgIcon-root": {
+                color: "text.light",
+              },
+              "& .css-1b9e9gy": {
+                display: "none", //hidden scorllY
+              },
+            }}
           />
         </Box>
       </Box>
-    </>
+      <WarningForm
+        open={showDeleteForm}
+        handleClose={handleClose}
+        handleDelete={handleDelete}
+        rowId={rowToDelete}
+      />
+      <ManagementForm
+        open={showEditForm}
+        handleClose={handleClose}
+        title={`Chỉnh sửa ${title}`}
+        handleSave={handleSaveClick}
+        func={"Sửa"}
+      />
+    </Box>
   );
-}
+};
 
 export default DataTable;

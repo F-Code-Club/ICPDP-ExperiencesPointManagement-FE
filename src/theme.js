@@ -23,10 +23,11 @@ const theme = createTheme({
       light: "#FFFFFF",
       secondary: "#737373",
       dark: "#000000",
+      neutral: "#EAEAEA"
     },
-    states: {
+    state: {
       success: "#00C851",
-      warning: "#FFBB33",
+      warning: "#FF5858",
       error: "#FF4444",
       info: "#33B5E5",
     },

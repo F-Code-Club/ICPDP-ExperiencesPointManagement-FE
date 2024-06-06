@@ -1,10 +1,12 @@
+import React from "react";
 import Layout from "../../layouts/Layout";
 import DataTable from "../../components/DataTable";
 
 function ClubManagement() {
   return (
-        <DataTable></DataTable>
-    
+    <Layout title="Quản lí câu lạc bộ">
+      <DataTable title={"câu lạc bộ"}/>
+    </Layout>
   );
 }
 

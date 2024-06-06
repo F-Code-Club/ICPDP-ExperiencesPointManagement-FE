@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import Background from "../components/Background";
 import Sidebar from "../components/Sidebar";
 
-const Layout = () => {
+const Layout = ({title, children}) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -20,10 +20,10 @@ const Layout = () => {
       </div>
       <div className={`flex flex-col flex-grow w-screen gap-4 z-10`}>
         <div>
-          <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+          <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} title={title} />
         </div>
         <div className="flex h-full">
-          <Main />
+          {children}
         </div>
       </div>
     </div>

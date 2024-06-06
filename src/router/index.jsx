@@ -12,6 +12,7 @@ import LoginPage from "../pages/Login";
 import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
+import DepartmentManagement from "../pages/DepartmentManagement";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -19,6 +20,7 @@ const RouterComponent = () => {
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "settings/clubs", element: <ClubManagement /> },
+    { path: "settings/departments", element: <DepartmentManagement /> },
     { path: "*", element: <ErrorPage /> },
 
     // Protected routes
@@ -53,10 +55,10 @@ const RouterComponent = () => {
               element: <div>Quản lí sinh viên</div>,
             },
             // { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
-            {
-              path: "settings/departments",
-              element: <div>Quản lí phòng ban</div>,
-            },
+            // {
+            //   path: "settings/departments",
+            //   element: <div>Quản lí phòng ban</div>,
+            // },
             { path: "settings/semesters", element: <div>Quản lí kì học</div> },
           ],
         },
