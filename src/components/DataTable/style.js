@@ -10,14 +10,11 @@ export const styles = {
     textTransform: "none",
   },
   pageContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
     padding: "24px 20px",
     margin: "0 auto",
     position: "relative",
     top: "-10%",
+    // backgroundColor: "red",
   },
   innerContainer: {
     display: "block",

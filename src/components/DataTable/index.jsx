@@ -113,6 +113,7 @@ const DataTable = ({ title }) => {
       width: 137,
       align: "left",
       editable: false,
+      resizable: false,
     },
     {
       field: "name",
@@ -153,6 +154,7 @@ const DataTable = ({ title }) => {
       headerClassName: "header",
       headerName: "Hành động",
       width: 137,
+      resizable: false,
       cellClassName: "actions",
       getActions: ({ row }) => [
         <GridActionsCellItem
@@ -174,23 +176,10 @@ const DataTable = ({ title }) => {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "24px 20px",
-        margin: "0 auto",
-        position: "relative",
-        top: "-10%",
-      }}
+      sx={styles.pageContainer}
     >
       <Box
-        sx={{
-          display: "block",
-          margin: "auto",
-          width: "100%",
-          maxWidth: "1376px",
-        }}
+        sx={styles.innerContainer}
       >
         <Box className="flex justify-end w-[1376px] h-[36px] mb-20 gap-x-[24px]">
           <TextField
@@ -213,45 +202,48 @@ const DataTable = ({ title }) => {
           />
           <AddToolbar setRows={setRows} rows={rows} title={title} />
         </Box>
-          <DataGrid
-            onRowClick={(row) => handleEditClick(row)}
-            rows={rows}
-            columns={columns}
-            rowHeight={55}
-            columnHeaderHeight={48}
-            disableColumnResize={true}
-            disableColumnSelector={true}
-            disableRowSelectionOnClick={true}
-            disableMultipleRowSelection={true}
-            autoHeight={true}
-            getRowId={(row) => row.id}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 10 } },
-            }}
-            scrollbarSize={0} //hidden scrollX
-            sx={{
-              ...styles.dataGrid,
+        <DataGrid
+          onRowClick={(row) => handleEditClick(row)}
+          rows={rows}
+          columns={columns}
+          rowHeight={55}
+          columnHeaderHeight={48}
+          disableColumnSelector={true}
+          disableRowSelectionOnClick={true}
+          disableColumnResize={true}
+          disableMultipleRowSelection={true}
+          autoHeight={true}
+          getRowId={(row) => row.id}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 10 } },
+          }}
+          scrollbarSize={0} //hidden scrollX
+          sx={{
+            ...styles.dataGrid,
+            color: "text.light",
+            width: 1376,
+            overflow: "hidden",
+            "& .MuiDataGrid-root": {
+              color: "blue",
+            },
+            "& .css-1jhlys9-MuiTablePagination-displayedRows": { //rows per page color
               color: "text.light",
-              width: 1376,
-              overflow: "hidden",
-              "& .MuiDataGrid-root": {
-                color: "blue",
+            },
+            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled": //disable prev button color
+              {
+                color: "text.secondary",
               },
-              "& .css-1jhlys9-MuiTablePagination-displayedRows": {
-                color: "text.light",
-              },
-              "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-                {
-                  color: "text.secondary",
-                },
-              "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
-                color: "text.light",
-              },
-              "& .css-1b9e9gy": {
-                display: "none", //hidden scrollY
-              },
-            }}
-          />
+            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": { //prev button color
+              color: "text.light",
+            },
+            "& .css-1b9e9gy": {
+              display: "none", //hidden scrollY
+            },
+            "& .css-1w53k9d-MuiDataGrid-overlay ": { //no rows color
+              backgroundColor: "transparent "
+            },
+          }}
+        />
       </Box>
       <WarningForm
         open={showDeleteForm}

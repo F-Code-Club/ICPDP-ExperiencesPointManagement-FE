@@ -39,16 +39,22 @@ export const ManagementFromStyles = {
   },
   warningHeader: {
     width: "100%",
-    height: "86px",
+    height: "96px",
     padding: "16px 24px",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "end",
+  
   },
   warningModalContent: {
     width: "100%",
     height: "74px",
     textAlign: "center",
+    padding: "0px 12px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    
   },
   warningModalButton: {
     width: "100%",
@@ -206,6 +212,7 @@ export const ManagementFromStyles = {
     borderColor: "text.neutral",
     gap: "10px",
     borderRadius: "5px",
+    textTransform: "none",
     "&:hover": {
       backgroundColor: "text.light",
       color: "primary.main",
@@ -218,10 +225,11 @@ export const ManagementFromStyles = {
     height: "32px",
     padding: "8px 20px",
     fontSize: "12px",
-    backgroundColor: "primary.main",
+    backgroundColor: "state.warning",
     color: "text.light",
     border: "1px solid",
     borderColor: "primary.main",
+    textTransform: "none",
     gap: "10px",
     borderRadius: "5px",
     boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.25)",
