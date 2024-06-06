@@ -11,9 +11,8 @@ export const styles = {
   },
   pageContainer: {
     padding: "24px 20px",
-    margin: "0 auto",
     position: "relative",
-   
+    width: "100%",
   },
   innerContainer: {
     display: "block",
