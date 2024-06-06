@@ -1,46 +1,16 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import AddToolbar from "./AddToolbar";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  TextField,
-  IconButton,
-  InputAdornment,
-  Avatar,
-  Typography,
-} from "@mui/material";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import AddToolbar from "./AddToolbar";
 import WarningForm from "../Form/WarningModal";
 import ManagementForm from "../Form/ManagementForm";
 import { styles } from "./style";
 
-const initialRows = [
-  { id: 1, name: "test1", email: `test1@gmail.com` },
-  { id: 2, name: "test2", email: `test2@gmail.com` },
-  { id: 3, name: "test3", email: `test3@gmail.com` },
-  { id: 4, name: "test1", email: `test1@gmail.com` },
-  { id: 5, name: "test2", email: `test2@gmail.com` },
-  { id: 6, name: "test3", email: `test3@gmail.com` },
-  { id: 7, name: "test1", email: `test1@gmail.com` },
-  { id: 8, name: "test2", email: `test2@gmail.com` },
-  { id: 9, name: "test3", email: `test3@gmail.com` },
-  {
-    id: 10,
-    name: "Fcode",
-    email: `test1@gmail.com`,
-    password: "dasdas",
-    username: "dsad",
-    avatar:
-      "https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/440491684_953819473416997_5707415369883086073_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=0Js6PhRnegIQ7kNvgE5CJB-&_nc_ht=scontent.fsgn5-5.fna&oh=00_AYDIDKxX74BqJS65cNj99QmVjFS7UD4bJQYqnVEEHDiyuw&oe=66674F05",
-  },
-];
-
-const DataTable = ({ title }) => {
+const DataTable = ({ title, columnsSchema, initialRows }) => {
   const [rows, setRows] = useState(initialRows);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -103,74 +73,7 @@ const DataTable = ({ title }) => {
     setRows(newRows);
   };
 
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      headerClassName: "header",
-      headerAlign: "left",
-      type: "number",
-      width: 137,
-      align: "left",
-      editable: false,
-    },
-    {
-      field: "name",
-      headerName: "Tên",
-      headerClassName: "header",
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 18px 12px 0px",
-            gap: "18px",
-          }}
-        >
-          <Avatar src={params.row.avatar} alt="Avatar" sx={styles.avatar} />
-          <Typography variant="body1" className="ml-[12px]">
-            {params.value}
-          </Typography>
-        </Box>
-      ),
-      type: "string",
-      width: 539,
-      align: "left",
-      headerAlign: "left",
-      editable: true,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      headerClassName: "header",
-      type: "string",
-      width: 560,
-      editable: true,
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerClassName: "header",
-      headerName: "Hành động",
-      width: 137,
-      cellClassName: "actions",
-      getActions: ({ row }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={() => handleEditClick(row)}
-          color="inherit"
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete"
-          onClick={handleDeleteClick(row.id)}
-          color="inherit"
-        />,
-      ],
-    },
-  ];
+  const columns = columnsSchema(handleEditClick, handleDeleteClick);
 
   return (
     <Box sx={styles.pageContainer}>
@@ -226,9 +129,9 @@ const DataTable = ({ title }) => {
             },
             //disable prev button color
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-              {
+            {
                 color: "text.secondary",
-              },
+            },
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
               //prev button color
               color: "text.light",
@@ -243,9 +146,9 @@ const DataTable = ({ title }) => {
             "& .MuiDataGrid-filler": {
               backgroundColor: "primary.main", //white space color when resize
             },
-            "& .css-1rtad1 ": {
-              position: "relative" //fix scrollX
-            },
+            // "& .css-1rtad1 ": {
+            //   position: "relative", //fix scrollX
+            // },
           }}
         />
       </Box>
