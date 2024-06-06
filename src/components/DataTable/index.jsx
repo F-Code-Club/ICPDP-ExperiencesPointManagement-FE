@@ -113,7 +113,6 @@ const DataTable = ({ title }) => {
       width: 137,
       align: "left",
       editable: false,
-      resizable: false,
     },
     {
       field: "name",
@@ -136,7 +135,6 @@ const DataTable = ({ title }) => {
       ),
       type: "string",
       width: 539,
-      flex: 1,
       align: "left",
       headerAlign: "left",
       editable: true,
@@ -147,17 +145,14 @@ const DataTable = ({ title }) => {
       headerClassName: "header",
       type: "string",
       width: 560,
-      flex: 1,
       editable: true,
     },
     {
       field: "actions",
       type: "actions",
-      flex: 1,
       headerClassName: "header",
       headerName: "Hành động",
       width: 137,
-      resizable: false,
       cellClassName: "actions",
       getActions: ({ row }) => [
         <GridActionsCellItem
@@ -213,7 +208,6 @@ const DataTable = ({ title }) => {
           columnHeaderHeight={48}
           disableColumnSelector={true}
           disableRowSelectionOnClick={true}
-          // disableColumnResize={true}
           disableMultipleRowSelection={true}
           autoHeight={true}
           getRowId={(row) => row.id}
@@ -245,6 +239,9 @@ const DataTable = ({ title }) => {
             "& .css-1w53k9d-MuiDataGrid-overlay ": { //no rows color
               backgroundColor: "transparent "
             },
+            "& .MuiDataGrid-filler": {
+              backgroundColor: "primary.main",
+            }
           }}
         />
       </Box>
