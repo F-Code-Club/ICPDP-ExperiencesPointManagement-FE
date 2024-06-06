@@ -13,19 +13,18 @@ export const styles = {
     padding: "24px 20px",
     margin: "0 auto",
     position: "relative",
-    top: "-10%",
-    // backgroundColor: "red",
+   
   },
   innerContainer: {
     display: "block",
     margin: "auto",
     width: "100%",
-    maxWidth: "1376px",
+    maxWidth: "full",
   },
   toolbarContainer: {
     display: "flex",
     justifyContent: "end",
-    width: "1376px",
+    width: "full",
     height: "36px",
     marginBottom: "20px",
     gap: "24px",

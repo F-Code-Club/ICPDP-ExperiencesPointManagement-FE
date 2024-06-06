@@ -175,7 +175,7 @@ const DataTable = ({ title }) => {
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
-        <Box className="flex justify-end w-[1376px] h-[36px] mb-20 gap-x-[24px]">
+        <Box className="flex justify-end w-full h-[36px] mb-[50px] gap-x-[24px]">
           <TextField
             className="rounded-sm border-2"
             placeholder="Tìm kiếm"
@@ -244,7 +244,7 @@ const DataTable = ({ title }) => {
               backgroundColor: "primary.main", //white space color when resize
             },
             "& .css-1rtad1 ": {
-              position: "relative"
+              position: "relative" //fix scrollX
             },
           }}
         />
