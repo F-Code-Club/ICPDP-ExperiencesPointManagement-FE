@@ -57,7 +57,7 @@ export const styles = {
     border: "2px solid",
     borderRadius: "8px",
     height: 650,
-    width: 1376,
+    width: "full",
     overflow: "hidden",
     "& .actions": { color: "text.light" },
     "& .textPrimary": { color: "text.light" },
