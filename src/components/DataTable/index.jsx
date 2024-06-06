@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import EditToolbar from "./EditToolbar";
+import AddToolbar from "./AddToolbar";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+
 import SearchIcon from "@mui/icons-material/Search";
 import {
   TextField,
@@ -28,7 +29,15 @@ const initialRows = [
   { id: 7, name: "test1", email: `test1@gmail.com` },
   { id: 8, name: "test2", email: `test2@gmail.com` },
   { id: 9, name: "test3", email: `test3@gmail.com` },
-  { id: 10, name: "Fcode", email: `test1@gmail.com` },
+  {
+    id: 10,
+    name: "Fcode",
+    email: `test1@gmail.com`,
+    password: "dasdas",
+    username: "dsad",
+    avatar:
+      "https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/440491684_953819473416997_5707415369883086073_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=0Js6PhRnegIQ7kNvgE5CJB-&_nc_ht=scontent.fsgn5-5.fna&oh=00_AYDIDKxX74BqJS65cNj99QmVjFS7UD4bJQYqnVEEHDiyuw&oe=66674F05",
+  },
 ];
 
 const DataTable = ({ title }) => {
@@ -37,24 +46,32 @@ const DataTable = ({ title }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [rowToEdit, setRowToEdit] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
-  const handleEditClick = (id) => {
-    setRowToEdit(id);
+  const handleEditClick = (row) => {
+    setRowToEdit(row.id);
+    setIsEdit(true);
     setShowEditForm(true);
   };
 
   const handleSaveClick = (formData) => {
+    console.log(formData);
     const updatedRow = {
       ...formData,
       id: rowToEdit,
-      avatar: rows.find((row) => row.id === rowToEdit)?.avatar,
+      avatar:
+        formData.avatar || rows.find((row) => row.id === rowToEdit)?.avatar,
+      username: rows.find((row) => row.id === rowToEdit)?.username,
+      password: rows.find((row) => row.id === rowToEdit)?.password,
       isNew: false,
     };
+
     setRows((prevRows) =>
       prevRows.map((row) => (row.id === rowToEdit ? updatedRow : row))
     );
     setRowToEdit(null);
     setShowEditForm(false);
+    setIsEdit(false);
   };
 
   const handleClose = () => {
@@ -137,18 +154,18 @@ const DataTable = ({ title }) => {
       headerName: "Hành động",
       width: 137,
       cellClassName: "actions",
-      getActions: ({ id }) => [
+      getActions: ({ row }) => [
         <GridActionsCellItem
           icon={<EditIcon />}
           label="Edit"
           className="textPrimary"
-          onClick={() => handleEditClick(id)}
+          onClick={() => handleEditClick(row)}
           color="inherit"
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={handleDeleteClick(id)}
+          onClick={handleDeleteClick(row.id)}
           color="inherit"
         />,
       ],
@@ -161,7 +178,6 @@ const DataTable = ({ title }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
         padding: "24px 20px",
         margin: "0 auto",
         position: "relative",
@@ -195,21 +211,26 @@ const DataTable = ({ title }) => {
               ),
             }}
           />
-          <EditToolbar setRows={setRows} rows={rows} title={title} />
+          <AddToolbar setRows={setRows} rows={rows} title={title} />
         </Box>
-        <Box sx={styles.dataContainer}>
           <DataGrid
+            onRowClick={(row) => handleEditClick(row)}
             rows={rows}
             columns={columns}
             rowHeight={55}
             columnHeaderHeight={48}
-            editMode="row"
+            disableColumnResize={true}
+            disableColumnSelector={true}
+            disableRowSelectionOnClick={true}
+            disableMultipleRowSelection={true}
+            autoHeight={true}
             getRowId={(row) => row.id}
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
             }}
-            scrollbarSize={0} //hidden scorllX
+            scrollbarSize={0} //hidden scrollX
             sx={{
+              ...styles.dataGrid,
               color: "text.light",
               width: 1376,
               overflow: "hidden",
@@ -219,15 +240,18 @@ const DataTable = ({ title }) => {
               "& .css-1jhlys9-MuiTablePagination-displayedRows": {
                 color: "text.light",
               },
-              "& .css-i4bv87-MuiSvgIcon-root": {
+              "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
+                {
+                  color: "text.secondary",
+                },
+              "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
                 color: "text.light",
               },
               "& .css-1b9e9gy": {
-                display: "none", //hidden scorllY
+                display: "none", //hidden scrollY
               },
             }}
           />
-        </Box>
       </Box>
       <WarningForm
         open={showDeleteForm}
@@ -235,12 +259,15 @@ const DataTable = ({ title }) => {
         handleDelete={handleDelete}
         rowId={rowToDelete}
       />
+
       <ManagementForm
         open={showEditForm}
         handleClose={handleClose}
         title={`Chỉnh sửa ${title}`}
         handleSave={handleSaveClick}
+        editedRow={rows.find((row) => row.id === rowToEdit)}
         func={"Sửa"}
+        isEdit={isEdit}
       />
     </Box>
   );

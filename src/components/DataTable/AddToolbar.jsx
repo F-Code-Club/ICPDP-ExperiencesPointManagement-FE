@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { TextField, IconButton, InputAdornment } from "@mui/material";
 import ManagementForm from "../Form/ManagementForm";
 
-const EditToolbar = ({ setRows, rows, title }) => {
+const AddToolbar = ({ setRows, rows, title }) => {
   const [showForm, setShowForm] = useState(false);
 
   const handleOpenForm = () => setShowForm(true);
@@ -41,9 +41,10 @@ const EditToolbar = ({ setRows, rows, title }) => {
         title={`Thêm ${title}`}
         handleSave={handleSave}
         func={"Thêm"}
+
       />
     </>
   );
 };
 
-export default EditToolbar;
+export default AddToolbar;

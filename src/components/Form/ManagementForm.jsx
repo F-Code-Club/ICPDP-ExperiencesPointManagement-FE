@@ -7,7 +7,15 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { ManagementFromStyles as styles } from "./style";
 import { toastError } from "../../utils/toast";
 
-function ManagementForm({ open, handleClose, title, handleSave, func }) {
+function ManagementForm({
+  open,
+  handleClose,
+  title,
+  handleSave,
+  func,
+  isEdit,
+  editedRow,
+}) {
   const [info, setInfo] = useState({
     name: "",
     email: "",
@@ -22,6 +30,8 @@ function ManagementForm({ open, handleClose, title, handleSave, func }) {
     username: false,
     password: false,
   });
+
+  const [hovered, setHovered] = useState(false);
 
   const handleImage = (event) => {
     const file = event.target.files[0];
@@ -42,7 +52,7 @@ function ManagementForm({ open, handleClose, title, handleSave, func }) {
   };
 
   useEffect(() => {
-    if (!open) {
+    if (!open || (isEdit && !editedRow)) {
       setInfo({
         name: "",
         email: "",
@@ -56,8 +66,10 @@ function ManagementForm({ open, handleClose, title, handleSave, func }) {
         username: false,
         password: false,
       });
+    } else if (isEdit && editedRow) {
+      setInfo(editedRow);
     }
-  }, [open]);
+  }, [open, isEdit, editedRow]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -160,7 +172,25 @@ function ManagementForm({ open, handleClose, title, handleSave, func }) {
                 <Box sx={styles.imagePreview}>
                   {info.avatar ? (
                     <>
-                      <img src={info.avatar} alt="avatar" className="object-cover w-full h-full"/>
+                      <img
+                        src={info.avatar}
+                        alt="avatar"
+                        className={`${!hovered ? "object-cover w-full h-full opacity-1" : "object-cover w-full h-full opacity-[0.5]"}`}
+                        onMouseEnter={() => setHovered(true)}
+                        onMouseLeave={() => setHovered(false)}
+                      />
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          textAlign: "center",
+                          opacity: hovered ? 1 : 0,
+                        }}
+                      >
+                        <ImageIcon sx={{ color: "text.dark" }} />
+                        <Typography variant="body1" className="ml-[12px]">
+                          Thêm ảnh
+                        </Typography>
+                      </Box>
                     </>
                   ) : (
                     <>
