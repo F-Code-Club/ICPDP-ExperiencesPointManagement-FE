@@ -1,13 +1,6 @@
-import axios, { axiosPrivate } from "../config/axios";
+import axios from "../config/axios";
 
-const request = (
-  endpoint,
-  method,
-  isPrivate,
-  headers = {},
-  params = {},
-  body = {}
-) => {
+const request = (endpoint, method, headers = {}, params = {}, body = {}) => {
   const config = {
     url: endpoint,
     method,
@@ -15,34 +8,19 @@ const request = (
     params: Object.assign(params),
     data: body,
   };
-  return isPrivate ? axiosPrivate(config) : axios(config);
+  return axios(config);
 };
 
-const get = (endpoint, isPrivate = false, params = {}, headers = {}) =>
-  request(endpoint, "GET", isPrivate, headers, params);
+const get = (endpoint, params = {}, headers = {}) =>
+  request(endpoint, "GET", headers, params);
 
-const post = (
-  endpoint,
-  isPrivate = false,
-  body = {},
-  params = {},
-  headers = {}
-) => request(endpoint, "POST", isPrivate, headers, params, body);
+const post = (endpoint, body = {}, params = {}, headers = {}) =>
+  request(endpoint, "POST", headers, params, body);
 
-const put = (
-  endpoint,
-  isPrivate = false,
-  body = {},
-  params = {},
-  headers = {}
-) => request(endpoint, "PUT", isPrivate, headers, params, body);
+const put = (endpoint, body = {}, params = {}, headers = {}) =>
+  request(endpoint, "PUT", headers, params, body);
 
-const remove = (
-  endpoint,
-  isPrivate = false,
-  body = {},
-  params = {},
-  headers = {}
-) => request(endpoint, "DELETE", isPrivate, headers, params, body);
+const remove = (endpoint, body = {}, params = {}, headers = {}) =>
+  request(endpoint, "DELETE", headers, params, body);
 
 export { request, get, post, put, remove };
