@@ -114,6 +114,7 @@ const DataTable = ({ title, columnsSchema, initialRows }) => {
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
           }}
+          // autoPageSize={true}
           sx={{
             ...styles.dataGrid,
             color: "text.light",

@@ -15,7 +15,7 @@ const Layout = ({title, children}) => {
   return (
     <div className="relative flex min-h-[100%] w-full gap-4">
       <Background />
-      <div className={`${isSidebarOpen ? "hidden" : ""} w-[15%]`}>
+      <div className={`${isSidebarOpen ? "hidden" : ""} w-[17%]`}>
         <Sidebar />
       </div>
       <div className={`flex flex-col flex-grow w-[80%] gap-4 z-10`}>

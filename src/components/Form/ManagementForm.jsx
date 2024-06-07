@@ -123,6 +123,7 @@ function ManagementForm({
                 id="name"
                 name="name"
                 label="Tên"
+                autoComplete="off"
                 variant="outlined"
                 margin="dense"
                 onChange={handleChange}
@@ -135,6 +136,7 @@ function ManagementForm({
                 label="Email"
                 name="email"
                 variant="outlined"
+                autoComplete="off"
                 margin="dense"
                 onChange={handleChange}
                 value={info.email}
@@ -147,6 +149,7 @@ function ManagementForm({
                 name="username"
                 variant="outlined"
                 margin="dense"
+                autoComplete="off"
                 onChange={handleChange}
                 value={info.username}
                 sx={styles.inputField}
@@ -154,6 +157,7 @@ function ManagementForm({
               <PasswordField
                 error={isEmpty.password}
                 margin="dense"
+                autoComplete="off"
                 onChange={handleChange}
                 sx={styles.inputField}
                 value={info.password}
