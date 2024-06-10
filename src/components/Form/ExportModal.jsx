@@ -16,7 +16,7 @@ function ExportForm({ open, handleClose, handleExport, numberOfRow }) {
             Xuất thông tin
           </h1>
           <h2 className="text-[12px] font-[600] text-second-text-color">
-            Bạn có muốn xuất thông tin {numberOfRow} câu lạc bộ ra file CSV chứ?
+           {numberOfRow === 0 ? "Bạn có muốn xuất thông tin trang hiện ra file CSV chứ?" : `Bạn có muốn xuất thông tin ${numberOfRow} câu lạc bộ ra file CSV chứ?`}
           </h2>
         </Box>
         <Box sx={styles.warningModalButton}>

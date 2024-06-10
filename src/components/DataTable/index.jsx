@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +13,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import ExportForm from "../Form/ExportModal";
-
+import { useGridApiRef } from "@mui/x-data-grid";
 const DataTable = ({
   title,
   columnsSchema,
@@ -21,6 +21,7 @@ const DataTable = ({
   API_ENDPOINTS,
   accessToken,
   role,
+  exportOptions,
 }) => {
   const [rows, setRows] = useState([]);
   const [originalRows, setOriginalRows] = useState([]);
@@ -33,6 +34,9 @@ const DataTable = ({
   const [searchQuery, setSearchQuery] = useState("");
   const axios = useAxiosPrivate();
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [countRow, setCountRow] = useState(0);
+  const dataGridRef = useRef(null);
+  const apiRef = useGridApiRef();
 
   // Set index for each row
   useEffect(() => {
@@ -130,24 +134,19 @@ const DataTable = ({
   const handleExportClick = () => {
     setShowExportForm(true);
   };
-  console.log(showDeleteForm);
+  const selectedRowCount = 0;
   const exportSelectedRow = () => {
-    
-    //TODO
+    let selectedRows;
     if (!rowSelectionModel.length) {
-      
-      return;
+      selectedRows = rows;
+    } else {
+      selectedRows = rows.filter((row) => rowSelectionModel.includes(row.id));
     }
 
-    const selectedRows = rows.filter((row) =>
-      rowSelectionModel.includes(row.id)
-    );
-
-    const fieldsToExport = ["id", "name", "email"];
-    const customHeaders = ["ID", "Tên", "Email"];
+    const fieldsToExport = exportOptions.fields;
+    const customHeaders = exportOptions.headers;
 
     const csvHeader = customHeaders.join(",");
-
     const csvRows = selectedRows.map((row) =>
       fieldsToExport.map((field) => row[field]).join(",")
     );
@@ -161,6 +160,10 @@ const DataTable = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Count the number of selected rows
+    setCountRow(selectedRows.length);
+    
   };
 
   return (
@@ -223,6 +226,8 @@ const DataTable = ({
           rowSelectionModel={rowSelectionModel}
           rows={rows}
           columns={columns}
+          apiRef={apiRef}
+          ref={dataGridRef}
           rowHeight={55}
           onCellDoubleClick={(e) => e.preventDefault()}
           columnHeaderHeight={48}
@@ -263,8 +268,8 @@ const DataTable = ({
               backgroundColor: "primary.main",
             },
             "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
-              color: "text.light"
-            }
+              color: "text.light",
+            },
           }}
         />
       </Box>
@@ -285,7 +290,12 @@ const DataTable = ({
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
       />
-      <ExportForm open={showExportForm} handleClose={handleClose} handleExport={exportSelectedRow} numberOfRow={rowSelectionModel.length}/>
+      <ExportForm
+        open={showExportForm}
+        handleClose={handleClose}
+        handleExport={exportSelectedRow}
+        numberOfRow={rowSelectionModel.length}
+      />
     </Box>
   );
 };

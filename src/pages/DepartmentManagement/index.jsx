@@ -48,6 +48,7 @@ const DepartmentManagement = () => {
         onPageChange={handlePageChange}
         API_ENDPOINTS={API_ENDPOINTS.DEPARTMENT}
         accessToken={accessToken}
+        exportOptions={exportOptions}
         role="dept"
       />
     </>

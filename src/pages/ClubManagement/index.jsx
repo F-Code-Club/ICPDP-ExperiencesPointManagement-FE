@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AuthContext } from "../../context/auth.context";
 import Layout from "../../layouts/Layout";
+import { exportOptions } from "./exportOptions";
 const ClubManagement = () => {
   const [clubs, setClubs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +51,7 @@ const ClubManagement = () => {
         API_ENDPOINTS={API_ENDPOINTS.CLUBS}
         accessToken={accessToken}
         role="club"
+        exportOptions={exportOptions}
       />
     </>
   );
