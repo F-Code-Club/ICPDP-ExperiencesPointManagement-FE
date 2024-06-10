@@ -15,7 +15,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
-const Sidebar = () => {
+const Sidebar = ({setTitle}) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   return (
@@ -166,7 +166,8 @@ const Sidebar = () => {
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
-                      to="/settings/clubs"
+                      to="settings/clubs"
+                      onClick={() => setTitle("Quản lí câu lạc bộ")}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
@@ -181,7 +182,8 @@ const Sidebar = () => {
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
-                      to="/settings/departments"
+                      to="settings/departments"
+                      onClick={() => setTitle("Quản lí phòng ban")}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"

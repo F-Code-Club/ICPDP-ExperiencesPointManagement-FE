@@ -19,8 +19,6 @@ const RouterComponent = () => {
     // Public routes
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
-    // { path: "settings/clubs", element: <ClubManagement /> },
-    { path: "settings/departments", element: <DepartmentManagement /> },
     { path: "*", element: <ErrorPage /> },
 
     // Protected routes
@@ -39,42 +37,38 @@ const RouterComponent = () => {
           element: <RequireAuth allowedRoles={[ROLE.ADMIN]} />,
           children: [
             {
-              index: true,
-              element: <Home />,
+              element: <Layout />,
+              children: [
+                { index: true, element: <Home /> },
+                {
+                  path: "transcripts/experience-point",
+                  element: <div>Điểm phong trào</div>,
+                },
+                {
+                  path: "transcripts/final-point",
+                  element: <div>Điểm tổng kết</div>,
+                },
+                {
+                  path: "settings/students",
+                  element: <div>Quản lí sinh viên</div>,
+                },
+                { path: "settings/clubs", element: <ClubManagement title="Quản lí câu lạc bộ"/> },
+                {
+                  path: "settings/departments",
+                  element: <DepartmentManagement title="Quản lí phòng ban"/>,
+                },
+                {
+                  path: "settings/semesters",
+                  element: <div>Quản lí kì học</div>,
+                },
+              ],
             },
-            {
-              path: "transcripts/experience-point",
-              element: <div>Điểm phong trào</div>,
-            },
-            {
-              path: "transcripts/final-point",
-              element: <div>Điểm tổng kết</div>,
-            },
-            {
-              path: "settings/students",
-              element: <div>Quản lí sinh viên</div>,
-            },
-            { path: "/settings/clubs", 
-              element: <ClubManagement /> },
-            ,
-            {
-              path: "settings/departments",
-              element: <div>Quản lí phòng ban</div>,
-            },
-            { path: "settings/semesters", element: <div>Quản lí kì học</div> },
           ],
         },
       ],
     },
-    // Additional routes with Layout
-    // {
-    //   path: "/",
-    //   element: <Layout />,
-    //   children: [
-
-    //   ],
-    // },
   ]);
+
   return (
     <RouterProvider
       fallbackElement={<CircularIndeterminate />}

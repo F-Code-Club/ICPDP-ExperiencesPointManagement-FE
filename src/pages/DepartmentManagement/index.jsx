@@ -1,40 +1,57 @@
-import React from "react";
-import Layout from "../../layouts/Layout";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import DataTable from "../../components/DataTable";
 import columnsSchema from "./columns";
+import { API_ENDPOINTS } from "../../utils/api";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { AuthContext } from "../../context/auth.context";
+import Header from "../../components/Header";
+const DepartmentManagement = () => {
+  const [departments, setDepartments] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const axios = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
+  const { accessToken } = auth;
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await axios.get(API_ENDPOINTS.DEPARTMENT.GET_ALL, {
+        params: {
+          page: currentPage,
+          take: 0,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200 || response.status === 201) {
+        setDepartments(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.response);
+    }
+  }, [axios, currentPage, departments?.length]);
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-function DepartmentManagement() {
-  const initialRows = [
-    { id: 1, name: "test1", email: `test1@gmail.com` },
-    { id: 2, name: "test2", email: `test2@gmail.com` },
-    { id: 3, name: "test3", email: `test3@gmail.com` },
-    { id: 4, name: "test1", email: `test1@gmail.com` },
-    { id: 5, name: "test2", email: `test2@gmail.com` },
-    { id: 6, name: "test3", email: `test3@gmail.com` },
-    { id: 7, name: "test1", email: `test1@gmail.com` },
-    { id: 8, name: "test2", email: `test2@gmail.com` },
-    { id: 9, name: "test3", email: `test3@gmail.com` },
-    {
-      id: 10,
-      name: "Fcode",
-      email: `test1@gmail.com`,
-      password: "dasdas",
-      username: "dsad",
-      avatar:
-        "https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/440491684_953819473416997_5707415369883086073_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=0Js6PhRnegIQ7kNvgE5CJB-&_nc_ht=scontent.fsgn5-5.fna&oh=00_AYDIDKxX74BqJS65cNj99QmVjFS7UD4bJQYqnVEEHDiyuw&oe=66674F05",
-    },
-  ];
   return (
-    <Layout title="Quản lí câu phòng ban">
-       <DataTable
-        title={"phòng ban"}
-        initialRows={initialRows}
+    <>
+      <DataTable
+        title="phòng ban"
+        initialRows={departments}
         columnsSchema={columnsSchema}
+        onPageChange={handlePageChange}
+        API_ENDPOINTS={API_ENDPOINTS.DEPARTMENT}
+        accessToken={accessToken}
+        role="dept"
       />
-    </Layout>
+    </>
   );
-}
+};
 
 export default DepartmentManagement;

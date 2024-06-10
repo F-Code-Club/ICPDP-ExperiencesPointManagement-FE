@@ -12,4 +12,11 @@ export const API_ENDPOINTS = {
     UPDATE: `/clubs`,
     DELETE: `/clubs`,
   },
+  DEPARTMENT: {
+    GET_ALL: "/departments",
+    GET: `/departments`,
+    ADD: "/departments",
+    UPDATE: `/departments`,
+    DELETE: `/departments`,
+  },
 };
