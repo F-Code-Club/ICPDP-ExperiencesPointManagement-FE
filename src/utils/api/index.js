@@ -5,4 +5,11 @@ export const API_ENDPOINTS = {
     LOGOUT: "auth/logout",
     REFRESH_TOKEN: "auth/refresh",
   },
+  CLUBS: {
+    GET_ALL: "/clubs",
+    GET: `/clubs`,
+    ADD: "/clubs",
+    UPDATE: `/clubs`,
+    DELETE: `/clubs`,
+  },
 };

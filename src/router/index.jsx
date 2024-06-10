@@ -19,7 +19,7 @@ const RouterComponent = () => {
     // Public routes
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
-    { path: "settings/clubs", element: <ClubManagement /> },
+    // { path: "settings/clubs", element: <ClubManagement /> },
     { path: "settings/departments", element: <DepartmentManagement /> },
     { path: "*", element: <ErrorPage /> },
 
@@ -54,11 +54,13 @@ const RouterComponent = () => {
               path: "settings/students",
               element: <div>Quản lí sinh viên</div>,
             },
-            // { path: "settings/clubs", element: <div>Quản lí câu lạc bộ</div> },
-            // {
-            //   path: "settings/departments",
-            //   element: <div>Quản lí phòng ban</div>,
-            // },
+            { path: "/settings/clubs", 
+              element: <ClubManagement /> },
+            ,
+            {
+              path: "settings/departments",
+              element: <div>Quản lí phòng ban</div>,
+            },
             { path: "settings/semesters", element: <div>Quản lí kì học</div> },
           ],
         },

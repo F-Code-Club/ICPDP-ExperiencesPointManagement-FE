@@ -1,40 +1,59 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Layout from "../../layouts/Layout";
 import DataTable from "../../components/DataTable";
 import columnsSchema from "./columns";
+import { API_ENDPOINTS } from "../../utils/api";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-const initialRows = [
-  { id: 1, name: "test1", email: `test1@gmail.com` },
-  { id: 2, name: "test2", email: `test2@gmail.com` },
-  { id: 3, name: "test3", email: `test3@gmail.com` },
-  { id: 4, name: "test1", email: `test1@gmail.com` },
-  { id: 5, name: "test2", email: `test2@gmail.com` },
-  { id: 6, name: "test3", email: `test3@gmail.com` },
-  { id: 7, name: "test1", email: `test1@gmail.com` },
-  { id: 8, name: "test2", email: `test2@gmail.com` },
-  { id: 9, name: "test3", email: `test3@gmail.com` },
-  {
-    id: 10,
-    name: "Fcode",
-    email: `test1@gmail.com`,
-    password: "dasdas",
-    username: "dsad",
-    avatar:
-      "https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/440491684_953819473416997_5707415369883086073_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=0Js6PhRnegIQ7kNvgE5CJB-&_nc_ht=scontent.fsgn5-5.fna&oh=00_AYDIDKxX74BqJS65cNj99QmVjFS7UD4bJQYqnVEEHDiyuw&oe=66674F05",
-  },
-];
+const ClubManagement = () => {
+  const [clubs, setClubs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const axios = useAxiosPrivate();
 
-function ClubManagement() {
- 
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJkZWExM2E0Ni1mMzJmLTQ4YWUtODgwOS1iOTE0MWRjMDk5ZDAiLCJ1c2VybmFtZSI6InRlc3QxMjMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTgwMDAwOTUsImV4cCI6MTcxODAwMTg5NX0.sr4Z1pelwtykKCX2JC_UnzRvKvYBWDxPhEAaz9IlACU";
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {
+        params: {
+          page: currentPage,
+          take: 0,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200 || response.status === 201) {
+        setClubs(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.response);
+    }
+  }, [axios, currentPage, clubs?.length]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <Layout title="Quản lí câu lạc bộ">
       <DataTable
-        title={"câu lạc bộ"}
-        initialRows={initialRows}
+        title="câu lạc bộ"
+        initialRows={clubs}
         columnsSchema={columnsSchema}
+        onPageChange={handlePageChange}
+        API_ENDPOINTS={API_ENDPOINTS.CLUBS}
+        accessToken={accessToken}
+        role="club"
       />
     </Layout>
   );
-}
+};
 
 export default ClubManagement;

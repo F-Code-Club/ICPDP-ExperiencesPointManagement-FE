@@ -5,6 +5,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ManagementFromStyles as styles } from "./style";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
 
 function ManagementForm({
@@ -15,6 +16,8 @@ function ManagementForm({
   func,
   isEdit,
   editedRow,
+  API_ENDPOINTS,
+  accessToken,
 }) {
   const [info, setInfo] = useState({
     name: "",
@@ -32,18 +35,21 @@ function ManagementForm({
   });
 
   const [hovered, setHovered] = useState(false);
+  const axios = useAxiosPrivate();
 
   const handleImage = (event) => {
     const file = event.target.files[0];
     if (file) {
-      info.avatar && URL.revokeObjectURL(info.avatar.preview);
+      if (info.avatar) {
+        URL.revokeObjectURL(info.avatar.preview);
+      }
       setInfo((prevInfo) => ({
         ...prevInfo,
         avatar: URL.createObjectURL(file),
       }));
     }
   };
-  console.log(info);
+
   const handleChange = (e) => {
     setInfo((prev) => ({
       ...prev,
@@ -52,7 +58,7 @@ function ManagementForm({
   };
 
   useEffect(() => {
-    if (!open || (isEdit && !editedRow)) {
+    const resetForm = () => {
       setInfo({
         name: "",
         email: "",
@@ -66,12 +72,32 @@ function ManagementForm({
         username: false,
         password: false,
       });
+    };
+
+    if (!open || (isEdit && !editedRow)) {
+      resetForm();
     } else if (isEdit && editedRow) {
+      // const fetchData = async () => {
+      //   try {
+      //     const response = await axios.get(`${API_ENDPOINTS.GET}/${editedRow.clubID}`, {
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: `Bearer ${accessToken}`,
+      //       },
+      //     });
+      //     const { data } = response.data;
+      //     console.log(data);
+      //     setInfo(data);
+      //   } catch (error) {
+      //     console.error("Error fetching data:", error);
+      //   }
+      // };
+      // fetchData();
       setInfo(editedRow);
     }
-  }, [open, isEdit, editedRow]);
+  }, [open, isEdit, editedRow, axios, accessToken]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {
       name: !info.name.trim(),
@@ -87,7 +113,7 @@ function ManagementForm({
     }
 
     handleSave(info);
-    setInfo({ name: "", email: "", username: "", password: "" });
+    setInfo({ name: "", email: "", username: "", password: "", avatar: "" });
     handleClose();
   };
 

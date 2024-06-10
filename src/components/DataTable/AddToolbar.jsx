@@ -1,20 +1,50 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import { TextField, IconButton, InputAdornment } from "@mui/material";
 import ManagementForm from "../Form/ManagementForm";
+import axios from "../../config/axios";
 
-const AddToolbar = ({ setRows, rows, title }) => {
+const AddToolbar = ({
+  setRows,
+  rows,
+  title,
+  API_ENDPOINTS,
+  accessToken,
+  role,
+}) => {
   const [showForm, setShowForm] = useState(false);
-
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
-  const handleSave = (formData) => {
-    const id = rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-    const newRow = { id, ...formData, isNew: true };
-    setRows((oldRows) => [...oldRows, newRow]);
-    setShowForm(false);
+  const handleSave = async (formData) => {
+    try {
+      const response = await axios.post(
+        API_ENDPOINTS.ADD,
+        { ...formData, role, avt: formData.avatar },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response.status);
+      const id =
+        rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
+      const newRow = {
+        ...formData,
+        id,
+        avatar: formData.avatar,
+      };
+      setRows((prevRows) => [...prevRows, newRow]);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error while saving:", error);
+      console.log("Response data:", error.response.data);
+      console.log("Status:", error.response.status);
+      console.log("Headers:", error.response.headers);
+    }
   };
 
   return (
@@ -41,7 +71,6 @@ const AddToolbar = ({ setRows, rows, title }) => {
         title={`Thêm ${title}`}
         handleSave={handleSave}
         func={"Thêm"}
-
       />
     </>
   );
