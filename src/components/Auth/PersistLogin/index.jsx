@@ -9,8 +9,8 @@ import Layout from "../../../layouts/Layout";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const refresh = useRefreshToken();
   const { auth } = useAuth();
+  const refresh = useRefreshToken();
 
   useEffect(() => {
     let isMounted = true;
@@ -27,17 +27,15 @@ const PersistLogin = () => {
 
     !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [auth?.accessToken, refresh]);
+    return () => (isMounted = false);
+  }, [auth, refresh]);
 
   useEffect(() => {
     console.log(`isLoading: ${isLoading}`);
-    console.log(`aT: ${JSON.stringify(auth?.accessToken)}`);
-  }, [isLoading, auth?.accessToken]);
+    console.log(`aT: ${JSON.stringify(auth)}`);
+  }, [isLoading, auth]);
 
-  return <Layout> {isLoading ? <CircularIndeterminate /> : <Outlet />}</Layout>;
+  return isLoading ? <CircularIndeterminate /> : <Outlet />;
 };
 
 export default PersistLogin;
