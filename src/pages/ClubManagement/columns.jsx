@@ -11,7 +11,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 137,
+    width: 124,
     align: "left",
     editable: false,
   },

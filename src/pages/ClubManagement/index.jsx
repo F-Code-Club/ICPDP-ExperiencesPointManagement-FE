@@ -33,6 +33,7 @@ const ClubManagement = () => {
 
   useEffect(() => {
     fetchData();
+    console.log("Re-render");
   }, [fetchData]);
 
   const handlePageChange = (newPage) => {
@@ -41,15 +42,15 @@ const ClubManagement = () => {
 
   return (
     <>
-        <DataTable
-          title="câu lạc bộ"
-          initialRows={clubs}
-          columnsSchema={columnsSchema}
-          onPageChange={handlePageChange}
-          API_ENDPOINTS={API_ENDPOINTS.CLUBS}
-          accessToken={accessToken}
-          role="club"
-        />
+      <DataTable
+        title="câu lạc bộ"
+        initialRows={clubs}
+        columnsSchema={columnsSchema}
+        onPageChange={handlePageChange}
+        API_ENDPOINTS={API_ENDPOINTS.CLUBS}
+        accessToken={accessToken}
+        role="club"
+      />
     </>
   );
 };

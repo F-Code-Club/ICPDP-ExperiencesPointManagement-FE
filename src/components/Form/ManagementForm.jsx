@@ -102,16 +102,26 @@ function ManagementForm({
     const errors = {
       name: !info.name.trim(),
       email: !info.email.trim(),
-      username: !info.username.trim(),
+      username: !info.username.trim() || info.username.length < 6,
       password: !info.password.trim(),
     };
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      toastError("Vui lòng điền đầy đủ thông tin");
+      if (errors.name) {
+        toastError("Tên không được để trống");
+      }
+      if (errors.email) {
+        toastError("Email không được để trống");
+      }
+      if (errors.username) {
+        toastError("Mã định danh phải có ít nhất 6 ký tự");
+      }
+      if (errors.password) {
+        toastError("Mật khẩu không được để trống");
+      }
       return;
     }
-
     handleSave(info);
     setInfo({ name: "", email: "", username: "", password: "", avatar: "" });
     handleClose();

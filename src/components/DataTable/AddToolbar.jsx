@@ -6,6 +6,7 @@ import axios from "../../config/axios";
 
 const AddToolbar = ({
   setRows,
+  setOriginalRows,
   rows,
   title,
   API_ENDPOINTS,
@@ -20,7 +21,7 @@ const AddToolbar = ({
     try {
       const response = await axios.post(
         API_ENDPOINTS.ADD,
-        { ...formData, role, avt: formData.avatar },
+        { ...formData, role, avatar: formData.avatar },
         {
           headers: {
             "Content-Type": "application/json",
@@ -38,6 +39,7 @@ const AddToolbar = ({
         avatar: formData.avatar,
       };
       setRows((prevRows) => [...prevRows, newRow]);
+      setOriginalRows((prevRows) => [...prevRows, newRow]);
       setShowForm(false);
     } catch (error) {
       console.error("Error while saving:", error);
