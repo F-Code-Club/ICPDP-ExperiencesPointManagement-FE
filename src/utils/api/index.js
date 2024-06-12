@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     GET_ALL: "/clubs",
     GET: `/clubs`,
     ADD: "/clubs",
+    UPLOAD: `/local-files`,
     UPDATE: `/clubs`,
     DELETE: `/clubs`,
   },
@@ -16,7 +17,9 @@ export const API_ENDPOINTS = {
     GET_ALL: "/departments",
     GET: `/departments`,
     ADD: "/departments",
+    UPLOAD: `/local-files`,
     UPDATE: `/departments`,
     DELETE: `/departments`,
   },
+  
 };

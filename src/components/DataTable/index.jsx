@@ -63,6 +63,7 @@ const DataTable = ({
   };
 
   const handleEditClick = (row) => {
+    console.log("Datatable ", accessToken);
     setRowToEdit(row.id);
     setIsEdit(true);
     setShowEditForm(true);
@@ -233,6 +234,7 @@ const DataTable = ({
           columnHeaderHeight={48}
           disableColumnSelector
           disableRowSelectionOnClick
+          disableColumnResize
           autoHeight
           getRowId={(row) => row.id}
           scrollbarSize={0}

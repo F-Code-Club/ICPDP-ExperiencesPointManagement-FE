@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
@@ -9,7 +9,7 @@ const useAxiosPrivate = () => {
   const { auth } = useAuth();
   const refresh = useRefreshToken();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {

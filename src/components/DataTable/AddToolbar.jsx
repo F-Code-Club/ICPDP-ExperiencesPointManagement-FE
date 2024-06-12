@@ -21,7 +21,7 @@ const AddToolbar = ({
     try {
       const response = await axios.post(
         API_ENDPOINTS.ADD,
-        { ...formData, role, avatar: formData.avatar },
+        { ...formData, role },
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,17 +30,23 @@ const AddToolbar = ({
           },
         }
       );
-      console.log(response.status);
-      const id =
-        rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-      const newRow = {
-        ...formData,
-        id,
-        avatar: formData.avatar,
-      };
-      setRows((prevRows) => [...prevRows, newRow]);
-      setOriginalRows((prevRows) => [...prevRows, newRow]);
-      setShowForm(false);
+      console.log(response.data.data);
+      if (response.status === 200 || response.status === 201) {
+        const id =
+          rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
+        const newRow = {
+          ...formData,
+          id,
+          clubID: response.data.data.clubID,
+          userID: response.data.data.userID,
+          role: response.data.data.role,
+          password: response.data.data.password,
+          active: response.data.data.active,
+        };
+        setRows((prevRows) => [...prevRows, newRow]);
+        setOriginalRows((prevRows) => [...prevRows, newRow]);
+        setShowForm(false);
+      }
     } catch (error) {
       console.error("Error while saving:", error);
       console.log("Response data:", error.response.data);
@@ -73,6 +79,8 @@ const AddToolbar = ({
         title={`Thêm ${title}`}
         handleSave={handleSave}
         func={"Thêm"}
+        accessToken={accessToken}
+        API_ENDPOINTS={API_ENDPOINTS}
       />
     </>
   );

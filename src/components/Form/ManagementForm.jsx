@@ -16,7 +16,6 @@ function ManagementForm({
   func,
   isEdit,
   editedRow,
-  API_ENDPOINTS,
   accessToken,
 }) {
   const [info, setInfo] = useState({
@@ -34,11 +33,14 @@ function ManagementForm({
     password: false,
   });
 
+  const [img, setImg] = useState(null);
   const [hovered, setHovered] = useState(false);
   const axios = useAxiosPrivate();
 
+  // Handle img selection and preview
   const handleImage = (event) => {
     const file = event.target.files[0];
+    setImg(file);
     if (file) {
       if (info.avatar) {
         URL.revokeObjectURL(info.avatar.preview);
@@ -50,6 +52,7 @@ function ManagementForm({
     }
   };
 
+  // Handle input changes for text fields
   const handleChange = (e) => {
     setInfo((prev) => ({
       ...prev,
@@ -57,6 +60,7 @@ function ManagementForm({
     }));
   };
 
+  // Reset form when the modal is closed or a new row is being edited
   useEffect(() => {
     const resetForm = () => {
       setInfo({
@@ -77,26 +81,11 @@ function ManagementForm({
     if (!open || (isEdit && !editedRow)) {
       resetForm();
     } else if (isEdit && editedRow) {
-      // const fetchData = async () => {
-      //   try {
-      //     const response = await axios.get(`${API_ENDPOINTS.GET}/${editedRow.clubID}`, {
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: `Bearer ${accessToken}`,
-      //       },
-      //     });
-      //     const { data } = response.data;
-      //     console.log(data);
-      //     setInfo(data);
-      //   } catch (error) {
-      //     console.error("Error fetching data:", error);
-      //   }
-      // };
-      // fetchData();
       setInfo(editedRow);
     }
-  }, [open, isEdit, editedRow, axios, accessToken]);
+  }, [open, isEdit, editedRow]);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {
@@ -108,23 +97,43 @@ function ManagementForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      if (errors.name) {
-        toastError("Tên không được để trống");
-      }
-      if (errors.email) {
-        toastError("Email không được để trống");
-      }
-      if (errors.username) {
-        toastError("Mã định danh phải có ít nhất 6 ký tự");
-      }
-      if (errors.password) {
-        toastError("Mật khẩu không được để trống");
-      }
+      if (errors.name) toastError("Tên không được để trống");
+      if (errors.email) toastError("Email không được để trống");
+      if (errors.username) toastError("Mã định danh phải có ít nhất 6 ký tự");
+      if (errors.password) toastError("Mật khẩu không được để trống");
       return;
     }
-    handleSave(info);
-    setInfo({ name: "", email: "", username: "", password: "", avatar: "" });
-    handleClose();
+
+    let finalInfo = { ...info };
+
+    if (img) {
+      const uploadFile = new FormData();
+      uploadFile.append("file", img);
+
+      try {
+        const response = await axios.post(
+          "https://epm-be-dev.f-code.tech/local-files",
+          uploadFile,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const imageUrl = await response.data.data.avatarURL;
+        finalInfo.avatar = imageUrl;
+        handleSave(finalInfo);
+        resetForm();
+        handleClose();
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    } else {
+      handleSave(finalInfo);
+      resetForm();
+      handleClose();
+    }
   };
 
   return (
@@ -215,7 +224,9 @@ function ManagementForm({
                       <img
                         src={info.avatar}
                         alt="avatar"
-                        className={`${!hovered ? "object-cover w-full h-full opacity-1" : "object-cover w-full h-full opacity-[0.5]"}`}
+                        className={`object-cover w-full h-full ${
+                          hovered ? "opacity-50" : "opacity-100"
+                        }`}
                         onMouseEnter={() => setHovered(true)}
                         onMouseLeave={() => setHovered(false)}
                       />
@@ -227,7 +238,7 @@ function ManagementForm({
                         }}
                       >
                         <ImageIcon sx={{ color: "text.dark" }} />
-                        <Typography variant="body1" className="ml-[12px]">
+                        <Typography variant="body1" className="ml-3">
                           Thêm ảnh
                         </Typography>
                       </Box>
@@ -235,7 +246,7 @@ function ManagementForm({
                   ) : (
                     <>
                       <ImageIcon sx={{ color: "text.dark" }} />
-                      <Typography variant="body1" className="ml-[12px]">
+                      <Typography variant="body1" className="ml-3">
                         Thêm ảnh
                       </Typography>
                     </>
