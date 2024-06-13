@@ -48,7 +48,7 @@ const DepartmentManagement = () => {
         initialRows={departments}
         columnsSchema={columnsSchema}
         onPageChange={handlePageChange}
-        API_ENDPOINTS={API_ENDPOINTS.DEPARTMENT}
+        API_ENDPOINTS={API_ENDPOINTS.DEPARTMENTS}
         accessToken={accessToken}
         exportOptions={exportOptions}
         role="dept"

@@ -16,6 +16,7 @@ function ManagementForm({
   func,
   isEdit,
   editedRow,
+  API_ENDPOINTS,
   accessToken,
 }) {
   const [info, setInfo] = useState({
@@ -112,7 +113,7 @@ function ManagementForm({
 
       try {
         const response = await axios.post(
-          "https://epm-be-dev.f-code.tech/local-files",
+          API_ENDPOINTS.UPLOAD,
           uploadFile,
           {
             headers: {
@@ -124,7 +125,6 @@ function ManagementForm({
         const imageUrl = await response.data.data.avatarURL;
         finalInfo.avatar = imageUrl;
         handleSave(finalInfo);
-        resetForm();
         handleClose();
       } catch (error) {
         console.error("Error uploading image:", error);

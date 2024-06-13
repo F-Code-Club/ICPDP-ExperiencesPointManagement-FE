@@ -11,7 +11,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 137,
+    width: 124,
     align: "left",
     editable: false,
   },
@@ -46,7 +46,15 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerName: "Email",
     headerClassName: "header",
     type: "string",
-    width: 560,
+    width: 500,
+    editable: true,
+  },
+  {
+    field: "active",
+    headerName: "Active",
+    headerClassName: "header",
+    type: "string",
+    width: 150,
     editable: true,
   },
   {
@@ -54,7 +62,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     type: "actions",
     headerClassName: "header",
     headerName: "Hành động",
-    width: 137,
+    width: 130,
     cellClassName: "actions",
     getActions: ({ row }) => [
       <GridActionsCellItem

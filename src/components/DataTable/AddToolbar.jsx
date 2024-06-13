@@ -37,7 +37,8 @@ const AddToolbar = ({
         const newRow = {
           ...formData,
           id,
-          clubID: response.data.data.clubID,
+          clubID: response.data.data?.clubID,
+          deptID: response.data.data?.deptID,
           userID: response.data.data.userID,
           role: response.data.data.role,
           password: response.data.data.password,
