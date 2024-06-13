@@ -20,6 +20,7 @@ const LoginForm = ({ className }) => {
           id="code"
           name="code"
           autoFocus
+          autoComplete="off"
           label="Identifying code *"
         />
         <FormInputText isPassword control={control} label="Password *" />

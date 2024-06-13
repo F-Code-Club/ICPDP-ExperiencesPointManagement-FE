@@ -12,7 +12,7 @@ import useAuth from "../../../hooks/useAuth";
 import { getRoles } from "../../../utils/jwt";
 
 export default function useLogin() {
-  const { setAuth } = useAuth();
+  const { setAuth, setRefreshToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,7 +33,7 @@ export default function useLogin() {
     }
 
     try {
-      const res = await post(API_ENDPOINTS.AUTH.LOGIN, false, {
+      const res = await post(API_ENDPOINTS.AUTH.LOGIN, {
         username: result.data.code,
         password: result.data.password,
       });
@@ -42,8 +42,9 @@ export default function useLogin() {
       if (!resData) {
         return errorToastHandler(data);
       }
-      const { access_token, refresh_token } = resData;
-      setAuth({ accessToken: access_token, refreshToken: refresh_token });
+      const { accessToken, refreshToken } = resData;
+      setAuth({ accessToken });
+      setRefreshToken(refreshToken);
 
       // unauthenticated user is redirected to the page they were trying to access
       const from = location.state?.from?.pathname;
@@ -51,7 +52,7 @@ export default function useLogin() {
         return navigate(from, { replace: true });
       }
 
-      const resRoles = getRoles(access_token);
+      const resRoles = getRoles(accessToken);
       if (!resRoles.success) {
         return;
       }
@@ -59,6 +60,7 @@ export default function useLogin() {
       navigate("/" + resRoles.data);
     } catch (error) {
       errorToastHandler(error.response);
+      setRefreshToken("");
     }
 
     if (isSubmitSuccessful) {

@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  @apply font-sans;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bg-sidebar {
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%);
+}
+
+#root {
+  height: 100vh;
+  
+}
+
+
+
+
