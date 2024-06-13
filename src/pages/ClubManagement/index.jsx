@@ -29,7 +29,7 @@ const ClubManagement = () => {
         setClubs(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching data:", error.response);
+      toastError("Error fetching data");
     }
   }, [axios, currentPage, clubs?.length]);
 
