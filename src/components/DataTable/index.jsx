@@ -68,7 +68,8 @@ const DataTable = ({
 
   const handleSaveClick = async (formData) => {
     const currentRow = rows.find((row) => row.id === rowToEdit);
-    const ID = currentRow?.clubID || currentRow?.departmentID;
+    const ID = currentRow?.[`${role}ID`];
+
     try {
       const response = await axios.patch(
         `${API_ENDPOINTS.UPDATE}/${ID}`,
@@ -101,9 +102,8 @@ const DataTable = ({
   };
 
   const handleDelete = async (rowId) => {
-    const currentRow = rows.find((row) => row.id === rowId);
-    const ID = currentRow?.clubID || currentRow?.departmentID;
-
+    const currentRow = rows.find((row) => row.id === rowToEdit);
+    const ID = currentRow?.[`${role}ID`];
     try {
       const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
