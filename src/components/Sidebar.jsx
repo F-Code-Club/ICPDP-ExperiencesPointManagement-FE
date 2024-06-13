@@ -18,6 +18,7 @@ import { useState } from "react";
 const Sidebar = ({setTitle}) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  
   return (
     <>
       <div

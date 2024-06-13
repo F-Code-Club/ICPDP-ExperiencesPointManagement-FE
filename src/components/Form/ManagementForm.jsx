@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import PasswordField from "../PasswordField";
 import ImageIcon from "@mui/icons-material/Image";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,22 +26,31 @@ function ManagementForm({
   editedRow,
   API_ENDPOINTS,
   accessToken,
+  formConfig,
 }) {
-  const [info, setInfo] = useState({
-    name: "",
-    email: "",
-    username: "",
-    password: "",
-    avatar: "",
-  });
+  const { fields, selectFields } = formConfig;
 
-  const [isEmpty, setIsEmpty] = useState({
-    name: false,
-    email: false,
-    username: false,
-    password: false,
-  });
+  // Initialize state dynamically based on formConfig
+  const initState = () => {
+    const initState = {};
+    fields.forEach((field) => (initState[field.name] = ""));
+    selectFields.forEach(
+      (selectField) =>
+        (initState[selectField.name] = selectField.options[0].value) //selectField.options[0].value is default value
+    );
+    initState.avatar = "";
+    return initState;
+  };
 
+  // Initialize errors dynamically based on formConfig
+  const initializeErrors = () => {
+    const errors = {};
+    fields.forEach((field) => (errors[field.name] = false));
+    return errors;
+  };
+
+  const [info, setInfo] = useState(initState);
+  const [isEmpty, setIsEmpty] = useState(initializeErrors);
   const [img, setImg] = useState(null);
   const [hovered, setHovered] = useState(false);
   const axios = useAxiosPrivate();
@@ -44,7 +61,7 @@ function ManagementForm({
     setImg(file);
     if (file) {
       if (info.avatar) {
-        URL.revokeObjectURL(info.avatar.preview);
+        URL.revokeObjectURL(info.avatar);
       }
       setInfo((prevInfo) => ({
         ...prevInfo,
@@ -55,32 +72,15 @@ function ManagementForm({
 
   // Handle input changes for text fields
   const handleChange = (e) => {
-    setInfo((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   // Reset form when the modal is closed or a new row is being edited
   useEffect(() => {
-    const resetForm = () => {
-      setInfo({
-        name: "",
-        email: "",
-        username: "",
-        password: "",
-        avatar: "",
-      });
-      setIsEmpty({
-        name: false,
-        email: false,
-        username: false,
-        password: false,
-      });
-    };
-
     if (!open || (isEdit && !editedRow)) {
-      resetForm();
+      setInfo(initState);
+      setIsEmpty(initializeErrors);
     } else if (isEdit && editedRow) {
       setInfo(editedRow);
     }
@@ -89,12 +89,11 @@ function ManagementForm({
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = {
-      name: !info.name.trim(),
-      email: !info.email.trim(),
-      username: !info.username.trim() || info.username.length < 6,
-      password: !info.password.trim(),
-    };
+    const errors = fields.reduce((acc, field) => {
+      acc[field.name] = !info[field.name].trim();
+      return acc;
+    }, {});
+    errors.username = !info.username.trim() || info.username.length < 6;
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
@@ -112,28 +111,22 @@ function ManagementForm({
       uploadFile.append("file", img);
 
       try {
-        const response = await axios.post(
-          API_ENDPOINTS.UPLOAD,
-          uploadFile,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const imageUrl = await response.data.data.avatarURL;
+        const response = await axios.post(API_ENDPOINTS.UPLOAD, uploadFile, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const imageUrl = response.data.data.avatarURL;
         finalInfo.avatar = imageUrl;
-        handleSave(finalInfo);
-        handleClose();
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toastError("Error uploading image");
+        return;
       }
-    } else {
-      handleSave(finalInfo);
-      resetForm();
-      handleClose();
     }
+
+    handleSave(finalInfo);
+    handleClose();
   };
 
   return (
@@ -163,51 +156,53 @@ function ManagementForm({
         <form onSubmit={handleSubmit}>
           <Box sx={styles.formContainer}>
             <Box sx={styles.formColumn}>
-              <TextField
-                error={isEmpty.name}
-                id="name"
-                name="name"
-                label="Tên"
-                autoComplete="off"
-                variant="outlined"
-                margin="dense"
-                onChange={handleChange}
-                value={info.name}
-                sx={styles.inputField}
-              />
-              <TextField
-                error={isEmpty.email}
-                id="email"
-                label="Email"
-                name="email"
-                variant="outlined"
-                autoComplete="off"
-                margin="dense"
-                onChange={handleChange}
-                value={info.email}
-                sx={styles.inputField}
-              />
-              <TextField
-                error={isEmpty.username}
-                id="username"
-                label="Mã định danh"
-                name="username"
-                variant="outlined"
-                margin="dense"
-                autoComplete="off"
-                onChange={handleChange}
-                value={info.username}
-                sx={styles.inputField}
-              />
-              <PasswordField
-                error={isEmpty.password}
-                margin="dense"
-                autoComplete="off"
-                onChange={handleChange}
-                sx={styles.inputField}
-                value={info.password}
-                name="password"
-              />
+              {fields.map((field) =>
+                field.type === "password" ? (
+                  <PasswordField
+                    key={field.name}
+                    error={isEmpty[field.name]}
+                    margin="dense"
+                    autoComplete="off"
+                    onChange={handleChange}
+                    sx={styles.inputField}
+                    value={info[field.name]}
+                    name={field.name}
+                  />
+                ) : (
+                  <TextField
+                    key={field.name}
+                    error={isEmpty[field.name]}
+                    id={field.name}
+                    name={field.name}
+                    label={field.label}
+                    autoComplete="off"
+                    variant="outlined"
+                    margin="dense"
+                    onChange={handleChange}
+                    value={info[field.name]}
+                    sx={styles.inputField}
+                  />
+                )
+              )}
+              {isEdit &&
+                selectFields.map((selectField) => (
+                  <Select
+                    key={selectField.name}
+                    labelId={selectField.name}
+                    id={selectField.name}
+                    value={info[selectField.name]}
+                    label={selectField.label}
+                    name={selectField.name}
+                    onChange={handleChange}
+                    sx={styles.inputField}
+                  >
+                    {selectField.options.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                ))}
             </Box>
             <Box sx={styles.imageContainer}>
               <label htmlFor="imageInput">

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ManagementForm from "../Form/ManagementForm";
 import axios from "../../config/axios";
-
+import { toastError } from "../../utils/toast";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -12,6 +12,7 @@ const AddToolbar = ({
   API_ENDPOINTS,
   accessToken,
   role,
+  formConfig,
 }) => {
   const [showForm, setShowForm] = useState(false);
   const handleOpenForm = () => setShowForm(true);
@@ -30,32 +31,23 @@ const AddToolbar = ({
           },
         }
       );
-      console.log(response.data.data);
+      const data = await response.data.data;
       if (response.status === 200 || response.status === 201) {
         const id =
           rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
         const newRow = {
-          ...formData,
+          ...data,
           id,
-          clubID: response.data.data?.clubID,
-          deptID: response.data.data?.deptID,
-          userID: response.data.data.userID,
-          role: response.data.data.role,
-          password: response.data.data.password,
-          active: response.data.data.active,
         };
         setRows((prevRows) => [...prevRows, newRow]);
         setOriginalRows((prevRows) => [...prevRows, newRow]);
         setShowForm(false);
       }
     } catch (error) {
-      console.error("Error while saving:", error);
-      console.log("Response data:", error.response.data);
-      console.log("Status:", error.response.status);
-      console.log("Headers:", error.response.headers);
+      toastError("Saving Fail..");
+      toastError(error.response.data.message);
     }
   };
-
   return (
     <>
       <Button
@@ -82,6 +74,7 @@ const AddToolbar = ({
         func={"Thêm"}
         accessToken={accessToken}
         API_ENDPOINTS={API_ENDPOINTS}
+        formConfig={formConfig}
       />
     </>
   );

@@ -51,7 +51,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
   },
   {
     field: "active",
-    headerName: "Active",
+    headerName: "Trạng thái",
     headerClassName: "header",
     type: "string",
     width: 150,

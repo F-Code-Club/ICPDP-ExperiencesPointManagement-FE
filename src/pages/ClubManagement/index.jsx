@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import DataTable from "../../components/DataTable";
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AuthContext } from "../../context/auth.context";
-import Layout from "../../layouts/Layout";
 import { exportOptions } from "./exportOptions";
+import { formConfig } from "./formConfig";
+import { ROLE } from "../../constant/core";
 const ClubManagement = () => {
   const [clubs, setClubs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +14,6 @@ const ClubManagement = () => {
   const { auth } = useContext(AuthContext);
   const { accessToken } = auth;
   const fetchData = useCallback(async () => {
-    console.log("Fetching data...", accessToken);
     try {
       const response = await axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {
         params: {
@@ -35,7 +35,6 @@ const ClubManagement = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("Re-render");
   }, [fetchData]);
 
   const handlePageChange = (newPage) => {
@@ -51,8 +50,9 @@ const ClubManagement = () => {
         onPageChange={handlePageChange}
         API_ENDPOINTS={API_ENDPOINTS.CLUBS}
         accessToken={accessToken}
-        role="club"
+        role={ROLE.CLUB}
         exportOptions={exportOptions}
+        formConfig={formConfig}
       />
     </>
   );

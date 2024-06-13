@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import { DataGrid } from "@mui/x-data-grid";
-import AddToolbar from "./AddToolbar";
-import WarningForm from "../Form/WarningModal";
-import ManagementForm from "../Form/ManagementForm";
-import { styles } from "./style";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
+import { toastError } from "../../utils/toast";
+import WarningForm from "../Form/WarningModal";
+import ManagementForm from "../Form/ManagementForm";
 import ExportForm from "../Form/ExportModal";
-import { useGridApiRef } from "@mui/x-data-grid";
+import { styles } from "./style";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import AddToolbar from "./AddToolbar";
+
 const DataTable = ({
   title,
   columnsSchema,
@@ -22,6 +23,7 @@ const DataTable = ({
   accessToken,
   role,
   exportOptions,
+  formConfig,
 }) => {
   const [rows, setRows] = useState([]);
   const [originalRows, setOriginalRows] = useState([]);
@@ -34,11 +36,8 @@ const DataTable = ({
   const [searchQuery, setSearchQuery] = useState("");
   const axios = useAxiosPrivate();
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
-  const [countRow, setCountRow] = useState(0);
-  const dataGridRef = useRef(null);
   const apiRef = useGridApiRef();
 
-  // Set index for each row
   useEffect(() => {
     const rowsWithIds = initialRows.map((row, index) => ({
       ...row,
@@ -48,7 +47,6 @@ const DataTable = ({
     setOriginalRows(rowsWithIds);
   }, [initialRows]);
 
-  // Update rows based on search query
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
@@ -63,38 +61,37 @@ const DataTable = ({
   };
 
   const handleEditClick = (row) => {
-    console.log("Datatable ", accessToken);
     setRowToEdit(row.id);
     setIsEdit(true);
     setShowEditForm(true);
   };
 
   const handleSaveClick = async (formData) => {
-    const clubID = rows.find((row) => row.id === rowToEdit)?.clubID;
+    const currentRow = rows.find((row) => row.id === rowToEdit);
+    const ID = currentRow?.clubID || currentRow?.departmentID;
     try {
       const response = await axios.patch(
-        `${API_ENDPOINTS.UPDATE}/${clubID}`,
-        { ...formData, id: rowToEdit },
+        `${API_ENDPOINTS.UPDATE}/${ID}`,
+        { ...formData, id: rowToEdit, active: formData.active },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+
       if (response.status === 200 || response.status === 201) {
         const updatedRow = {
           ...formData,
           id: rowToEdit,
-          avatar:
-            formData.avatar || rows.find((row) => row.id === rowToEdit)?.avatar,
+          avatar: formData.avatar || currentRow?.avatar,
+          active: formData.active,
         };
         const updatedRows = rows.map((row) =>
           row.id === rowToEdit ? updatedRow : row
         );
         setRows(updatedRows);
         setOriginalRows(updatedRows);
-        setRowToEdit(null);
-        setShowEditForm(false);
-        setIsEdit(false);
+        handleClose();
       }
     } catch (error) {
-      console.error("Error updating row:", error);
+      toastError("Updating Fail..");
     }
   };
 
@@ -104,22 +101,24 @@ const DataTable = ({
   };
 
   const handleDelete = async (rowId) => {
-    const clubID = rows.find((row) => row.id === rowId)?.clubID;
+    const currentRow = rows.find((row) => row.id === rowId);
+    const ID = currentRow?.clubID || currentRow?.departmentID;
+
     try {
-      const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${clubID}`, {
+      const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+
       if (response.status === 200 || response.status === 201) {
-        const newRows = rows.filter((row) => row.clubID !== clubID);
+        const newRows = rows.filter((row) => row.id !== rowId);
         setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
         setOriginalRows(
           newRows.map((row, index) => ({ ...row, id: index + 1 }))
         );
-        setShowDeleteForm(false);
-        setRowToDelete(null);
+        handleClose();
       }
     } catch (error) {
-      console.error("Error deleting row:", error);
+      toastError("Deleting Fail..");
     }
   };
 
@@ -135,14 +134,11 @@ const DataTable = ({
   const handleExportClick = () => {
     setShowExportForm(true);
   };
-  const selectedRowCount = 0;
+
   const exportSelectedRow = () => {
-    let selectedRows;
-    if (!rowSelectionModel.length) {
-      selectedRows = rows;
-    } else {
-      selectedRows = rows.filter((row) => rowSelectionModel.includes(row.id));
-    }
+    const selectedRows = rowSelectionModel.length
+      ? rows.filter((row) => rowSelectionModel.includes(row.id))
+      : rows;
 
     const fieldsToExport = exportOptions.fields;
     const customHeaders = exportOptions.headers;
@@ -153,18 +149,14 @@ const DataTable = ({
     );
 
     const csvContent = `data:text/csv;charset=utf-8,${csvHeader}\n${csvRows.join("\n")}`;
-
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
+
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "selected_rows.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    // Count the number of selected rows
-    setCountRow(selectedRows.length);
-    
   };
 
   return (
@@ -198,6 +190,7 @@ const DataTable = ({
             API_ENDPOINTS={API_ENDPOINTS}
             accessToken={accessToken}
             role={role}
+            formConfig={formConfig}
           />
           <Button
             onClick={handleExportClick}
@@ -221,14 +214,12 @@ const DataTable = ({
         <DataGrid
           checkboxSelection
           onRowSelectionModelChange={(newRowSelectionModel) => {
-            console.log(rowSelectionModel);
             setRowSelectionModel(newRowSelectionModel);
           }}
           rowSelectionModel={rowSelectionModel}
           rows={rows}
           columns={columns}
           apiRef={apiRef}
-          ref={dataGridRef}
           rowHeight={55}
           onCellDoubleClick={(e) => e.preventDefault()}
           columnHeaderHeight={48}
@@ -291,12 +282,14 @@ const DataTable = ({
         isEdit={isEdit}
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
+        formConfig={formConfig}
       />
       <ExportForm
         open={showExportForm}
         handleClose={handleClose}
         handleExport={exportSelectedRow}
         numberOfRow={rowSelectionModel.length}
+        title={title}
       />
     </Box>
   );

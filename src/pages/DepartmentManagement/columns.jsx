@@ -3,7 +3,7 @@ import { Box, Avatar, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import {styles} from "../../components/DataTable/style";
+import { styles } from "../../components/DataTable/style";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -34,7 +34,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
         </Typography>
       </Box>
     ),
-    
+
     type: "string",
     width: 539,
     align: "left",
@@ -51,7 +51,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
   },
   {
     field: "active",
-    headerName: "Active",
+    headerName: "Trạng thái",
     headerClassName: "header",
     type: "string",
     width: 150,

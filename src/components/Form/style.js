@@ -44,7 +44,6 @@ export const ManagementFromStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "end",
-  
   },
   warningModalContent: {
     width: "100%",
@@ -54,7 +53,6 @@ export const ManagementFromStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    
   },
   warningModalButton: {
     width: "100%",
@@ -82,7 +80,7 @@ export const ManagementFromStyles = {
   },
   inputField: {
     width: "321px",
-   
+
     "& .MuiInputLabel-root": {
       fontSize: "16px",
       color: "text.secondary",

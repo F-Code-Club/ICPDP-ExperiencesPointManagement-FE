@@ -2,7 +2,7 @@ import { Modal, Box, Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { ManagementFromStyles as styles } from "./style";
 
-function ExportForm({ open, handleClose, handleExport, numberOfRow }) {
+function ExportForm({ open, handleClose, handleExport, numberOfRow, title }) {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={styles.warningModal}>
@@ -16,7 +16,7 @@ function ExportForm({ open, handleClose, handleExport, numberOfRow }) {
             Xuất thông tin
           </h1>
           <h2 className="text-[12px] font-[600] text-second-text-color">
-           {numberOfRow === 0 ? "Bạn có muốn xuất thông tin trang hiện ra file CSV chứ?" : `Bạn có muốn xuất thông tin ${numberOfRow} câu lạc bộ ra file CSV chứ?`}
+           {numberOfRow === 0 ? "Bạn có muốn xuất thông tin trang hiện ra file CSV chứ?" : `Bạn có muốn xuất thông tin ${numberOfRow} ${title} ra file CSV chứ?`}
           </h2>
         </Box>
         <Box sx={styles.warningModalButton}>

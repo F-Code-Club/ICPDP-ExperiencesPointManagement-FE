@@ -13,6 +13,7 @@ const ROLE = {
   ADMIN: "admin",
   USER: "user",
   CLUB: "club",
+  DEPARTMENT: "dept"
 };
 
 export { STRING_EMPTY, HTTP_STATUS, ROLE };
