@@ -14,10 +14,8 @@ export const InputStyles = {
   },
 };
 
-export const ManagementFromStyles = {
+export const ManagementFormStyles = {
   managementModal: {
-    width: 750,
-    height: 544,
     position: "absolute",
     top: "50%",
     left: "50%",

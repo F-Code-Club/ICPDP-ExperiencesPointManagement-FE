@@ -29,18 +29,18 @@ export const styles = {
   searchBar: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "text.light",
+        borderColor: "text.dark",
       },
       "&:hover fieldset": {
-        borderColor: "text.light",
+        borderColor: "text.dark",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "text.light",
+        borderColor: "text.dark",
       },
-      color: "text.light",
+      color: "text.dark",
     },
     "& .MuiOutlinedInput-input::placeholder": {
-      color: "text.light",
+      color: "text.dark",
       fontSize: 12,
     },
     "& .MuiOutlinedInput-input": {
@@ -49,26 +49,27 @@ export const styles = {
     width: 247,
   },
   dataGrid: {
-    color: "text.light",
+    color: "text.dark",
     width: "1376px",
     border: "2px solid",
     borderRadius: "8px",
     height: 650,
     width: "full",
     overflow: "hidden",
-    "& .actions": { color: "text.light" },
-    "& .textPrimary": { color: "text.light" },
+    "& .actions": { color: "text.dark" },
+    "& .textPrimary": { color: "text.dark" },
     "& .header": {
       backgroundColor: "primary.main",
       color: "text.light",
     },
     border: "1px solid",
     borderRadius: 1,
+    
   },
   avatar: {
     width: 32,
     height: 32,
-    color: "text.dark",
-    backgroundColor: "text.light",
+    color: "text.light",
+    backgroundColor: "text.dark",
   },
 };

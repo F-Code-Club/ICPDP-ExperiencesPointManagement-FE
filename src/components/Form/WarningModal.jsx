@@ -1,6 +1,6 @@
 import { Modal, Box, Button } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
-import { ManagementFromStyles as styles } from "./style";
+import { ManagementFormStyles as styles } from "./style";
 
 function WarningForm({ open, handleClose, handleDelete, rowId }) {
   return (

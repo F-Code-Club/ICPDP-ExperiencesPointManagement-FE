@@ -31,7 +31,7 @@ const Layout = () => {
             title={title}
           />
         </div>
-        <div className="flex h-full">
+        <div className="flex h-full bg-light-text-color rounded-lg">
           <Outlet title={title} />
         </div>
       </div>

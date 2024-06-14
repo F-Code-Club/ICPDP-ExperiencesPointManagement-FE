@@ -10,8 +10,8 @@ export const formConfig = {
         name: "active",
         label: "Active",
         options: [
-          { value: true, label: "Kích hoạt" }, // default value
-          { value: false, label: "Không kích hoạt" },
+          { value: true, label: "Đang hoạt động" }, // default value
+          { value: false, label: "Ngừng hoạt động" },
         ],
       },
     ],

@@ -14,6 +14,7 @@ import ExportForm from "../Form/ExportModal";
 import { styles } from "./style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import AddToolbar from "./AddToolbar";
+import { red } from "@mui/material/colors";
 
 const DataTable = ({
   title,
@@ -175,7 +176,7 @@ const DataTable = ({
                 <InputAdornment position="start">
                   <IconButton>
                     <SearchIcon
-                      sx={{ color: "text.light", width: 15, height: 15 }}
+                      sx={{ color: "text.dark", width: 15, height: 15 }}
                     />
                   </IconButton>
                 </InputAdornment>
@@ -232,18 +233,20 @@ const DataTable = ({
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
           sx={{
             ...styles.dataGrid,
-            color: "text.light",
+            color: "text.dark",
             width: "100%",
+            borderColor: "text.dark",
+            borderRadius: "8px",
             overflowX: "auto",
             "& .css-1jhlys9-MuiTablePagination-displayedRows": {
-              color: "text.light",
+              color: "text.dark",
             },
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
               {
                 color: "text.secondary",
               },
             "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
-              color: "text.light",
+              color: "text.dark",
             },
             "& .css-1b9e9gy": {
               display: "none",
@@ -261,8 +264,15 @@ const DataTable = ({
               backgroundColor: "primary.main",
             },
             "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
-              color: "text.light",
+              color: "text.dark",
             },
+            "& .MuiDataGrid-cell": {
+              borderColor: "text.dark",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderColor: "text.dark",
+            },
+            
           }}
         />
       </Box>

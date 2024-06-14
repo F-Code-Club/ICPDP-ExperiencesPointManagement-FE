@@ -4,6 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { styles } from "../../components/DataTable/style";
+import { render } from "react-dom";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -56,6 +57,9 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     type: "string",
     width: 150,
     editable: true,
+    renderCell: (params) => (
+      <span>{params.value ? "Đang hoạt động" : "Ngừng hoạt động"}</span>
+    ),
   },
   {
     field: "actions",

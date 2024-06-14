@@ -12,7 +12,7 @@ import PasswordField from "../PasswordField";
 import ImageIcon from "@mui/icons-material/Image";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import { ManagementFromStyles as styles } from "./style";
+import { ManagementFormStyles as styles } from "./style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
 

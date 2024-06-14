@@ -1,6 +1,6 @@
 import { Modal, Box, Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import { ManagementFromStyles as styles } from "./style";
+import { ManagementFormStyles as styles } from "./style";
 
 function ExportForm({ open, handleClose, handleExport, numberOfRow, title }) {
   return (

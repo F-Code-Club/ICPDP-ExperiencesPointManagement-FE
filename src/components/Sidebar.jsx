@@ -22,7 +22,7 @@ const Sidebar = ({setTitle}) => {
   return (
     <>
       <div
-        className={`p-6 bg-sidebar min-h-[100%] text-black flex flex-col justify-between z-10 relative gap-4`}
+        className={`p-6 bg-light-text-color min-h-[100%] text-black flex flex-col justify-between z-10 relative gap-4`}
       >
         <div className="flex flex-col gap-6 h-full w-full">
           <div className="flex items-center p-4 cursor-pointer"></div>
