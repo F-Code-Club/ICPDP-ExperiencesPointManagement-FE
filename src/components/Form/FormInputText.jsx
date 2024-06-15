@@ -19,7 +19,7 @@ const FormInputText = ({ name, control, isPassword = false, ...rest }) => {
             sx={InputStyles}
             showIcon
             {...rest}
-          />
+          /> 
         ) : (
           <TextField
             variant="filled"
