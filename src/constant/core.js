@@ -12,6 +12,8 @@ const HTTP_STATUS = {
 const ROLE = {
   ADMIN: "admin",
   USER: "user",
+  CLUB: "club",
+  DEPARTMENT: "department"
 };
 
 export { STRING_EMPTY, HTTP_STATUS, ROLE };

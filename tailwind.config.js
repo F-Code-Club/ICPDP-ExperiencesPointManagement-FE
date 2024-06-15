@@ -17,6 +17,8 @@ export default {
           800: "#914417",
           900: "#793914",
         },
+        sidebar: "#FFFFFF",
+        neutral: "#EAEAEA",
         secondary: "#262525",
         "light-text-color": "#FFFFFF",
         "second-text-color": "#737373",

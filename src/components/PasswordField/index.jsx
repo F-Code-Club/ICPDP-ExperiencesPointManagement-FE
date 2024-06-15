@@ -7,7 +7,7 @@ const PasswordField = ({
   name = "password",
   id = "password",
   label = "Password",
-  showIcon = false,
+  showIcon = true,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
