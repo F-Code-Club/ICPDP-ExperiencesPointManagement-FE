@@ -12,7 +12,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 124,
+    width: 70,
     align: "left",
     editable: false,
   },
@@ -37,7 +37,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     ),
 
     type: "string",
-    width: 539,
+    width: 350,
     align: "left",
     headerAlign: "left",
     editable: true,
@@ -55,7 +55,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerName: "Trạng thái",
     headerClassName: "header",
     type: "string",
-    width: 150,
+    width: 300,
     editable: true,
     renderCell: (params) => <span>{params.value ? "Đang hoạt động" : "Ngừng hoạt động"}</span>,
   },
@@ -64,7 +64,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     type: "actions",
     headerClassName: "header",
     headerName: "Hành động",
-    width: 130,
+    width: 180,
     cellClassName: "actions",
     getActions: ({ row }) => [
       <GridActionsCellItem

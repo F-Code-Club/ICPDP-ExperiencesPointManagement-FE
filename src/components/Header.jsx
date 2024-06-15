@@ -5,9 +5,8 @@ import IconButton from "@mui/material/IconButton";
 const Header = ({ toggleSidebar, isSidebarOpen, title }) => {
   return (
     <div
-      className={`bg-light-text-color flex h-[91px] rounded-lg justify-start items-center p-6 gap-2 self-stretch w-full mt-[16px] ml-[16px]`}
+      className={`bg-light-text-color flex h-[91px] rounded-lg justify-start items-center p-6 gap-2 self-stretch w-full mt-[16px] mx-[16px]`}
       style={{
-        marginLeft: isSidebarOpen ? "24px" : "0",
         transition: "padding-left 0.3s ease",
       }}
     >
@@ -22,7 +21,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, title }) => {
           left: "20px",
         }}
       >
-        <MenuIcon style={{ color: isSidebarOpen ? "white" : "black" }} />
+        <MenuIcon style={{ color: "black" }} />
       </IconButton>
       <h1 className="text-3xl font-bold text-primary">{title}</h1>
     </div>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import Main from "../components/Main";
 import Header from "../components/Header";
 import Background from "../components/Background";
 import Sidebar from "../components/Sidebar";
@@ -31,7 +30,7 @@ const Layout = () => {
             title={title}
           />
         </div>
-        <div className="flex h-full bg-light-text-color rounded-lg">
+        <div className="flex h-full bg-light-text-color rounded-lg mx-[16px]">
           <Outlet title={title} />
         </div>
       </div>
