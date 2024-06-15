@@ -7,6 +7,8 @@ import {
   Button,
   MenuItem,
   Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import PasswordField from "../PasswordField";
 import ImageIcon from "@mui/icons-material/Image";
@@ -184,17 +186,22 @@ function ManagementForm({
                   />
                 )
               )}
-              {isEdit &&
-                selectFields.map((selectField) => (
+              {selectFields.map((selectField) => (
+                <FormControl
+                  variant="outlined"
+                  sx={styles.inputField}
+                  key={selectField.name}
+                >
+                  <InputLabel id={`${selectField.name}-label`}>
+                    {selectField.label}
+                  </InputLabel>
                   <Select
-                    key={selectField.name}
-                    labelId={selectField.name}
+                    labelId={`${selectField.name}-label`}
                     id={selectField.name}
                     value={info[selectField.name]}
                     label={selectField.label}
                     name={selectField.name}
                     onChange={handleChange}
-                    sx={styles.inputField}
                   >
                     {selectField.options.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -202,7 +209,8 @@ function ManagementForm({
                       </MenuItem>
                     ))}
                   </Select>
-                ))}
+                </FormControl>
+              ))}
             </Box>
             <Box sx={styles.imageContainer}>
               <label htmlFor="imageInput">

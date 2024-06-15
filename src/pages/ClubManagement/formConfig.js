@@ -8,7 +8,7 @@ export const formConfig = {
     selectFields: [
       {
         name: "active",
-        label: "Active",
+        label: "Trạng thái",
         options: [
           { value: true, label: "Đang hoạt động" }, // default value
           { value: false, label: "Ngừng hoạt động" },
