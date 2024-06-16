@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:22-alpine
 #Define ARGS to use when build.
 ARG VITE_REACT_APP_BASE_URL
 #Set environment variable for build stages
