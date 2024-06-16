@@ -13,7 +13,8 @@ const ROLE = {
   ADMIN: "admin",
   USER: "user",
   CLUB: "club",
-  DEPARTMENT: "department"
+  DEPARTMENT: "department",
+  STUDENT: "student"
 };
 
 export { STRING_EMPTY, HTTP_STATUS, ROLE };

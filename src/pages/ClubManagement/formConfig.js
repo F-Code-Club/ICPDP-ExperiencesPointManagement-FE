@@ -4,6 +4,7 @@ export const formConfig = {
       { name: "email", label: "Email", type: "text" },
       { name: "username", label: "Mã định danh", type: "text" },
       { name: "password", label: "Mật khẩu", type: "password" },
+     
     ],
     selectFields: [
       {

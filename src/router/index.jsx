@@ -13,6 +13,8 @@ import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
+import StudentManagement from "../pages/StudentManagement";
+
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -50,7 +52,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "settings/students",
-                  element: <div>Quản lí sinh viên</div>,
+                  element: <StudentManagement title="Quản lí sinh viên"/>
                 },
                 { path: "settings/clubs", element: <ClubManagement title="Quản lí câu lạc bộ"/> },
                 {
