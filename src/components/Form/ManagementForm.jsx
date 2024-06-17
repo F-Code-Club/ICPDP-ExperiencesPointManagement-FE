@@ -186,7 +186,7 @@ function ManagementForm({
                   />
                 )
               )}
-              {selectFields.map((selectField) => (
+              {isEdit && selectFields.map((selectField) => (
                 <FormControl
                   variant="outlined"
                   sx={styles.inputField}
