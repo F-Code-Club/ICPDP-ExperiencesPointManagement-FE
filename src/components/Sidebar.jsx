@@ -15,10 +15,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
-const Sidebar = ({setTitle}) => {
+const Sidebar = ({ setTitle }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
-  
+
   return (
     <>
       <div
