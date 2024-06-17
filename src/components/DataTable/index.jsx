@@ -87,7 +87,6 @@ const DataTable = ({
         { ...updatedFormData, id: rowToEdit, active: formData.active },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      console.log(response.data.data);
       if (response.status === 200 || response.status === 201) {
         const updatedRow = {
           ...formData,
