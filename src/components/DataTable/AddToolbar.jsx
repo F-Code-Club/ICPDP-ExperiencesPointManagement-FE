@@ -32,6 +32,7 @@ const AddToolbar = ({
         }
       );
       const data = await response.data.data;
+      console.log(data);
       if (response.status === 200 || response.status === 201) {
         const id =
           rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
