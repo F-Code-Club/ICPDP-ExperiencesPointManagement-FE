@@ -5,6 +5,7 @@ import axios from "../../config/axios";
 import { toastError } from "../../utils/toast";
 import StudentForm from "../Form/StudentForm";
 import { styles } from "./style";
+import theme from "../../theme";
 
 const AddStudentToolbar = ({
   setRows,
@@ -28,7 +29,7 @@ const AddStudentToolbar = ({
   const handleSave = async (formData) => {
     try {
       const response = await axios.post(
-        API_ENDPOINTS.ADD,
+        API_ENDPOINTS.STUDENTS.ADD,
         { ...formData, role },
         {
           headers: {
@@ -60,22 +61,82 @@ const AddStudentToolbar = ({
     <>
       <Button
         onClick={() => setShowModal((prev) => !prev)}
-        sx={styles.addButton} 
+        sx={styles.addButton}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
 
       {showModal && (
-        <div style={styles.modalContainer}>
+        <div
+          style={{
+            position: "absolute",
+            right: "44px",
+            top: "67px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "8px",
+            gap: "6px",
+            borderRadius: "5px",
+            background: "white",
+            boxShadow: "2px 4px 10px 0px rgba(0, 0, 0, 0.40)",
+            zIndex: 2,
+          }}
+        >
           <Button
-            sx={styles.modalButton}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
           >
             Thêm từ excel
           </Button>
           <Button
             onClick={handleOpenForm}
-            sx={styles.modalButton} 
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
           >
             Thêm sinh viên
           </Button>

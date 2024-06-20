@@ -106,10 +106,4 @@ export const styles = {
     borderRadius: 1,
     
   },
-  avatar: {
-    width: 32,
-    height: 32,
-    color: "text.light",
-    backgroundColor: "text.dark",
-  },
 };

@@ -1,19 +1,10 @@
 import { useState, useEffect } from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { StudentFormStyles as styles } from "./style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
-
-// Import formConfig with fields definition
-import { formConfig } from "../../pages/StudentManagement/formConfig";
 
 function StudentForm({
   open,
@@ -25,6 +16,7 @@ function StudentForm({
   editedRow,
   API_ENDPOINTS,
   accessToken,
+  formConfig,
 }) {
   const { fields } = formConfig;
 
@@ -44,7 +36,6 @@ function StudentForm({
 
   const [info, setInfo] = useState(initState);
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
-  const [img, setImg] = useState(null);
   const axios = useAxiosPrivate();
 
   // Handle input changes for text fields
@@ -73,26 +64,14 @@ function StudentForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      if (errors.username) toastError("Vui lòng điền đầy đủ thông tin.");
-      if (errors.name) toastError("Vui lòng điền đầy đủ thông tin.");
+      if (errors.username || errors.name)
+        toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
     let finalInfo = { ...info };
-
-    try {
-      const response = await axios.post(API_ENDPOINTS.STUDENTS.ADD, finalInfo, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      toastSuccess("Thêm sinh viên thành công!");
-      handleSave(response.data);
-      handleClose();
-    } catch (error) {
-      toastError("Error saving student");
-      return;
-    }
+    handleSave(finalInfo);
+    handleClose();
   };
 
   return (

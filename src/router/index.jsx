@@ -15,7 +15,6 @@ import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
 
-
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
@@ -52,12 +51,15 @@ const RouterComponent = () => {
                 },
                 {
                   path: "settings/students",
-                  element: <StudentManagement title="Quản lí sinh viên"/>
+                  element: <StudentManagement title="Quản lí sinh viên" />,
                 },
-                { path: "settings/clubs", element: <ClubManagement title="Quản lí câu lạc bộ"/> },
+                {
+                  path: "settings/clubs",
+                  element: <ClubManagement title="Quản lí câu lạc bộ" />,
+                },
                 {
                   path: "settings/departments",
-                  element: <DepartmentManagement title="Quản lí phòng ban"/>,
+                  element: <DepartmentManagement title="Quản lí phòng ban" />,
                 },
                 {
                   path: "settings/semesters",

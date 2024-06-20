@@ -9,15 +9,14 @@ import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { toastError } from "../../utils/toast";
 import WarningForm from "../Form/WarningModal";
-import ManagementForm from "../Form/ManagementForm";
+// import ManagementForm from "../Form/ManagementForm";
 import ExportForm from "../Form/ExportModal";
 import { styles } from "./style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import AddStudentToolbar from "./AddStudentToolbar";
 import StudentForm from "../Form/StudentForm";
 
-
-const DataTable = ({
+const StudentDataTable = ({
   title,
   columnsSchema,
   initialRows,
@@ -94,6 +93,7 @@ const DataTable = ({
         handleClose();
       }
     } catch (error) {
+      console.error("Update error:", error);
       toastError("Updating Fail..");
     }
   };
@@ -120,6 +120,7 @@ const DataTable = ({
         handleClose();
       }
     } catch (error) {
+      console.error("Delete error:", error);
       toastError("Deleting Fail..");
     }
   };
@@ -306,4 +307,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default StudentDataTable;

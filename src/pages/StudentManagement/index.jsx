@@ -21,7 +21,7 @@ const StudentManagement = () => {
       const response = await axios.get(API_ENDPOINTS.STUDENTS.GET_ALL, {
         params: {
           page: currentPage,
-          take: 0,
+          take: 10,
         },
         headers: {
           "Content-Type": "application/json",
@@ -30,9 +30,12 @@ const StudentManagement = () => {
       });
       if (response.status === 200 || response.status === 201) {
         setStudents(response.data.data);
+      } else {
+        console.error("Unexpected status:", response.status);
       }
     } catch (error) {
-      toastError("Error fetching data");
+      console.error("Fetch error:", error);
+      toastError(`Error fetching data: ${error.message}`);
     }
   }, [axios, currentPage, students?.length]);
 
