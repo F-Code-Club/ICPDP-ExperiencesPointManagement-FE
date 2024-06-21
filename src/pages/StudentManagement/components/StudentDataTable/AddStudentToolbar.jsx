@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "../../config/axios";
-import { toastError } from "../../utils/toast";
-import StudentForm from "../Form/StudentForm";
 import { styles } from "./style";
-import theme from "../../theme";
+import theme from "../../../../theme";
+import { toastError } from "../../../../utils/toast";
+import axios from "../../../../config/axios";
+import StudentForm from "../../../../components/Form/StudentForm";
 
 const AddStudentToolbar = ({
   setRows,

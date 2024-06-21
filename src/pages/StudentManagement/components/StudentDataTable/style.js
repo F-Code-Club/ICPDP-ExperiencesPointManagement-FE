@@ -1,4 +1,4 @@
-import theme from "../../theme";
+
 export const styles = {
   addButton: {
     borderRadius: 1,

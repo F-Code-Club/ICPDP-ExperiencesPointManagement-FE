@@ -7,13 +7,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import { toastError } from "../../utils/toast";
-import WarningForm from "../Form/WarningModal";
-import ExportForm from "../Form/ExportModal";
+import { toastError } from "../../../../utils/toast";
+import WarningForm from "../../../../components/Form/WarningModal";
+import ExportForm from "../../../../components/Form/ExportModal";
 import { styles } from "./style";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import AddStudentToolbar from "./AddStudentToolbar";
-import StudentForm from "../Form/StudentForm";
+import StudentForm from "../../../../components/Form/StudentForm";
 
 const StudentDataTable = ({
   title,

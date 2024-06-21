@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import StudentDataTable from "../../components/StudentDataTable";
+import StudentDataTable from './components/StudentDataTable';
+
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
