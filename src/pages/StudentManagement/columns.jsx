@@ -1,10 +1,8 @@
 import React from "react";
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { styles } from "../../components/StudentDataTable/style";
-import { render } from "react-dom";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -17,7 +15,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     editable: false,
   },
   {
-    field: "username",
+    field: "studentID",
     headerName: "MSSV",
     headerClassName: "header",
     renderCell: (params) => (

@@ -14,8 +14,6 @@ function StudentForm({
   func,
   isEdit,
   editedRow,
-  API_ENDPOINTS,
-  accessToken,
   formConfig,
 }) {
   const { fields } = formConfig;
@@ -64,7 +62,7 @@ function StudentForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      if (errors.username || errors.name)
+      if (errors.studentID || errors.name)
         toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }

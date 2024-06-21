@@ -9,7 +9,6 @@ import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { toastError } from "../../utils/toast";
 import WarningForm from "../Form/WarningModal";
-// import ManagementForm from "../Form/ManagementForm";
 import ExportForm from "../Form/ExportModal";
 import { styles } from "./style";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -40,10 +39,10 @@ const StudentDataTable = ({
   const apiRef = useGridApiRef();
 
   useEffect(() => {
-    const rowsWithIds = initialRows.map((row, index) => ({
+    const rowsWithIds = initialRows?.map((row, index) => ({
       ...row,
       id: index + 1,
-    }));
+    })) || [];
     setRows(rowsWithIds);
     setOriginalRows(rowsWithIds);
   }, [initialRows]);
@@ -51,8 +50,8 @@ const StudentDataTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name.toLowerCase().includes(searchQuery) ||
-        row.email.toLowerCase().includes(searchQuery)
+        row.studentID.toLowerCase().includes(searchQuery) ||
+        row.name.toLowerCase().includes(searchQuery)
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows]);
@@ -74,7 +73,7 @@ const StudentDataTable = ({
     try {
       const response = await axios.patch(
         `${API_ENDPOINTS.UPDATE}/${ID}`,
-        { ...formData, id: rowToEdit, active: formData.active },
+        { ...formData, id: rowToEdit},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
@@ -82,8 +81,6 @@ const StudentDataTable = ({
         const updatedRow = {
           ...formData,
           id: rowToEdit,
-          avatar: formData.avatar || currentRow?.avatar,
-          active: formData.active,
         };
         const updatedRows = rows.map((row) =>
           row.id === rowToEdit ? updatedRow : row
@@ -104,7 +101,7 @@ const StudentDataTable = ({
   };
 
   const handleDelete = async (rowId) => {
-    const currentRow = rows.find((row) => row.id === rowToEdit);
+    const currentRow = rows.find((row) => row.id === rowId);
     const ID = currentRow?.[`${role}ID`];
     try {
       const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
@@ -274,7 +271,6 @@ const StudentDataTable = ({
             "& .MuiDataGrid-footerContainer": {
               borderColor: "text.dark",
             },
-            
           }}
         />
       </Box>

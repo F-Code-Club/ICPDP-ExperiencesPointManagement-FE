@@ -29,7 +29,7 @@ const AddStudentToolbar = ({
   const handleSave = async (formData) => {
     try {
       const response = await axios.post(
-        API_ENDPOINTS.STUDENTS.ADD,
+        API_ENDPOINTS.ADD,
         { ...formData, role },
         {
           headers: {
