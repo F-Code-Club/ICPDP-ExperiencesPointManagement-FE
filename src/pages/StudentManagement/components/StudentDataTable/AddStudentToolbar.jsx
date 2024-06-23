@@ -150,7 +150,6 @@ const AddStudentToolbar = ({
         handleSave={handleSave}
         func={"Thêm"}
         accessToken={accessToken}
-        API_ENDPOINTS={API_ENDPOINTS}
         formConfig={formConfig}
       />
     </>

@@ -14,6 +14,7 @@ import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
+import ExperiencePointView from "../pages/ExperiencePointView";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -21,6 +22,10 @@ const RouterComponent = () => {
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
+    // {
+    //   path: "transcripts/experience-point",
+    //   element: <ExperiencePointView />,
+    // },
 
     // Protected routes
     {
@@ -30,7 +35,18 @@ const RouterComponent = () => {
           // User routes
           path: "user",
           element: <RequireAuth allowedRoles={[ROLE.USER]} />,
-          children: [],
+          children: [
+            {
+              element: <Layout />,
+              children: [
+                { index: true, element: <Home /> },
+                // {
+                //   path: "transcripts/experience-point",
+                //   element: <ExperiencePointView />,
+                // },
+              ],
+            },
+          ],
         },
         {
           // Admin routes
@@ -43,7 +59,7 @@ const RouterComponent = () => {
                 { index: true, element: <Home /> },
                 {
                   path: "transcripts/experience-point",
-                  element: <div>Điểm phong trào</div>,
+                  element: <ExperiencePointView />,
                 },
                 {
                   path: "transcripts/final-point",
