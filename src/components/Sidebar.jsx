@@ -149,7 +149,8 @@ const Sidebar = ({ setTitle }) => {
                 <ul className="flex flex-col pl-8 gap-1 self-stretch">
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
-                      to="/settings/students"
+                      to="settings/students"
+                      onClick={() => setTitle("Quản lí sinh viên")}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"

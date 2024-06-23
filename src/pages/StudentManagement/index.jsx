@@ -1,25 +1,28 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import DataTable from "../../components/DataTable";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import StudentDataTable from './components/StudentDataTable';
+
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { AuthContext } from "../../context/auth.context";
 import { exportOptions } from "./exportOptions";
-import { formConfig } from "./formConfig";
+import { toastError } from "../../utils/toast";
 import { ROLE } from "../../constant/core";
-const ClubManagement = () => {
-  const [clubs, setClubs] = useState([]);
+import { formConfig } from "./formConfig";
+
+const StudentManagement = () => {
+  const [students, setStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const axios = useAxiosPrivate();
   const { auth } = useContext(AuthContext);
   const { accessToken } = auth;
-  
+
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {
+      const response = await axios.get(API_ENDPOINTS.STUDENTS.GET_ALL, {
         params: {
           page: currentPage,
-          take: 0,
+          take: 10,
         },
         headers: {
           "Content-Type": "application/json",
@@ -27,12 +30,15 @@ const ClubManagement = () => {
         },
       });
       if (response.status === 200 || response.status === 201) {
-        setClubs(response.data.data);
+        setStudents(response.data.data);
+      } else {
+        console.error("Unexpected status:", response.status);
       }
     } catch (error) {
-      toastError("Error fetching data");
+      console.error("Fetch error:", error);
+      toastError(`Error fetching data: ${error.message}`);
     }
-  }, [axios, currentPage, clubs?.length]);
+  }, [axios, currentPage, students?.length]);
 
   useEffect(() => {
     fetchData();
@@ -44,19 +50,19 @@ const ClubManagement = () => {
 
   return (
     <>
-      <DataTable
-        title="câu lạc bộ"
-        initialRows={clubs}
+      <StudentDataTable
+        title="sinh viên"
+        initialRows={students}
         columnsSchema={columnsSchema}
         onPageChange={handlePageChange}
-        API_ENDPOINTS={API_ENDPOINTS.CLUBS}
+        API_ENDPOINTS={API_ENDPOINTS.STUDENTS}
         accessToken={accessToken}
-        role={ROLE.CLUB}
         exportOptions={exportOptions}
+        role={ROLE.STUDENT}
         formConfig={formConfig}
       />
     </>
   );
 };
 
-export default ClubManagement;
+export default StudentManagement;
