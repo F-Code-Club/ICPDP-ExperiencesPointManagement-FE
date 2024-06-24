@@ -4,7 +4,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { styles } from "../../components/DataTable/style";
-import { render } from "react-dom";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",

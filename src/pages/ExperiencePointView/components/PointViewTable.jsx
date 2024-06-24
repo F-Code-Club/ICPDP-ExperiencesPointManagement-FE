@@ -44,6 +44,7 @@ const ExperiencePointTable = ({
   const axios = useAxiosPrivate();
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const apiRef = useGridApiRef();
+  console.log(columnsSchema);
   useEffect(() => {
     const rowsWithIds =
       initialRows?.map((row, index) => ({

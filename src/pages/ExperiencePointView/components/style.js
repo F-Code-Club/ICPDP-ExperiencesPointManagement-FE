@@ -76,7 +76,6 @@ export const styles = {
   selectField: {
     width: 130,
     borderRadius: 1,
-    padding: 0,
     "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select":
       {
         padding: "0",
