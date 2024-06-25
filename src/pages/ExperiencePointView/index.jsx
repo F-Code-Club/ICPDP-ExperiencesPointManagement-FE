@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import columnsSchema from "./column";
 import { ROLE } from "../../constant/core";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { formConfig } from "./formConfig";
+import { formConfig } from "./pointViewFormConfig";
 import { AuthContext } from "../../context/auth.context";
 const initRow = [
   {

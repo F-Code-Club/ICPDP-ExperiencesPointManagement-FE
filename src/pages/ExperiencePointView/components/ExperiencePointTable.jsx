@@ -13,10 +13,9 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
-import { toastError } from "../../../utils/toast";
 import WarningForm from "../../../components/Form/WarningModal";
 import StudentForm from "../../../components/Form/StudentForm";
-import { styles } from "./style";
+import {styles} from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { selectOptions } from "./selectOption";
@@ -28,7 +27,6 @@ const ExperiencePointTable = ({
   API_ENDPOINTS,
   accessToken,
   role,
-  exportOptions,
   formConfig,
 }) => {
   const [rows, setRows] = useState([]);
@@ -45,11 +43,12 @@ const ExperiencePointTable = ({
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [tables, setTables] = useState([
     {
-      tableID: 1,
+      tableID: 0,
       name: "Tab 1",
       row: [],
     },
   ]);
+  console.log(formConfig);
   const apiRef = useGridApiRef();
 
   useEffect(() => {
@@ -109,18 +108,28 @@ const ExperiencePointTable = ({
   const columns = columnsSchema(handleEditClick, handleDeleteClick);
 
   const handleTableChange = () => {
+    const newTableID = tables.length;
     const newTable = {
-      tableID: tables.length + 1,
-      name: `Tab ${tables.length + 1}`,
+      tableID: newTableID,
+      name: `Tab ${newTableID + 1}`,
       row: [],
     };
     setTables([...tables, newTable]);
-    setTabValue(tables.length); // Switch to the new tab
+    setTabValue(newTableID);
   };
 
   const handleTabDelete = (tableID) => {
-    setTables(tables.filter((table) => table.tableID !== tableID));
-    setTabValue(0); // Switch to the first tab
+    const newTables = tables
+      .filter((table) => table.tableID !== tableID)
+      .map((table, index) => ({
+        ...table,
+        tableID: index,
+        name: `Tab ${index + 1}`,
+      }));
+    setTables(newTables);
+    if (tabValue >= newTables.length) {
+      setTabValue(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
+    }
   };
 
   const handleClose = useCallback(() => {
@@ -140,7 +149,6 @@ const ExperiencePointTable = ({
         <Box className="flex justify-between w-full h-[36px] mb-[50px] ">
           <Box className="flex gap-3 h-full">
             <TextField
-              id="outlined-select-currency"
               select
               label="Năm học"
               placeholder="Năm học"
@@ -153,7 +161,6 @@ const ExperiencePointTable = ({
               ))}
             </TextField>
             <TextField
-              id="outlined-select-currency"
               select
               label="Kì học"
               placeholder="Kì học"
@@ -166,7 +173,6 @@ const ExperiencePointTable = ({
               ))}
             </TextField>
             <TextField
-              id="outlined-select-currency"
               select
               label="Tổ chức"
               placeholder="Tổ chức"
@@ -203,6 +209,7 @@ const ExperiencePointTable = ({
               setRows={setRows}
               setOriginalRows={setOriginalRows}
               rows={rows}
+              tables={tables.tableID}
               title={title}
               API_ENDPOINTS={API_ENDPOINTS}
               accessToken={accessToken}
@@ -254,7 +261,7 @@ const ExperiencePointTable = ({
                       },
                     }}
                     onClick={(e) => {
-                      e.stopPropagation();
+                      //   e.stopPropagation();
                       handleTabDelete(table.tableID);
                     }}
                   >

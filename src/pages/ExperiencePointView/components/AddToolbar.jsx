@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import StudentForm from "../../../components/Form/StudentForm";
-import { toastError } from "../../../utils/toast";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -78,11 +77,11 @@ const AddToolbar = ({
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
 
-      <StudentForm 
-        open={showForm} 
-        handleClose={handleCloseForm} 
-        handleSave={handleSave} 
-        title={title} 
+      <StudentForm
+        open={showForm}
+        handleClose={handleCloseForm}
+        handleSave={handleSave}
+        title={title}
         formConfig={formConfig}
       />
     </>
