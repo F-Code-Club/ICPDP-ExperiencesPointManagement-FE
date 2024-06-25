@@ -12,10 +12,10 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import WarningForm from "../../../components/Form/WarningModal";
 import StudentForm from "../../../components/Form/StudentForm";
-import {styles} from "./pointViewStyle";
+import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { selectOptions } from "./selectOption";
@@ -38,7 +38,7 @@ const ExperiencePointTable = ({
   const [rowToEdit, setRowToEdit] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [tabValue, setTabValue] = useState(0);
+  const [currentTab, setCurrentTab] = useState(0);
   const axios = useAxiosPrivate();
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [tables, setTables] = useState([
@@ -48,18 +48,20 @@ const ExperiencePointTable = ({
       row: [],
     },
   ]);
-  console.log(formConfig);
-  const apiRef = useGridApiRef();
-
+  console.log("table: ", tables);
   useEffect(() => {
     const rowsWithIds =
       initialRows?.map((row, index) => ({
         ...row,
         id: index + 1,
       })) || [];
+    const updatedTables = tables.map((table, index) =>
+      index === currentTab ? { ...table, rows: rowsWithIds } : table //i don't know why it's rows instead of row but it actually works
+    );
+    setTables(updatedTables);
     setRows(rowsWithIds);
     setOriginalRows(rowsWithIds);
-  }, [initialRows]);
+  }, [initialRows, currentTab]);
 
   useEffect(() => {
     const filteredRows = originalRows.filter(
@@ -85,11 +87,24 @@ const ExperiencePointTable = ({
       ...formData,
       id: rowToEdit,
     };
+
     const updatedRows = rows.map((row) =>
       row.id === rowToEdit ? updatedRow : row
     );
     setRows(updatedRows);
     setOriginalRows(updatedRows);
+
+    const updatedTables = tables.map((table) => {
+      if (table.tableID === currentTab) {
+        return {
+          ...table,
+          row: updatedRows,
+        };
+      }
+      return table;
+    });
+    setTables(updatedTables);
+
     handleClose();
   };
 
@@ -100,8 +115,28 @@ const ExperiencePointTable = ({
 
   const handleDelete = async (rowID) => {
     const newRows = rows.filter((row) => row.id !== rowID);
-    setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
-    setOriginalRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
+
+    const updatedRows = newRows.map((row, index) => ({
+      ...row,
+      id: index + 1,
+    }));
+
+    setRows(updatedRows);
+    setOriginalRows(updatedRows);
+
+    const updatedTables = tables.map((table) => {
+      if (table.tableID === currentTab) {
+        const updatedTableRows = table.row.filter((row) => row.id !== rowID);
+        return {
+          ...table,
+          row: updatedTableRows,
+        };
+      }
+      return table;
+    });
+
+    setTables(updatedTables);
+
     handleClose();
   };
 
@@ -115,9 +150,8 @@ const ExperiencePointTable = ({
       row: [],
     };
     setTables([...tables, newTable]);
-    setTabValue(newTableID);
+    setCurrentTab(newTableID);
   };
-
   const handleTabDelete = (tableID) => {
     const newTables = tables
       .filter((table) => table.tableID !== tableID)
@@ -127,8 +161,8 @@ const ExperiencePointTable = ({
         name: `Tab ${index + 1}`,
       }));
     setTables(newTables);
-    if (tabValue >= newTables.length) {
-      setTabValue(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
+    if (currentTab >= newTables.length) {
+      setCurrentTab(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
     }
   };
 
@@ -140,7 +174,7 @@ const ExperiencePointTable = ({
   }, []);
 
   const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
+    setCurrentTab(newValue);
   };
 
   return (
@@ -209,7 +243,9 @@ const ExperiencePointTable = ({
               setRows={setRows}
               setOriginalRows={setOriginalRows}
               rows={rows}
-              tables={tables.tableID}
+              currentTable={tables[currentTab]?.tableID}
+              tables={tables}
+              setTables={setTables}
               title={title}
               API_ENDPOINTS={API_ENDPOINTS}
               accessToken={accessToken}
@@ -219,7 +255,7 @@ const ExperiencePointTable = ({
           </Box>
         </Box>
         <Tabs
-          value={tabValue}
+          value={currentTab}
           onChange={handleTabChange}
           sx={{
             marginBottom: 2,
@@ -281,9 +317,9 @@ const ExperiencePointTable = ({
             <Box
               key={table.tableID}
               role="tabpanel"
-              hidden={tabValue !== index}
+              hidden={currentTab !== index}
             >
-              {tabValue === index && (
+              {currentTab === index && (
                 <DataGrid
                   checkboxSelection
                   onRowSelectionModelChange={(newRowSelectionModel) => {
@@ -292,7 +328,6 @@ const ExperiencePointTable = ({
                   rowSelectionModel={rowSelectionModel}
                   rows={table.row}
                   columns={columns}
-                  apiRef={apiRef}
                   rowHeight={55}
                   onCellDoubleClick={(e) => e.preventDefault()}
                   columnHeaderHeight={48}

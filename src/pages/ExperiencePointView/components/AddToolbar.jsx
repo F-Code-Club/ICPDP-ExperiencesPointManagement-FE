@@ -11,6 +11,9 @@ const AddToolbar = ({
   API_ENDPOINTS,
   accessToken,
   role,
+  tables,
+  setTables,
+  currentTable,
   formConfig,
 }) => {
   const [showForm, setShowForm] = useState(false);
@@ -56,6 +59,18 @@ const AddToolbar = ({
     };
     setRows((prevRows) => [...prevRows, newRow]);
     setOriginalRows((prevRows) => [...prevRows, newRow]);
+     const updatedTables = tables.map((table) => {
+      if (table.tableID === currentTable) {
+        const updatedRows = [...table.row, newRow];
+        return {
+          ...table,
+          row: updatedRows,
+        };
+      }
+      return table;
+    });
+
+    setTables(updatedTables);
     setShowForm(false);
   };
   return (
