@@ -51,7 +51,7 @@ function ManagementForm({
     return errors;
   };
 
-  const [info, setInfo] = useState(initState);
+  const [info, setInfo] = useState(initState || {});
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
   const [img, setImg] = useState(null);
   const [hovered, setHovered] = useState(false);

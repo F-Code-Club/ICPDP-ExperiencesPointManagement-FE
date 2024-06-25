@@ -1,26 +1,25 @@
 import { useState, useEffect, useCallback } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import {
+  Box,
+  TextField,
+  IconButton,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
- } from "@mui/material";
+  InputAdornment,
+  Tabs,
+  Tab,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { toastError } from "../../../utils/toast";
 import WarningForm from "../../../components/Form/WarningModal";
 import StudentForm from "../../../components/Form/StudentForm";
-import ManagementForm from "../../../components/Form/ManagementForm";
 import { styles } from "./style";
 import AddToolbar from "./AddToolbar";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { selectOptions } from "./selectOptions";
+import { selectOptions } from "./selectOption";
 
 const ExperiencePointTable = ({
   title,
@@ -41,10 +40,18 @@ const ExperiencePointTable = ({
   const [rowToEdit, setRowToEdit] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tabValue, setTabValue] = useState(0);
   const axios = useAxiosPrivate();
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [tables, setTables] = useState([
+    {
+      tableID: 1,
+      name: "Tab 1",
+      row: [],
+    },
+  ]);
   const apiRef = useGridApiRef();
-  console.log(columnsSchema);
+
   useEffect(() => {
     const rowsWithIds =
       initialRows?.map((row, index) => ({
@@ -75,40 +82,6 @@ const ExperiencePointTable = ({
   };
 
   const handleSaveClick = async (formData) => {
-    // const currentRow = rows.find((row) => row.id === rowToEdit);
-    // const ID = currentRow?.[`${role}ID`];
-
-    // try {
-    //   const updatedFormData = {
-    //     ...formData,
-    //     id: rowToEdit,
-    //     active: formData.active,
-    //   };
-
-    //   if (!formData.password || formData.password === currentRow?.password) {
-    //     delete updatedFormData.password;
-    //   }
-
-    //   const response = await axios.patch(
-    //     `${API_ENDPOINTS.UPDATE}/${ID}`,
-    //     { ...updatedFormData, id: rowToEdit, active: formData.active },
-    //     { headers: { Authorization: `Bearer ${accessToken}` } }
-    //   );
-    //   if (response.status === 200 || response.status === 201) {
-    //     const updatedRow = {
-    //       ...formData,
-    //       id: rowToEdit,
-    //     };
-    //     const updatedRows = rows.map((row) =>
-    //       row.id === rowToEdit ? updatedRow : row
-    //     );
-    //     setRows(updatedRows);
-    //     setOriginalRows(updatedRows);
-    //     handleClose();
-    //   }
-    // } catch (error) {
-    //   toastError("Updating Fail..");
-    // }
     const updatedRow = {
       ...formData,
       id: rowToEdit,
@@ -127,25 +100,6 @@ const ExperiencePointTable = ({
   };
 
   const handleDelete = async (rowID) => {
-    // const currentRow = rows.find((row) => row.id === rowID);
-    // const ID = currentRow?.[`${role}ID`];
-    // try {
-    //   const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
-    //     headers: { Authorization: `Bearer ${accessToken}` },
-    //   });
-
-    //   if (response.status === 200 || response.status === 201) {
-    //     const newRows = rows.filter((row) => row.id !== rowID);
-    //     setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
-    //     setOriginalRows(
-    //       newRows.map((row, index) => ({ ...row, id: index + 1 }))
-    //     );
-    //     handleClose();
-    //   }
-    // } catch (error) {
-    //   toastError("Deleting Fail..");
-    // }
-
     const newRows = rows.filter((row) => row.id !== rowID);
     setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
     setOriginalRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
@@ -154,12 +108,31 @@ const ExperiencePointTable = ({
 
   const columns = columnsSchema(handleEditClick, handleDeleteClick);
 
+  const handleTableChange = () => {
+    const newTable = {
+      tableID: tables.length + 1,
+      name: `Tab ${tables.length + 1}`,
+      row: [],
+    };
+    setTables([...tables, newTable]);
+    setTabValue(tables.length); // Switch to the new tab
+  };
+
+  const handleTabDelete = (tableID) => {
+    setTables(tables.filter((table) => table.tableID !== tableID));
+    setTabValue(0); // Switch to the first tab
+  };
+
   const handleClose = useCallback(() => {
     setShowDeleteForm(false);
     setShowEditForm(false);
     setRowToDelete(null);
     setShowExportForm(false);
   }, []);
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
     <Box sx={styles.pageContainer}>
@@ -238,71 +211,141 @@ const ExperiencePointTable = ({
             />
           </Box>
         </Box>
-        <Box className="w-full border-b-2 border-neutral mb-[32px] flex justify-start gap-8">
-          <AddIcon className="text-xl text-red-500 cursor-pointer" />
-        </Box>
-        <DataGrid
-          checkboxSelection
-          onRowSelectionModelChange={(newRowSelectionModel) => {
-            setRowSelectionModel(newRowSelectionModel);
-          }}
-          rowSelectionModel={rowSelectionModel}
-          rows={rows}
-          columns={columns}
-          apiRef={apiRef}
-          rowHeight={55}
-          onCellDoubleClick={(e) => e.preventDefault()}
-          columnHeaderHeight={48}
-          disableColumnSelector
-          disableRowSelectionOnClick
-          disableColumnResize
-          autoHeight
-          getRowId={(row) => row.id}
-          scrollbarSize={0}
-          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
           sx={{
-            ...styles.dataGrid,
-            color: "text.dark",
+            marginBottom: 2,
             width: "100%",
-            borderColor: "text.dark",
-            borderRadius: "8px",
-            overflowX: "auto",
-            "& .css-1jhlys9-MuiTablePagination-displayedRows": {
-              color: "text.dark",
-            },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-              {
-                color: "text.secondary",
-              },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
-              color: "text.dark",
-            },
-            "& .css-1b9e9gy": {
-              display: "none",
-            },
-            "& .css-1w53k9d-MuiDataGrid-overlay": {
-              backgroundColor: "transparent",
-            },
-            "& .MuiDataGrid-filler": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-1rtad1": {
-              position: "relative",
-            },
-            "& .MuiDataGrid-columnHeaderDraggableContainer": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
-              color: "text.dark",
-            },
-            "& .MuiDataGrid-cell": {
-              borderColor: "text.dark",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderColor: "text.dark",
-            },
+            height: 36,
+            borderBottom: "1px solid #E0E0E0",
           }}
-        />
+        >
+          {tables.map((table, index) => (
+            <Tab
+              key={table.tableID}
+              sx={{
+                position: "relative",
+                "& .css-qdjdaa-MuiButtonBase-root-MuiTab-root": {
+                  padding: 0,
+                },
+                color: "text.dark",
+                "&:focus": {
+                  color: "primary.main",
+                },
+              }}
+              label={
+                <Box
+                  tabIndex={0}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  <IconButton
+                    edge="start"
+                    sx={{
+                      position: "absolute",
+                      left: "5px",
+                      top: "-10px",
+                      "& .css-i4bv87-MuiSvgIcon-root": {
+                        width: "10px",
+                      },
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleTabDelete(table.tableID);
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                  {table.name}
+                </Box>
+              }
+            />
+          ))}
+          <Button onClick={handleTableChange}>
+            <AddIcon className="text-xl text-dark-text-color" />
+          </Button>
+        </Tabs>
+        <Box>
+          {tables.map((table, index) => (
+            <Box
+              key={table.tableID}
+              role="tabpanel"
+              hidden={tabValue !== index}
+            >
+              {tabValue === index && (
+                <DataGrid
+                  checkboxSelection
+                  onRowSelectionModelChange={(newRowSelectionModel) => {
+                    setRowSelectionModel(newRowSelectionModel);
+                  }}
+                  rowSelectionModel={rowSelectionModel}
+                  rows={table.row}
+                  columns={columns}
+                  apiRef={apiRef}
+                  rowHeight={55}
+                  onCellDoubleClick={(e) => e.preventDefault()}
+                  columnHeaderHeight={48}
+                  disableColumnSelector
+                  disableRowSelectionOnClick
+                  disableColumnResize
+                  autoHeight
+                  getRowId={(row) => row.id}
+                  scrollbarSize={0}
+                  initialState={{
+                    pagination: { paginationModel: { pageSize: 10 } },
+                  }}
+                  sx={{
+                    ...styles.dataGrid,
+                    color: "text.dark",
+                    width: "100%",
+                    borderColor: "text.dark",
+                    borderRadius: "8px",
+                    overflowX: "auto",
+                    "& .css-1jhlys9-MuiTablePagination-displayedRows": {
+                      color: "text.dark",
+                    },
+                    "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
+                      {
+                        color: "text.secondary",
+                      },
+                    "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
+                      color: "text.dark",
+                    },
+                    "& .css-1b9e9gy": {
+                      display: "none",
+                    },
+                    "& .css-1w53k9d-MuiDataGrid-overlay": {
+                      backgroundColor: "transparent",
+                    },
+                    "& .MuiDataGrid-filler": {
+                      backgroundColor: "primary.main",
+                    },
+                    "& .css-1rtad1": {
+                      position: "relative",
+                    },
+                    "& .MuiDataGrid-columnHeaderDraggableContainer": {
+                      backgroundColor: "primary.main",
+                    },
+                    "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked":
+                      {
+                        color: "text.dark",
+                      },
+                    "& .MuiDataGrid-cell": {
+                      borderColor: "text.dark",
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderColor: "text.dark",
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          ))}
+        </Box>
       </Box>
       <WarningForm
         open={showDeleteForm}

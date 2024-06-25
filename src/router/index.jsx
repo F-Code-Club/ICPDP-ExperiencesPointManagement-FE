@@ -15,7 +15,6 @@ import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
 import ExperiencePointView from "../pages/ExperiencePointView";
-
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes

@@ -1,10 +1,9 @@
-import ExperiencePointTable from "./components/PointViewTable";
+import ExperiencePointTable from "./components/ExperiencePointTable";
 import { useState, useContext, useEffect } from "react";
-import columnsSchema from "./columns";
-import { exportOptions } from "./exportOptions";
+import columnsSchema from "./column";
 import { ROLE } from "../../constant/core";
-import { formConfig } from "./formConfig";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { formConfig } from "./formConfig";
 import { AuthContext } from "../../context/auth.context";
 const initRow = [
   {
@@ -33,7 +32,6 @@ const ExperiencePointView = () => {
         columnsSchema={columnsSchema}
         // API_ENDPOINTS={API_ENDPOINTS.DEPARTMENTS}
         accessToken={accessToken}
-        exportOptions={exportOptions}
         role={ROLE.USER}
         formConfig={formConfig}
       />

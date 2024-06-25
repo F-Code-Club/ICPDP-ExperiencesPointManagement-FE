@@ -85,7 +85,6 @@ function StudentForm({
     }
 
     let finalInfo = { ...info };
-    console.log("final", finalInfo);
     handleSave(finalInfo);
     handleClose();
   };
