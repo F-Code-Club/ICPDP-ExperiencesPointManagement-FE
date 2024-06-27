@@ -48,15 +48,15 @@ const ExperiencePointTable = ({
       row: [],
     },
   ]);
-  console.log("table: ", tables);
   useEffect(() => {
     const rowsWithIds =
       initialRows?.map((row, index) => ({
         ...row,
         id: index + 1,
       })) || [];
-    const updatedTables = tables.map((table, index) =>
-      index === currentTab ? { ...table, rows: rowsWithIds } : table //i don't know why it's rows instead of row but it actually works
+    const updatedTables = tables.map(
+      (table, index) =>
+        index === currentTab ? { ...table, rows: rowsWithIds } : table //i don't know why it's rows instead of row but it actually works
     );
     setTables(updatedTables);
     setRows(rowsWithIds);
@@ -67,15 +67,18 @@ const ExperiencePointTable = ({
     const filteredRows = originalRows.filter(
       (row) =>
         row.name.toLowerCase().includes(searchQuery) ||
-        row.email.toLowerCase().includes(searchQuery)
+        row.studentID.toLowerCase().includes(searchQuery)
     );
+    const updatedTables = tables.map((table, index) =>
+      index === currentTab ? { ...table, rows: filteredRows } : table
+    );
+    setTables(updatedTables);
     setRows(filteredRows);
-  }, [searchQuery, originalRows]);
+  }, [searchQuery, originalRows, currentTab]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value.trim().toLowerCase());
   };
-
   const handleEditClick = (row) => {
     setRowToEdit(row.id);
     setIsEdit(true);
@@ -287,13 +290,18 @@ const ExperiencePointTable = ({
                   }}
                 >
                   <IconButton
-                    edge="start"
+                    edge="end"
                     sx={{
                       position: "absolute",
-                      left: "5px",
+                      left: "80%",
                       top: "-10px",
                       "& .css-i4bv87-MuiSvgIcon-root": {
-                        width: "10px",
+                        width: "12px",
+                      },
+                      "&:hover": {
+                        backgroundColor: "transparent",
+                        boxShadow: "none",
+                        color: "text.dark",
                       },
                     }}
                     onClick={(e) => {
@@ -321,11 +329,6 @@ const ExperiencePointTable = ({
             >
               {currentTab === index && (
                 <DataGrid
-                  checkboxSelection
-                  onRowSelectionModelChange={(newRowSelectionModel) => {
-                    setRowSelectionModel(newRowSelectionModel);
-                  }}
-                  rowSelectionModel={rowSelectionModel}
                   rows={table.row}
                   columns={columns}
                   rowHeight={55}

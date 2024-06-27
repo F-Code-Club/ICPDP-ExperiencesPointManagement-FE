@@ -97,6 +97,7 @@ const AddToolbar = ({
         handleClose={handleCloseForm}
         handleSave={handleSave}
         title={title}
+        func={"Thêm"}
         formConfig={formConfig}
       />
     </>

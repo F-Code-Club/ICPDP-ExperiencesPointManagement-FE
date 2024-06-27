@@ -10,7 +10,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 70,
+    width: 100,
     align: "left",
     editable: false,
   },
@@ -69,7 +69,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerName: "Điểm cộng",
     headerClassName: "header",
     type: "string",
-    width: 150,
+    width: 200,
     editable: true,
   },
   {
