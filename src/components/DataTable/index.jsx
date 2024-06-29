@@ -40,10 +40,10 @@ const DataTable = ({
   const apiRef = useGridApiRef();
 
   useEffect(() => {
-    const rowsWithIds = initialRows.map((row, index) => ({
+    const rowsWithIds = initialRows?.map((row, index) => ({
       ...row,
       id: index + 1,
-    }));
+    })) || [];
     setRows(rowsWithIds);
     setOriginalRows(rowsWithIds);
   }, [initialRows]);
@@ -72,12 +72,21 @@ const DataTable = ({
     const ID = currentRow?.[`${role}ID`];
 
     try {
+      const updatedFormData = {
+        ...formData,
+        id: rowToEdit,
+        active: formData.active,
+      };
+
+      if (!formData.password || formData.password === currentRow?.password) {
+        delete updatedFormData.password;
+      }
+
       const response = await axios.patch(
         `${API_ENDPOINTS.UPDATE}/${ID}`,
-        { ...formData, id: rowToEdit, active: formData.active },
+        { ...updatedFormData, id: rowToEdit, active: formData.active },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-
       if (response.status === 200 || response.status === 201) {
         const updatedRow = {
           ...formData,
@@ -102,8 +111,8 @@ const DataTable = ({
     setShowDeleteForm(true);
   };
 
-  const handleDelete = async (rowId) => {
-    const currentRow = rows.find((row) => row.id === rowToEdit);
+  const handleDelete = async (rowID) => {
+    const currentRow = rows.find((row) => row.id === rowID);
     const ID = currentRow?.[`${role}ID`];
     try {
       const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
@@ -111,7 +120,7 @@ const DataTable = ({
       });
 
       if (response.status === 200 || response.status === 201) {
-        const newRows = rows.filter((row) => row.id !== rowId);
+        const newRows = rows.filter((row) => row.id !== rowID);
         setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
         setOriginalRows(
           newRows.map((row, index) => ({ ...row, id: index + 1 }))
@@ -272,7 +281,6 @@ const DataTable = ({
             "& .MuiDataGrid-footerContainer": {
               borderColor: "text.dark",
             },
-            
           }}
         />
       </Box>
