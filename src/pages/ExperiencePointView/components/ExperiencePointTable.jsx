@@ -18,7 +18,6 @@ import StudentForm from "../../../components/Form/StudentForm";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { selectOptions } from "./selectOption";
 
 const ExperiencePointTable = ({
   title,
@@ -33,30 +32,76 @@ const ExperiencePointTable = ({
   const [originalRows, setOriginalRows] = useState([]);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [showExportForm, setShowExportForm] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [rowToEdit, setRowToEdit] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentTab, setCurrentTab] = useState(0);
   const axios = useAxiosPrivate();
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [clubs, setClubs] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [tables, setTables] = useState([
     {
       tableID: 0,
       name: "Tab 1",
-      row: [],
+      rows: [],
     },
   ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [semestersResponse, clubsResponse, departmentsResponse] =
+          await Promise.all([
+            axios.get(API_ENDPOINTS.SEMESTERS.GET, {
+              params: { page: 1, take: 0 },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }),
+            axios.get(API_ENDPOINTS.CLUBS.GET, {
+              params: { page: 1, take: 0 },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }),
+            axios.get(API_ENDPOINTS.DEPARTMENTS.GET, {
+              params: { page: 1, take: 0 },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }),
+          ]);
+
+        setSemesters(semestersResponse.data.data);
+        setClubs(clubsResponse.data.data);
+        setDepartments(departmentsResponse.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [
+    axios,
+    API_ENDPOINTS.SEMESTERS.GET,
+    API_ENDPOINTS.CLUBS.GET,
+    API_ENDPOINTS.DEPARTMENTS.GET,
+    accessToken,
+  ]);
+
   useEffect(() => {
     const rowsWithIds =
       initialRows?.map((row, index) => ({
         ...row,
         id: index + 1,
       })) || [];
-    const updatedTables = tables.map(
-      (table, index) =>
-        index === currentTab ? { ...table, rows: rowsWithIds } : table //i don't know why it's rows instead of row but it actually works
+    const updatedTables = tables.map((table, index) =>
+      index === currentTab ? { ...table, rows: rowsWithIds } : table
     );
     setTables(updatedTables);
     setRows(rowsWithIds);
@@ -79,6 +124,7 @@ const ExperiencePointTable = ({
   const handleSearch = (e) => {
     setSearchQuery(e.target.value.trim().toLowerCase());
   };
+
   const handleEditClick = (row) => {
     setRowToEdit(row.id);
     setIsEdit(true);
@@ -86,28 +132,16 @@ const ExperiencePointTable = ({
   };
 
   const handleSaveClick = async (formData) => {
-    const updatedRow = {
-      ...formData,
-      id: rowToEdit,
-    };
-
+    const updatedRow = { ...formData, id: rowToEdit };
     const updatedRows = rows.map((row) =>
       row.id === rowToEdit ? updatedRow : row
     );
     setRows(updatedRows);
     setOriginalRows(updatedRows);
-
-    const updatedTables = tables.map((table) => {
-      if (table.tableID === currentTab) {
-        return {
-          ...table,
-          row: updatedRows,
-        };
-      }
-      return table;
-    });
+    const updatedTables = tables.map((table) =>
+      table.tableID === currentTab ? { ...table, rows: updatedRows } : table
+    );
     setTables(updatedTables);
-
     handleClose();
   };
 
@@ -118,43 +152,32 @@ const ExperiencePointTable = ({
 
   const handleDelete = async (rowID) => {
     const newRows = rows.filter((row) => row.id !== rowID);
-
     const updatedRows = newRows.map((row, index) => ({
       ...row,
       id: index + 1,
     }));
-
     setRows(updatedRows);
     setOriginalRows(updatedRows);
-
-    const updatedTables = tables.map((table) => {
-      if (table.tableID === currentTab) {
-        const updatedTableRows = table.row.filter((row) => row.id !== rowID);
-        return {
-          ...table,
-          row: updatedTableRows,
-        };
-      }
-      return table;
-    });
-
+    const updatedTables = tables.map((table) =>
+      table.tableID === currentTab ? { ...table, rows: updatedRows } : table
+    );
     setTables(updatedTables);
-
     handleClose();
   };
 
-  const columns = columnsSchema(handleEditClick, handleDeleteClick);
+  const columns = columnsSchema(handleEditClick, handleDeleteClick, role);
 
   const handleTableChange = () => {
     const newTableID = tables.length;
     const newTable = {
       tableID: newTableID,
       name: `Tab ${newTableID + 1}`,
-      row: [],
+      rows: [],
     };
     setTables([...tables, newTable]);
     setCurrentTab(newTableID);
   };
+
   const handleTabDelete = (tableID) => {
     const newTables = tables
       .filter((table) => table.tableID !== tableID)
@@ -173,13 +196,24 @@ const ExperiencePointTable = ({
     setShowDeleteForm(false);
     setShowEditForm(false);
     setRowToDelete(null);
-    setShowExportForm(false);
+    setRowToEdit(null);
+    setIsEdit(false);
   }, []);
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
+  const years = Array.from(
+    new Set(
+      semesters
+        .map((semester) => {
+          const year = new Date(semester.startDate).getFullYear();
+          return isNaN(year) ? null : year;
+        })
+        .filter((year) => year !== null)
+    )
+  );
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -191,9 +225,9 @@ const ExperiencePointTable = ({
               placeholder="Năm học"
               sx={styles.selectField}
             >
-              {selectOptions.years.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
                 </MenuItem>
               ))}
             </TextField>
@@ -203,9 +237,9 @@ const ExperiencePointTable = ({
               placeholder="Kì học"
               sx={styles.selectField}
             >
-              {selectOptions.semesters.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {semesters.map((option) => (
+                <MenuItem key={option.semesterID} value={option.semester}>
+                  {`Kì ${option.semester}`}
                 </MenuItem>
               ))}
             </TextField>
@@ -215,9 +249,9 @@ const ExperiencePointTable = ({
               placeholder="Tổ chức"
               sx={styles.selectField}
             >
-              {selectOptions.clubs.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {[...departments, ...clubs].map((option) => (
+                <MenuItem key={option?.[`${role}ID`]} value={option?.name}>
+                  {option?.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -242,19 +276,21 @@ const ExperiencePointTable = ({
                 ),
               }}
             />
-            <AddToolbar
-              setRows={setRows}
-              setOriginalRows={setOriginalRows}
-              rows={rows}
-              currentTable={tables[currentTab]?.tableID}
-              tables={tables}
-              setTables={setTables}
-              title={title}
-              API_ENDPOINTS={API_ENDPOINTS}
-              accessToken={accessToken}
-              role={role}
-              formConfig={formConfig}
-            />
+            {role === "admin" && (
+              <AddToolbar
+                setRows={setRows}
+                setOriginalRows={setOriginalRows}
+                rows={rows}
+                currentTable={tables[currentTab]?.tableID}
+                tables={tables}
+                setTables={setTables}
+                title={title}
+                API_ENDPOINTS={API_ENDPOINTS}
+                accessToken={accessToken}
+                role={role}
+                formConfig={formConfig}
+              />
+            )}
           </Box>
         </Box>
         <Tabs
@@ -305,7 +341,7 @@ const ExperiencePointTable = ({
                       },
                     }}
                     onClick={(e) => {
-                      //   e.stopPropagation();
+                      e.stopPropagation();
                       handleTabDelete(table.tableID);
                     }}
                   >
@@ -329,7 +365,7 @@ const ExperiencePointTable = ({
             >
               {currentTab === index && (
                 <DataGrid
-                  rows={table.row}
+                  rows={table.rows}
                   columns={columns}
                   rowHeight={55}
                   onCellDoubleClick={(e) => e.preventDefault()}

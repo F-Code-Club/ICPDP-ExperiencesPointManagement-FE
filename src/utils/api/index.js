@@ -28,5 +28,12 @@ export const API_ENDPOINTS = {
     UPDATE: `/students`,
     DELETE: `/students`,
   },
+  SEMESTERS: {
+    GET_ALL: `/semesters`,
+    GET: `/semesters`,
+    ADD: `/semesters`,
+    UPDATE: `/semesters`,
+    DELETE: `/semesters`,
+  },
   
 };
