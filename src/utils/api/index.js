@@ -31,9 +31,16 @@ export const API_ENDPOINTS = {
   SEMESTERS: {
     GET_ALL: `/semesters`,
     GET: `/semesters`,
+    NOW: `/semesters/now`,
     ADD: `/semesters`,
     UPDATE: `/semesters`,
     DELETE: `/semesters`,
   },
-  
+  EVENTS: {
+    GET_ALL: `/events`,
+    GET: `/events`,
+    ADD: `/events`,
+    UPDATE: `/events`,
+    DELETE: `/events`,
+  },
 };

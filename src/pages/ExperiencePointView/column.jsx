@@ -74,7 +74,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
     },
   ];
 
-  if (role === "admin") {
+  if (role !== "admin") {
     columns.push({
       field: "actions",
       type: "actions",

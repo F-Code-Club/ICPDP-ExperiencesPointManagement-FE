@@ -6,6 +6,9 @@ import {
   Button,
   MenuItem,
   InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -17,6 +20,7 @@ import WarningForm from "../../../components/Form/WarningModal";
 import StudentForm from "../../../components/Form/StudentForm";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
+import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 
 const ExperiencePointTable = ({
@@ -27,11 +31,13 @@ const ExperiencePointTable = ({
   accessToken,
   role,
   formConfig,
+  organizationID,
 }) => {
   const [rows, setRows] = useState([]);
   const [originalRows, setOriginalRows] = useState([]);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [rowToEdit, setRowToEdit] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -39,60 +45,106 @@ const ExperiencePointTable = ({
   const [currentTab, setCurrentTab] = useState(0);
   const axios = useAxiosPrivate();
   const [semesters, setSemesters] = useState([]);
-  const [clubs, setClubs] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [tables, setTables] = useState([
-    {
-      tableID: 0,
-      name: "Tab 1",
-      rows: [],
-    },
-  ]);
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [semestersResponse, clubsResponse, departmentsResponse] =
-          await Promise.all([
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        };
+
+        let semestersResponse, organizationsResponse;
+
+        if (role === "admin") {
+          const [semestersRes, clubsRes, departmentsRes] = await Promise.all([
             axios.get(API_ENDPOINTS.SEMESTERS.GET, {
               params: { page: 1, take: 0 },
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
+              headers,
             }),
             axios.get(API_ENDPOINTS.CLUBS.GET, {
               params: { page: 1, take: 0 },
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
+              headers,
             }),
             axios.get(API_ENDPOINTS.DEPARTMENTS.GET, {
               params: { page: 1, take: 0 },
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
+              headers,
             }),
           ]);
 
-        setSemesters(semestersResponse.data.data);
-        setClubs(clubsResponse.data.data);
-        setDepartments(departmentsResponse.data.data);
+          semestersResponse = semestersRes.data.data;
+          const clubsData = clubsRes.data.data;
+          const departmentsData = departmentsRes.data.data;
+
+          organizationsResponse = [...clubsData, ...departmentsData];
+        } else {
+          [semestersResponse, organizationsResponse] = await Promise.all([
+            axios.get(API_ENDPOINTS.SEMESTERS.NOW, { headers }),
+            role === "club"
+              ? axios.get(`${API_ENDPOINTS.CLUBS.GET}/${organizationID}`, {
+                  headers,
+                })
+              : axios.get(
+                  `${API_ENDPOINTS.DEPARTMENTS.GET}/${organizationID}`,
+                  { headers }
+                ),
+          ]);
+
+          semestersResponse = [semestersResponse.data.data];
+          organizationsResponse = [organizationsResponse.data.data];
+        }
+
+        setSemesters(semestersResponse);
+        setOrganizations(organizationsResponse);
+        if (semestersResponse && organizationsResponse) {
+          fetchEvents(semestersResponse, organizationsResponse);
+        }
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching data:", err);
       }
     };
 
+    const fetchEvents = async (semestersData, organizationData) => {
+      if (!semestersData || !organizationData) {
+        return;
+      }
+      try {
+        const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
+          params: {
+            organization: organizationData[0][`${role}ID`] || organizationID,
+            year: semestersData[0]?.year,
+            semester: semestersData[0]?.semester,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const eventData = response.data.data;
+        setEvents(eventData);
+        setupTables(eventData);
+      } catch (err) {
+        console.log("Error fetching events:", err);
+      }
+    };
+
+    const setupTables = (eventsData) => {
+      const newTables = eventsData.map((event, index) => ({
+        eventID: event.eventID,
+        index: index + 1,
+        eventName: event.eventName,
+        rows: [],
+      }));
+      setTables(newTables);
+    };
+
     fetchData();
-  }, [
-    axios,
-    API_ENDPOINTS.SEMESTERS.GET,
-    API_ENDPOINTS.CLUBS.GET,
-    API_ENDPOINTS.DEPARTMENTS.GET,
-    accessToken,
-  ]);
+  }, [role, organizationID, accessToken, selectedOrganization, tables.length]);
 
   useEffect(() => {
     const rowsWithIds =
@@ -139,7 +191,7 @@ const ExperiencePointTable = ({
     setRows(updatedRows);
     setOriginalRows(updatedRows);
     const updatedTables = tables.map((table) =>
-      table.tableID === currentTab ? { ...table, rows: updatedRows } : table
+      table.eventID === currentTab ? { ...table, rows: updatedRows } : table
     );
     setTables(updatedTables);
     handleClose();
@@ -159,7 +211,7 @@ const ExperiencePointTable = ({
     setRows(updatedRows);
     setOriginalRows(updatedRows);
     const updatedTables = tables.map((table) =>
-      table.tableID === currentTab ? { ...table, rows: updatedRows } : table
+      table.eventID === currentTab ? { ...table, rows: updatedRows } : table
     );
     setTables(updatedTables);
     handleClose();
@@ -167,34 +219,77 @@ const ExperiencePointTable = ({
 
   const columns = columnsSchema(handleEditClick, handleDeleteClick, role);
 
-  const handleTableChange = () => {
-    const newTableID = tables.length;
-    const newTable = {
-      tableID: newTableID,
-      name: `Tab ${newTableID + 1}`,
-      rows: [],
-    };
-    setTables([...tables, newTable]);
-    setCurrentTab(newTableID);
-  };
+  const handleAddTable = async (formData) => {
+    setShowAddEventModal(true);
+    try {
+      if (
+        !semesters ||
+        !semesters[0] ||
+        !organizations ||
+        organizations.length === 0
+      ) {
+        console.error("Semesters or organizations data not available.");
+        return;
+      }
 
-  const handleTabDelete = (tableID) => {
-    const newTables = tables
-      .filter((table) => table.tableID !== tableID)
-      .map((table, index) => ({
-        ...table,
-        tableID: index,
-        name: `Tab ${index + 1}`,
-      }));
-    setTables(newTables);
-    if (currentTab >= newTables.length) {
-      setCurrentTab(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
+      const response = await axios.post(
+        API_ENDPOINTS.EVENTS.ADD,
+        {
+          ...formData,
+          year: semesters[0].year,
+          semester: semesters[0].semester,
+          organization: organizations[0][`${role}ID`] || organizationID,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = await response.data.data;
+      if (response.status === 200 || response.status === 201) {
+        const newTab = {
+          eventID: data.eventID,
+          index: tables.length,
+          tabName: data.eventName,
+          rows: [],
+        };
+        setTables((prevTables) => [...prevTables, newTab]);
+        setCurrentTab(newTab.eventID);
+      }
+    } catch (err) {
+      console.log("Error adding event:", err);
     }
   };
 
+  const handleTabDelete = async (eventID) => {
+    try {
+      const response = await axios.delete(
+        `${API_ENDPOINTS.EVENTS.DELETE}/${eventID}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200 || response.status === 204) {
+        const newTables = tables.filter((table) => table.eventID !== eventID);
+        setTables(newTables);
+        if (currentTab >= newTables.length) {
+          setCurrentTab(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
+        }
+      }
+    } catch {
+      console.log("Error deleting event:", err);
+    }
+  };
   const handleClose = useCallback(() => {
     setShowDeleteForm(false);
     setShowEditForm(false);
+    setShowAddEventModal(false);
     setRowToDelete(null);
     setRowToEdit(null);
     setIsEdit(false);
@@ -208,7 +303,7 @@ const ExperiencePointTable = ({
     new Set(
       semesters
         .map((semester) => {
-          const year = new Date(semester.startDate).getFullYear();
+          const year = semester?.year;
           return isNaN(year) ? null : year;
         })
         .filter((year) => year !== null)
@@ -219,42 +314,92 @@ const ExperiencePointTable = ({
       <Box sx={styles.innerContainer}>
         <Box className="flex justify-between w-full h-[36px] mb-[50px] ">
           <Box className="flex gap-3 h-full">
-            <TextField
-              select
-              label="Năm học"
-              placeholder="Năm học"
-              sx={styles.selectField}
-            >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Kì học"
-              placeholder="Kì học"
-              sx={styles.selectField}
-            >
-              {semesters.map((option) => (
-                <MenuItem key={option.semesterID} value={option.semester}>
-                  {`Kì ${option.semester}`}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Tổ chức"
-              placeholder="Tổ chức"
-              sx={styles.selectField}
-            >
-              {[...departments, ...clubs].map((option) => (
-                <MenuItem key={option?.[`${role}ID`]} value={option?.name}>
-                  {option?.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            <FormControl fullWidth size="small">
+              <InputLabel
+                htmlFor="year-select"
+                size="small"
+                sx={{ textAlign: "start" }}
+              >
+                Năm học
+              </InputLabel>
+              <Select
+                size="small"
+                label="Năm học"
+                value={semesters[0]?.year}
+                id="year-select"
+                sx={{ ...styles.selectField }}
+              >
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth size="small">
+              <InputLabel
+                htmlFor="semester-select"
+                sx={{ textAlign: "center" }}
+              >
+                Kì học
+              </InputLabel>
+              <Select
+                label="Kì học"
+                size="small"
+                defaultValue={semesters[0]?.semester}
+                id="semester-select"
+                sx={{ ...styles.selectField }}
+              >
+                {semesters.map((option) => (
+                  <MenuItem key={option.semesterID} value={option.semester}>
+                    {`Kì ${option.semester}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {role === "admin" ? (
+              <FormControl fullWidth size="small">
+                <InputLabel
+                  htmlFor="organization-select"
+                  sx={{ textAlign: "center" }}
+                >
+                  Tổ chức
+                </InputLabel>
+                <Select
+                  label="Tổ chức"
+                  size="small"
+                  value={selectedOrganization}
+                  id="organization-select"
+                  sx={{ ...styles.selectField }}
+                  onChange={(e) => setSelectedOrganization(e.target.value)}
+                >
+                  {organizations.map((option) => (
+                    <MenuItem
+                      key={option.clubID || option.departmentID}
+                      value={option.clubID || option.departmentID}
+                    >
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              <FormControl fullWidth size="small">
+                <TextField
+                  size="small"
+                  defaultValue="Tổ chức"
+                  value={organizations[0]?.name}
+                  label="Tổ chức"
+                  id="organization-select"
+                  sx={{ ...styles.selectField }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </FormControl>
+            )}
           </Box>
           <Box className="flex gap-3">
             <TextField
@@ -276,12 +421,12 @@ const ExperiencePointTable = ({
                 ),
               }}
             />
-            {role === "admin" && (
+            {role !== "admin" && (
               <AddToolbar
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
                 rows={rows}
-                currentTable={tables[currentTab]?.tableID}
+                currentTable={tables[currentTab]?.eventID}
                 tables={tables}
                 setTables={setTables}
                 title={title}
@@ -305,7 +450,8 @@ const ExperiencePointTable = ({
         >
           {tables.map((table, index) => (
             <Tab
-              key={table.tableID}
+              key={table.eventID}
+              value={table.eventID}
               sx={{
                 position: "relative",
                 "& .css-qdjdaa-MuiButtonBase-root-MuiTab-root": {
@@ -342,28 +488,28 @@ const ExperiencePointTable = ({
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleTabDelete(table.tableID);
+                      handleTabDelete(table.eventID);
                     }}
                   >
                     <ClearIcon />
                   </IconButton>
-                  {table.name}
+                  {table.eventName}
                 </Box>
               }
             />
           ))}
-          <Button onClick={handleTableChange}>
+          <Button onClick={handleAddTable}>
             <AddIcon className="text-xl text-dark-text-color" />
           </Button>
         </Tabs>
         <Box>
           {tables.map((table, index) => (
             <Box
-              key={table.tableID}
+              key={table.eventID}
               role="tabpanel"
-              hidden={currentTab !== index}
+              hidden={currentTab !== table.eventID}
             >
-              {currentTab === index && (
+              {currentTab === table.eventID && (
                 <DataGrid
                   rows={table.rows}
                   columns={columns}
@@ -445,6 +591,17 @@ const ExperiencePointTable = ({
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
         formConfig={formConfig}
+      />
+      <AddEventModal
+        open={showAddEventModal}
+        handleClose={handleClose}
+        handleAddTable={handleAddTable}
+        title={"Thêm Sự Kiện"}
+        func={"Thêm "}
+        setTables={setTables}
+        API_ENDPOINTS={API_ENDPOINTS}
+        currentTab={currentTab}
+        tables={tables}
       />
     </Box>
   );

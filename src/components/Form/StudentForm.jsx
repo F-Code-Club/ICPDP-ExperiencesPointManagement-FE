@@ -26,6 +26,7 @@ function StudentForm({
   editedRow,
   formConfig,
 }) {
+  
   const { fields, selectFields } = formConfig;
   // Initialize state dynamically based on formConfig
   const initState = () => {

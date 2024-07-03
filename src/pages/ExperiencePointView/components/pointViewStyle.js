@@ -76,13 +76,13 @@ export const styles = {
     borderRadius: 1,
     "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select":
       {
+        position: "relative",
         padding: "0",
         height: 36,
         display: "flex",
-        alignItems: "center",
-        paddingLeft: "15px",
       },
     "& .css-ub0vj5-MuiFormLabel-root-MuiInputLabel-root ": {
+      padding: "0",
       top: "-25%",
     },
   },

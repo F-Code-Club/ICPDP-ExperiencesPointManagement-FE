@@ -27,15 +27,16 @@ const ExperiencePointView = () => {
   const { accessToken } = auth;
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
   const role = decoded?.role || "";
-
+  const organizationID = decoded?.organizationID || "";
   return (
     <>
       <ExperiencePointTable
-        title="sinh viên"
+        title="Thêm sinh viên"
         initialRows={initRow}
         columnsSchema={columnsSchema}
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
+        organizationID={role === "admin" ? " " : organizationID}
         role={role}
         formConfig={formConfig}
       />
