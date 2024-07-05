@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "axios";
 import StudentForm from "../../../components/Form/StudentForm";
+import { toastError } from "../../../utils/toast";
+
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -10,69 +12,69 @@ const AddToolbar = ({
   title,
   API_ENDPOINTS,
   accessToken,
-  role,
   tables,
   setTables,
   currentTable,
   formConfig,
 }) => {
   const [showForm, setShowForm] = useState(false);
+
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
-  const axios = useAxiosPrivate();
+
   const handleSave = async (formData) => {
-    // -=API=-
-    // try {
-    //   const response = await axios.post(
-    //     API_ENDPOINTS.ADD,
-    //     { ...formData, role },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Accept: "*/*",
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     }
-    //   );
-    //   const data = await response.data.data;
-    //   if (response.status === 200 || response.status === 201) {
-    //     const id =
-    //       rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-    //     const newRow = {
-    //       ...data,
-    //       id,
-    //     };
-    //     setRows((prevRows) => [...prevRows, newRow]);
-    //     setOriginalRows((prevRows) => [...prevRows, newRow]);
-    //     setShowForm(false);
-    //   }
-    // } catch (error) {
-    //   toastError("Saving Fail..");
-    //   toastError(error.response.data.message);
-    // }
+    if (!accessToken) {
+      console.log("No access token");
+      return;
+    }
 
-    //-=No API=-
-    const id = rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-    const newRow = {
-      ...formData,
-      id,
-    };
-    setRows((prevRows) => [...prevRows, newRow]);
-    setOriginalRows((prevRows) => [...prevRows, newRow]);
-     const updatedTables = tables.map((table) => {
-      if (table.tableID === currentTable) {
-        const updatedRows = [...table.row, newRow];
-        return {
-          ...table,
-          row: updatedRows,
+    try {
+      const response = await axios.post(
+        `https://epm-be-dev.f-code.tech${API_ENDPOINTS.EVENTS_POINT.ADD}/${currentTable}`,
+        {
+          ...formData,
+          studentID: formData?.studentID.toUpperCase().trim(),
+          point: 5,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      if (response.data && response.data.data) {
+        const data = response.data.data;
+
+        const newRow = {
+          ...data,
+          name: data?.studentName,
+          point: data?.point,
+          role: data?.role,
+          id: rows.length + 1,
         };
-      }
-      return table;
-    });
 
-    setTables(updatedTables);
-    setShowForm(false);
+        setRows((prevRows) => [...prevRows, newRow]);
+        setOriginalRows((prevRows) => [...prevRows, newRow]);
+
+        const updatedTables = tables.map((table) =>
+          table?.eventID === currentTable
+            ? {
+                ...table,
+                rows: [...table.rows, newRow],
+              }
+            : table
+        );
+        setTables(updatedTables);
+
+        setShowForm(false);
+      } else {
+        toastError("No data received from the server.");
+      }
+    } catch (error) {
+      toastError("Saving failed.");
+      toastError(error.response?.data?.message);
+    }
   };
+
   return (
     <>
       <Button
@@ -97,6 +99,7 @@ const AddToolbar = ({
         handleClose={handleCloseForm}
         handleSave={handleSave}
         title={title}
+        accessToken={accessToken}
         func={"Thêm"}
         formConfig={formConfig}
       />

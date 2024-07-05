@@ -26,7 +26,6 @@ function StudentForm({
   editedRow,
   formConfig,
 }) {
-  
   const { fields, selectFields } = formConfig;
   // Initialize state dynamically based on formConfig
   const initState = () => {
@@ -36,7 +35,6 @@ function StudentForm({
     });
     if (selectFields) {
       selectFields.forEach((selectField) => {
-        
         initState[selectField.name] = selectField.options[0].value; // selectField.options[0].value is the default value
       });
     }
@@ -86,6 +84,7 @@ function StudentForm({
     }
 
     let finalInfo = { ...info };
+
     handleSave(finalInfo);
     handleClose();
   };

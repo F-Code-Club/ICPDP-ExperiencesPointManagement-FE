@@ -22,6 +22,7 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { set } from "react-hook-form";
 
 const ExperiencePointTable = ({
   title,
@@ -49,7 +50,9 @@ const ExperiencePointTable = ({
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
   const [events, setEvents] = useState([]);
+  const [deleting, setDeleting] = useState(false);
 
+  // Effect to fetch initial data for semesters and organizations
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,7 +60,6 @@ const ExperiencePointTable = ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         };
-
         let semestersResponse, organizationsResponse;
 
         if (role === "admin") {
@@ -66,11 +68,11 @@ const ExperiencePointTable = ({
               params: { page: 1, take: 0 },
               headers,
             }),
-            axios.get(API_ENDPOINTS.CLUBS.GET, {
+            axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {
               params: { page: 1, take: 0 },
               headers,
             }),
-            axios.get(API_ENDPOINTS.DEPARTMENTS.GET, {
+            axios.get(API_ENDPOINTS.DEPARTMENTS.GET_ALL, {
               params: { page: 1, take: 0 },
               headers,
             }),
@@ -97,7 +99,6 @@ const ExperiencePointTable = ({
           semestersResponse = [semestersResponse.data.data];
           organizationsResponse = [organizationsResponse.data.data];
         }
-
         setSemesters(semestersResponse);
         setOrganizations(organizationsResponse);
         if (semestersResponse && organizationsResponse) {
@@ -133,32 +134,61 @@ const ExperiencePointTable = ({
       }
     };
 
-    const setupTables = (eventsData) => {
-      const newTables = eventsData.map((event, index) => ({
-        eventID: event.eventID,
-        index: index + 1,
-        eventName: event.eventName,
-        rows: [],
-      }));
-      setTables(newTables);
-    };
-
     fetchData();
-  }, [role, organizationID, accessToken, selectedOrganization, tables.length]);
+  }, [role, organizationID, accessToken]);
 
+  // Effect to fetch rows for the current tab when it changes
   useEffect(() => {
-    const rowsWithIds =
-      initialRows?.map((row, index) => ({
-        ...row,
-        id: index + 1,
-      })) || [];
-    const updatedTables = tables.map((table, index) =>
-      index === currentTab ? { ...table, rows: rowsWithIds } : table
-    );
-    setTables(updatedTables);
-    setRows(rowsWithIds);
-    setOriginalRows(rowsWithIds);
-  }, [initialRows, currentTab]);
+    if (currentTab !== 0) {
+      fetchRows(currentTab);
+    }
+  }, [currentTab]);
+
+  // Function to fetch rows for a given event ID
+  const fetchRows = async (eventID) => {
+    try {
+      const response = await axios.get(
+        `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
+        {
+          params: {
+            page: 1,
+            take: 0,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const data = response.data.data;
+      console.log(data);
+      const rowsWithIds =
+        data.map((row, index) => ({
+          ...row,
+          name: row?.studentName,
+          id: index + 1,
+        })) || [];
+      setRows(rowsWithIds);
+      setOriginalRows(rowsWithIds);
+      const updatedTables = tables.map((table) =>
+        table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+      );
+      setTables(updatedTables);
+    } catch (err) {
+      console.log("Error fetching rows:", err);
+    }
+  };
+
+  // Function to setup tables for events
+  const setupTables = (eventsData) => {
+    const newTables = eventsData.map((event, index) => ({
+      eventID: event.eventID,
+      index: index + 1,
+      eventName: event.eventName,
+      rows: [],
+    }));
+    setTables(newTables);
+  };
 
   useEffect(() => {
     const filteredRows = originalRows.filter(
@@ -173,16 +203,19 @@ const ExperiencePointTable = ({
     setRows(filteredRows);
   }, [searchQuery, originalRows, currentTab]);
 
+  // Handler for search input
   const handleSearch = (e) => {
     setSearchQuery(e.target.value.trim().toLowerCase());
   };
 
+  // Handler for edit button click
   const handleEditClick = (row) => {
     setRowToEdit(row.id);
     setIsEdit(true);
     setShowEditForm(true);
   };
 
+  // Handler for save button click in the edit form
   const handleSaveClick = async (formData) => {
     const updatedRow = { ...formData, id: rowToEdit };
     const updatedRows = rows.map((row) =>
@@ -197,28 +230,42 @@ const ExperiencePointTable = ({
     handleClose();
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRowToDelete(id);
+  // Handler for delete button click
+  const handleDeleteClick = (deleteRow) => {
+    setRowToDelete(deleteRow);
     setShowDeleteForm(true);
   };
 
-  const handleDelete = async (rowID) => {
-    const newRows = rows.filter((row) => row.id !== rowID);
-    const updatedRows = newRows.map((row, index) => ({
-      ...row,
-      id: index + 1,
-    }));
-    setRows(updatedRows);
-    setOriginalRows(updatedRows);
-    const updatedTables = tables.map((table) =>
-      table.eventID === currentTab ? { ...table, rows: updatedRows } : table
-    );
-    setTables(updatedTables);
-    handleClose();
+  // Handler for delete confirmation
+  const handleDelete = async (deleteRow) => {
+    const studentID = deleteRow.studentID;
+    try {
+      const response = await axios.delete(
+        `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`
+      );
+      if (response.status === 200 || response.status === 204) {
+        const newRows = rows.filter((row) => row.studentID !== studentID);
+        const updatedRows = newRows.map((row, index) => ({
+          ...row,
+          id: index + 1,
+        }));
+        setRows(updatedRows);
+        setOriginalRows(updatedRows);
+        const updatedTables = tables.map((table) =>
+          table.eventID === currentTab ? { ...table, rows: updatedRows } : table
+        );
+        setTables(updatedTables);
+        handleClose();
+      }
+    } catch (err) {
+      console.log("Error deleting row:", err);
+    }
   };
 
+  // Columns schema for the data grid
   const columns = columnsSchema(handleEditClick, handleDeleteClick, role);
 
+  // Handler for adding a new table/event
   const handleAddTable = async (formData) => {
     setShowAddEventModal(true);
     try {
@@ -236,6 +283,7 @@ const ExperiencePointTable = ({
         API_ENDPOINTS.EVENTS.ADD,
         {
           ...formData,
+
           year: semesters[0].year,
           semester: semesters[0].semester,
           organization: organizations[0][`${role}ID`] || organizationID,
@@ -253,7 +301,7 @@ const ExperiencePointTable = ({
         const newTab = {
           eventID: data.eventID,
           index: tables.length,
-          tabName: data.eventName,
+          eventName: data.eventName,
           rows: [],
         };
         setTables((prevTables) => [...prevTables, newTab]);
@@ -261,6 +309,60 @@ const ExperiencePointTable = ({
       }
     } catch (err) {
       console.log("Error adding event:", err);
+    }
+  };
+  // Handler for closing modals
+  const handleClose = () => {
+    setShowDeleteForm(false);
+    setShowEditForm(false);
+    setShowAddEventModal(false);
+    setRowToDelete(null);
+    setRowToEdit(null);
+    setIsEdit(false);
+  };
+
+  // Handler for changing tabs
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
+
+  // Filter rows based on search query
+  const filteredRows = searchQuery
+    ? rows.filter((row) =>
+        Object.values(row).some(
+          (value) =>
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchQuery)
+        )
+      )
+    : rows;
+
+  // Props for search input
+
+  // Handler for organization selection change (admin only)
+  const handleOrganizationChange = async (event) => {
+    const organization = event.target.value;
+    setSelectedOrganization(organization);
+
+    try {
+      const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
+        params: {
+          organization: organization.organizationID,
+          year: semesters[0]?.year,
+          semester: semesters[0]?.semester,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const eventData = response.data.data;
+      setEvents(eventData);
+      setupTables(eventData);
+      setCurrentTab(eventData.length > 0 ? eventData[0].eventID : 0);
+    } catch (err) {
+      console.log("Error fetching events for selected organization:", err);
     }
   };
 
@@ -271,7 +373,7 @@ const ExperiencePointTable = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: ` Bearer ${accessToken}`,
           },
         }
       );
@@ -286,25 +388,13 @@ const ExperiencePointTable = ({
       console.log("Error deleting event:", err);
     }
   };
-  const handleClose = useCallback(() => {
-    setShowDeleteForm(false);
-    setShowEditForm(false);
-    setShowAddEventModal(false);
-    setRowToDelete(null);
-    setRowToEdit(null);
-    setIsEdit(false);
-  }, []);
-
-  const handleTabChange = (event, newValue) => {
-    setCurrentTab(newValue);
-  };
 
   const years = Array.from(
     new Set(
       semesters
         .map((semester) => {
           const year = semester?.year;
-          return isNaN(year) ? null : year;
+          return year && !isNaN(year) ? year : null;
         })
         .filter((year) => year !== null)
     )
@@ -426,7 +516,7 @@ const ExperiencePointTable = ({
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
                 rows={rows}
-                currentTable={tables[currentTab]?.eventID}
+                currentTable={currentTab}
                 tables={tables}
                 setTables={setTables}
                 title={title}
@@ -493,7 +583,7 @@ const ExperiencePointTable = ({
                   >
                     <ClearIcon />
                   </IconButton>
-                  {table.eventName}
+                  {table?.eventName}
                 </Box>
               }
             />

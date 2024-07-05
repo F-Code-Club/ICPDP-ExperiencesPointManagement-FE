@@ -59,7 +59,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       renderCell: (params) => {
         return (
           <span>
-            {params.value === "Thành viên" ? "Thành viên" : "Ban tổ chức"}
+            {params.value === "member" ? "Thành viên" : "Ban tổ chức"}
           </span>
         );
       },
@@ -93,7 +93,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => handleDeleteClick(row.id)}
+          onClick={() => handleDeleteClick(row)}
           color="inherit"
         />,
       ],
