@@ -50,7 +50,6 @@ function StudentForm({
 
   const [info, setInfo] = useState(initState);
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
-  const axios = useAxiosPrivate();
 
   // Handle input changes for text fields
   const handleChange = (e) => {

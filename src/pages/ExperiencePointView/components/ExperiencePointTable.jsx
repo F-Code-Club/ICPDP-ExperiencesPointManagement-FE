@@ -52,7 +52,6 @@ const ExperiencePointTable = ({
   const [events, setEvents] = useState([]);
   const [deleting, setDeleting] = useState(false);
 
-  // Effect to fetch initial data for semesters and organizations
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -137,14 +136,12 @@ const ExperiencePointTable = ({
     fetchData();
   }, [role, organizationID, accessToken]);
 
-  // Effect to fetch rows for the current tab when it changes
   useEffect(() => {
     if (currentTab !== 0) {
       fetchRows(currentTab);
     }
   }, [currentTab]);
 
-  // Function to fetch rows for a given event ID
   const fetchRows = async (eventID) => {
     try {
       const response = await axios.get(
@@ -179,7 +176,6 @@ const ExperiencePointTable = ({
     }
   };
 
-  // Function to setup tables for events
   const setupTables = (eventsData) => {
     const newTables = eventsData.map((event, index) => ({
       eventID: event.eventID,
@@ -193,11 +189,11 @@ const ExperiencePointTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name.toLowerCase().includes(searchQuery) ||
-        row.studentID.toLowerCase().includes(searchQuery)
+        row.name?.toLowerCase().includes(searchQuery) ||
+        row.studentID?.toLowerCase().includes(searchQuery)
     );
-    const updatedTables = tables.map((table, index) =>
-      index === currentTab ? { ...table, rows: filteredRows } : table
+    const updatedTables = tables.map((table) =>
+      table.eventID === currentTab ? { ...table, rows: filteredRows } : table
     );
     setTables(updatedTables);
     setRows(filteredRows);
@@ -209,25 +205,38 @@ const ExperiencePointTable = ({
   };
 
   // Handler for edit button click
-  const handleEditClick = (row) => {
-    setRowToEdit(row.id);
+  const handleEditClick = (editRow) => {
+    setRowToEdit(editRow);
     setIsEdit(true);
     setShowEditForm(true);
   };
 
   // Handler for save button click in the edit form
   const handleSaveClick = async (formData) => {
-    const updatedRow = { ...formData, id: rowToEdit };
-    const updatedRows = rows.map((row) =>
-      row.id === rowToEdit ? updatedRow : row
-    );
-    setRows(updatedRows);
-    setOriginalRows(updatedRows);
-    const updatedTables = tables.map((table) =>
-      table.eventID === currentTab ? { ...table, rows: updatedRows } : table
-    );
-    setTables(updatedTables);
-    handleClose();
+    try {
+      const response = await axios.patch(
+        `${API_ENDPOINTS.EVENTS_POINT.UPDATE}/${currentTab}&${rowToEdit.studentID}`,
+        {
+          ...formData,
+          name: rowToEdit?.studentName,
+        }
+      );
+      const data = await response.data.data;
+      const updatedRow = { ...data, id: rowToEdit.id, name: data?.studentName };
+      const updatedRows = rows.map((row) =>
+        row.studentID === rowToEdit.studentID ? updatedRow : row
+      );
+      setRows(updatedRows);
+      setOriginalRows(updatedRows);
+      const updatedTables = tables.map((table) =>
+        table.eventID === currentTab ? { ...table, rows: updatedRows } : table
+      );
+      setTables(updatedTables);
+      handleClose();
+      console.log(response);
+    } catch (err) {
+      console.log("Error updating row:", err);
+    }
   };
 
   // Handler for delete button click
@@ -262,7 +271,6 @@ const ExperiencePointTable = ({
     }
   };
 
-  // Columns schema for the data grid
   const columns = columnsSchema(handleEditClick, handleDeleteClick, role);
 
   // Handler for adding a new table/event
@@ -327,17 +335,15 @@ const ExperiencePointTable = ({
   };
 
   // Filter rows based on search query
-  const filteredRows = searchQuery
-    ? rows.filter((row) =>
-        Object.values(row).some(
-          (value) =>
-            typeof value === "string" &&
-            value.toLowerCase().includes(searchQuery)
-        )
-      )
-    : rows;
-
-  // Props for search input
+  // const filteredRows = searchQuery
+  //   ? rows.filter((row) =>
+  //       Object.values(row).some(
+  //         (value) =>
+  //           typeof value === "string" &&
+  //           value.toLowerCase().includes(searchQuery)
+  //       )
+  //     )
+  //   : rows;
 
   // Handler for organization selection change (admin only)
   const handleOrganizationChange = async (event) => {
@@ -515,7 +521,9 @@ const ExperiencePointTable = ({
               <AddToolbar
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
-                rows={rows}
+                rows={
+                  tables.find((table) => table.eventID === currentTab)?.rows
+                }
                 currentTable={currentTab}
                 tables={tables}
                 setTables={setTables}
@@ -675,7 +683,7 @@ const ExperiencePointTable = ({
         handleClose={handleClose}
         title={`Chỉnh sửa ${title}`}
         handleSave={handleSaveClick}
-        editedRow={rows.find((row) => row.id === rowToEdit)}
+        editedRow={rowToEdit}
         func={"Sửa"}
         isEdit={isEdit}
         API_ENDPOINTS={API_ENDPOINTS}

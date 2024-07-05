@@ -50,7 +50,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       editable: true,
     },
     {
-      field: "participantRole",
+      field: "role",
       headerName: "Tư cách tham gia",
       headerClassName: "header",
       type: "string",
@@ -65,11 +65,13 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       },
     },
     {
-      field: "bonus",
+      field: "point",
       headerName: "Điểm cộng",
       headerClassName: "header",
       type: "string",
-      width: 200,
+      headerAlign: "left",
+      align: "left",
+      width: 150,
       editable: true,
     },
   ];
@@ -80,7 +82,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       type: "actions",
       headerClassName: "header",
       headerName: "Hành động",
-      width: 150,
+      width: 230,
       cellClassName: "actions",
       getActions: ({ row }) => [
         <GridActionsCellItem

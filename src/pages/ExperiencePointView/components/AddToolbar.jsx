@@ -34,44 +34,36 @@ const AddToolbar = ({
         {
           ...formData,
           studentID: formData?.studentID.toUpperCase().trim(),
-          point: 5,
+          point: parseInt(formData?.point) || 5,
         },
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-
-      if (response.data && response.data.data) {
-        const data = response.data.data;
-
-        const newRow = {
-          ...data,
-          name: data?.studentName,
-          point: data?.point,
-          role: data?.role,
-          id: rows.length + 1,
-        };
-
-        setRows((prevRows) => [...prevRows, newRow]);
-        setOriginalRows((prevRows) => [...prevRows, newRow]);
-
-        const updatedTables = tables.map((table) =>
-          table?.eventID === currentTable
-            ? {
-                ...table,
-                rows: [...table.rows, newRow],
-              }
-            : table
-        );
-        setTables(updatedTables);
-
-        setShowForm(false);
-      } else {
-        toastError("No data received from the server.");
-      }
+      const data = await response.data.data;
+      const newRow = {
+        ...data,
+        name: data?.studentName,
+        point: data?.point,
+        role: data?.role,
+        eventID: currentTable,
+        id: rows.length + 1,
+      };
+      setRows((prevRows) => [...prevRows, newRow]);
+      setOriginalRows((prevRows) => [...prevRows, newRow]);
+      const updatedTables = tables.map((table) =>
+        table?.eventID === currentTable
+          ? {
+              ...table,
+              rows: [...table.rows, newRow],
+            }
+          : table
+      );
+      setTables(updatedTables);
+      setShowForm(false);
     } catch (error) {
       toastError("Saving failed.");
-      toastError(error.response?.data?.message);
+      toastError(error);
     }
   };
 
