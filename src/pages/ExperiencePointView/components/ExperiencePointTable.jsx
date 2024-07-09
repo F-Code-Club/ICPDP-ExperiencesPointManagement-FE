@@ -50,8 +50,10 @@ const ExperiencePointTable = ({
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
   const [events, setEvents] = useState([]);
-  const [deleting, setDeleting] = useState(false);
-
+  const [selectedYear, setSelectedYear] = useState(0);
+  const [selectedSemester, setSelectedSemester] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +86,10 @@ const ExperiencePointTable = ({
           organizationsResponse = [...clubsData, ...departmentsData];
         } else {
           [semestersResponse, organizationsResponse] = await Promise.all([
-            axios.get(API_ENDPOINTS.SEMESTERS.NOW, { headers }),
+            axios.get(API_ENDPOINTS.SEMESTERS.GET, {
+              params: { page: 1, take: 0 },
+              headers,
+            }),
             role === "club"
               ? axios.get(`${API_ENDPOINTS.CLUBS.GET}/${organizationID}`, {
                   headers,
@@ -95,7 +100,8 @@ const ExperiencePointTable = ({
                 ),
           ]);
 
-          semestersResponse = [semestersResponse.data.data];
+          semestersResponse = semestersResponse.data.data;
+          console.log(semestersResponse);
           organizationsResponse = [organizationsResponse.data.data];
         }
         setSemesters(semestersResponse);
@@ -116,8 +122,8 @@ const ExperiencePointTable = ({
         const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
           params: {
             organization: organizationData[0][`${role}ID`] || organizationID,
-            year: semestersData[0]?.year,
-            semester: semestersData[0]?.semester,
+            year: selectedYear,
+            semester: selectedSemester,
           },
           headers: {
             "Content-Type": "application/json",
@@ -126,6 +132,7 @@ const ExperiencePointTable = ({
         });
 
         const eventData = response.data.data;
+        console.log("Event ", eventData);
         setEvents(eventData);
         setupTables(eventData);
       } catch (err) {
@@ -134,13 +141,13 @@ const ExperiencePointTable = ({
     };
 
     fetchData();
-  }, [role, organizationID, accessToken]);
+  }, [role, organizationID, accessToken, selectedYear, selectedSemester]);
 
   useEffect(() => {
     if (currentTab !== 0) {
       fetchRows(currentTab);
     }
-  }, [currentTab]);
+  }, [currentTab, currentPage, pageSize]);
 
   const fetchRows = async (eventID) => {
     try {
@@ -148,8 +155,8 @@ const ExperiencePointTable = ({
         `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
         {
           params: {
-            page: 1,
-            take: 0,
+            page: currentPage + 1,
+            take: pageSize,
           },
           headers: {
             "Content-Type": "application/json",
@@ -158,7 +165,7 @@ const ExperiencePointTable = ({
         }
       );
       const data = response.data.data;
-      console.log(data);
+      console.log("Rows Fetching ", data);
       const rowsWithIds =
         data.map((row, index) => ({
           ...row,
@@ -395,6 +402,17 @@ const ExperiencePointTable = ({
     }
   };
 
+  // Handler for page size change
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+  };
+
+  // Handler for page change
+  const handlePageChange = (newPage) => {
+    console.log(newPage);
+    setCurrentPage(newPage);
+  };
+
   const years = Array.from(
     new Set(
       semesters
@@ -405,6 +423,7 @@ const ExperiencePointTable = ({
         .filter((year) => year !== null)
     )
   );
+
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -422,6 +441,7 @@ const ExperiencePointTable = ({
                 size="small"
                 label="Năm học"
                 value={semesters[0]?.year}
+                onChange={(e) => setSelectedYear(e.target.value)}
                 id="year-select"
                 sx={{ ...styles.selectField }}
               >
@@ -445,13 +465,16 @@ const ExperiencePointTable = ({
                 size="small"
                 defaultValue={semesters[0]?.semester}
                 id="semester-select"
+                onChange={(e) => setSelectedSemester(e.target.value)}
                 sx={{ ...styles.selectField }}
               >
-                {semesters.map((option) => (
-                  <MenuItem key={option.semesterID} value={option.semester}>
-                    {`Kì ${option.semester}`}
-                  </MenuItem>
-                ))}
+                {semesters
+                  .filter((option) => option.year === selectedYear)
+                  .map((option) => (
+                    <MenuItem key={option.semesterID} value={option.semester}>
+                      {`Kì ${option.semester}`}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
 
@@ -620,9 +643,14 @@ const ExperiencePointTable = ({
                   autoHeight
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
-                  initialState={{
-                    pagination: { paginationModel: { pageSize: 10 } },
-                  }}
+                  pageSize={pageSize}
+                  onPageSizeChange={(newPageSize) =>
+                    handlePageSizeChange(newPageSize)
+                  }
+                  rowsPerPageOptions={[10]}
+                  pagination
+                  paginationMode="server"
+                  onPageChange={(newPage) => handlePageChange(newPage)}
                   sx={{
                     ...styles.dataGrid,
                     color: "text.dark",
