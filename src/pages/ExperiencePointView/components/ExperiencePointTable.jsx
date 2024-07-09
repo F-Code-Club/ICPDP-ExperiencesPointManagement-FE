@@ -54,6 +54,13 @@ const ExperiencePointTable = ({
   const [selectedSemester, setSelectedSemester] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [pageLoading, setPageLoading] = useState(true);
+  // const [pageState, setPageState] = {
+  //   pageSize: 10,
+  //   currentPage: 0,
+  //   isLoading:
+  // }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -143,45 +150,52 @@ const ExperiencePointTable = ({
     fetchData();
   }, [role, organizationID, accessToken, selectedYear, selectedSemester]);
 
-  useEffect(() => {
-    if (currentTab !== 0) {
-      fetchRows(currentTab);
-    }
-  }, [currentTab, currentPage, pageSize]);
+  // useEffect(() => {
+  //   if (currentTab !== 0) {
+  //     fetchRows(currentTab);
+  //   }
+  // }, [currentTab, currentPage, pageSize]);
 
-  const fetchRows = async (eventID) => {
-    try {
-      const response = await axios.get(
-        `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
-        {
-          params: {
-            page: currentPage + 1,
-            take: pageSize,
-          },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const data = response.data.data;
-      console.log("Rows Fetching ", data);
-      const rowsWithIds =
-        data.map((row, index) => ({
-          ...row,
-          name: row?.studentName,
-          id: index + 1,
-        })) || [];
-      setRows(rowsWithIds);
-      setOriginalRows(rowsWithIds);
-      const updatedTables = tables.map((table) =>
-        table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
-      );
-      setTables(updatedTables);
-    } catch (err) {
-      console.log("Error fetching rows:", err);
-    }
-  };
+  useEffect(() => {
+    const fetchRows = async (eventID) => {
+      setPageLoading(true);
+      try {
+        const response = await axios.get(
+          `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
+          {
+            params: {
+              page: currentPage + 1,
+              take: pageSize,
+            },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const data = response.data.data;
+        const totalPage = response.data.totalPage;
+        console.log("Rows Fetching ", data);
+        const rowsWithIds =
+          data.map((row, index) => ({
+            ...row,
+            name: row?.studentName,
+            id: index + 1,
+          })) || [];
+        setRows(rowsWithIds);
+        setOriginalRows(rowsWithIds);
+        const updatedTables = tables.map((table) =>
+          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+        );
+        setTables(updatedTables);
+        setTotal(totalPage);
+      } catch (err) {
+        console.log("Error fetching rows:", err);
+      }
+      setPageLoading(false);
+    };
+    fetchRows(currentTab);
+  }, [currentPage, pageSize, currentTab]);
 
   const setupTables = (eventsData) => {
     const newTables = eventsData.map((event, index) => ({
@@ -339,6 +353,7 @@ const ExperiencePointTable = ({
   // Handler for changing tabs
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
+    setCurrentPage(0);
   };
 
   // Filter rows based on search query
@@ -402,16 +417,14 @@ const ExperiencePointTable = ({
     }
   };
 
-  // Handler for page size change
-  const handlePageSizeChange = (newPageSize) => {
-    setPageSize(newPageSize);
-  };
-
-  // Handler for page change
   const handlePageChange = (newPage) => {
-    console.log(newPage);
-    setCurrentPage(newPage);
+    setCurrentPage(newPage.page);
   };
+  console.log(currentPage);
+  // const handlePageSizeChange = (newPage) => {
+  //   setPageSize(newPage);
+  //   setCurrentPage(0);
+  // };
 
   const years = Array.from(
     new Set(
@@ -643,14 +656,33 @@ const ExperiencePointTable = ({
                   autoHeight
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
-                  pageSize={pageSize}
-                  onPageSizeChange={(newPageSize) =>
-                    handlePageSizeChange(newPageSize)
-                  }
+                  // pageSize={pageSize}
+                  // onPageSizeChange={(newPageSize) =>
+                  //   handlePageSizeChange(newPageSize)
+                  // }
+                  // rowsPerPageOptions={[10]}
+                  // pagination
+                  // paginationMode="server"
+                  // onPageChange={(newPage) => {
+                  //   return handlePageChange(newPage);
+                  // }}
+                  // loading={pageLoading}
+                  // initialState={{
+                  //   pagination: {
+                  //     paginationModel: { pageSize: 10, page: 1 },
+                  //   },
+                  // }}
+
                   rowsPerPageOptions={[10]}
                   pagination
                   paginationMode="server"
-                  onPageChange={(newPage) => handlePageChange(newPage)}
+                  paginationModel={{
+                    pageSize: pageSize,
+                    page: currentPage,
+                  }}
+                  onPaginationModelChange={handlePageChange}
+                  rowCount={total * 10}
+                  loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
                     color: "text.dark",

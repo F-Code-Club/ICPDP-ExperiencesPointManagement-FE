@@ -31,7 +31,7 @@ function ManagementForm({
   formConfig,
 }) {
   const { fields, selectFields } = formConfig;
-
+  
   // Initialize state dynamically based on formConfig
   const initState = () => {
     const initState = {};
