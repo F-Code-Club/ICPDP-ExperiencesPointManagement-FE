@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import StudentForm from "../../../components/Form/StudentForm";
-import { toastError } from "../../../utils/toast";
+import { toastError, toastWarning } from "../../../utils/toast";
 
 const AddToolbar = ({
   setRows,
@@ -16,7 +16,7 @@ const AddToolbar = ({
   setTables,
   currentTable,
   formConfig,
-  currentPage
+  currentPage,
 }) => {
   const [showForm, setShowForm] = useState(false);
 
@@ -29,42 +29,49 @@ const AddToolbar = ({
       return;
     }
 
+    const studentID = formData?.studentID.toUpperCase().trim();
+    const point = parseInt(formData?.point) || 5;
+
+    if (rows.some((row) => row.studentID === studentID)) {
+      toastWarning("Student ID already exists.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `https://epm-be-dev.f-code.tech${API_ENDPOINTS.EVENTS_POINT.ADD}/${currentTable}`,
-        {
-          ...formData,
-          studentID: formData?.studentID.toUpperCase().trim(),
-          point: parseInt(formData?.point) || 5,
-        },
+        { ...formData, studentID, point },
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-      const data = await response.data.data;
+
+      const data = response.data.data;
       const newRow = {
         ...data,
         name: data?.studentName,
         point: data?.point,
         role: data?.role,
         eventID: currentTable,
-        id: currentPage !== 0 ? (rows.length + 1) + currentPage * 10 : rows.length + 1,
+        id:
+          currentPage !== 0
+            ? rows.length + 1 + currentPage * 10
+            : rows.length + 1,
       };
+
       setRows((prevRows) => [...prevRows, newRow]);
       setOriginalRows((prevRows) => [...prevRows, newRow]);
+
       const updatedTables = tables.map((table) =>
         table?.eventID === currentTable
-          ? {
-              ...table,
-              rows: [...table.rows, newRow],
-            }
+          ? { ...table, rows: [...table.rows, newRow] }
           : table
       );
+
       setTables(updatedTables);
       setShowForm(false);
     } catch (error) {
       toastError("Saving failed.");
-      toastError(error);
     }
   };
 

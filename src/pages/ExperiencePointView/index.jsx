@@ -6,20 +6,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { formConfig } from "../../pages/ExperiencePointView/pointViewFormConfig";
 import { AuthContext } from "../../context/auth.context";
 import { API_ENDPOINTS } from "../../utils/api";
-const initRow = [
-  // {
-  //   studentID: "SE123456",
-  //   name: "Nguyễn Văn A",
-  //   participantRole: "Thành viên",
-  //   bonus: 10,
-  // },
-  // {
-  //   studentID: "SE78910j",
-  //   name: "Nguyễn Văn A",
-  //   participantRole: "Thành viên",
-  //   bonus: 10,
-  // },
-];
 
 const ExperiencePointView = () => {
   const axios = useAxiosPrivate();
@@ -32,7 +18,6 @@ const ExperiencePointView = () => {
     <>
       <ExperiencePointTable
         title="Thêm sinh viên"
-        initialRows={initRow}
         columnsSchema={columnsSchema}
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
