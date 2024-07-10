@@ -56,11 +56,7 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-  // const [pageState, setPageState] = {
-  //   pageSize: 10,
-  //   currentPage: 0,
-  //   isLoading:
-  // }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -125,10 +121,12 @@ const ExperiencePointTable = ({
       if (!semestersData || !organizationData) {
         return;
       }
+      setEvents([]);
+      setupTables([]);
       try {
         const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
           params: {
-            organization: organizationData[0][`${role}ID`] || organizationID,
+            organization: selectedOrganization || organizationID,
             year: selectedYear,
             semester: selectedSemester,
           },
@@ -139,7 +137,6 @@ const ExperiencePointTable = ({
         });
 
         const eventData = response.data.data;
-        console.log("Event ", eventData);
         setEvents(eventData);
         setupTables(eventData);
       } catch (err) {
@@ -148,17 +145,19 @@ const ExperiencePointTable = ({
     };
 
     fetchData();
-  }, [role, organizationID, accessToken, selectedYear, selectedSemester]);
-
-  // useEffect(() => {
-  //   if (currentTab !== 0) {
-  //     fetchRows(currentTab);
-  //   }
-  // }, [currentTab, currentPage, pageSize]);
-
+  }, [
+    role,
+    organizationID,
+    accessToken,
+    selectedYear,
+    selectedSemester,
+    selectedOrganization,
+  ]);
   useEffect(() => {
     const fetchRows = async (eventID) => {
       setPageLoading(true);
+      setTables([]);
+      setTotal(0);
       try {
         const response = await axios.get(
           `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
@@ -173,14 +172,14 @@ const ExperiencePointTable = ({
             },
           }
         );
-        const data = response.data.data;
+        const data = response.data.data || [];
         const totalPage = response.data.totalPage;
         console.log("Rows Fetching ", data);
         const rowsWithIds =
           data.map((row, index) => ({
             ...row,
             name: row?.studentName,
-            id: index + 1,
+            id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
           })) || [];
         setRows(rowsWithIds);
         setOriginalRows(rowsWithIds);
@@ -195,12 +194,12 @@ const ExperiencePointTable = ({
       setPageLoading(false);
     };
     fetchRows(currentTab);
-  }, [currentPage, pageSize, currentTab]);
+  }, [currentPage, pageSize, currentTab, selectedOrganization]);
 
   const setupTables = (eventsData) => {
     const newTables = eventsData.map((event, index) => ({
       eventID: event.eventID,
-      index: index + 1,
+      index: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
       eventName: event.eventName,
       rows: [],
     }));
@@ -277,7 +276,7 @@ const ExperiencePointTable = ({
         const newRows = rows.filter((row) => row.studentID !== studentID);
         const updatedRows = newRows.map((row, index) => ({
           ...row,
-          id: index + 1,
+          id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
         }));
         setRows(updatedRows);
         setOriginalRows(updatedRows);
@@ -313,9 +312,9 @@ const ExperiencePointTable = ({
         {
           ...formData,
 
-          year: semesters[0].year,
-          semester: semesters[0].semester,
-          organization: organizations[0][`${role}ID`] || organizationID,
+          year: selectedYear,
+          semester: selectedSemester,
+          organization: selectedOrganization || organizationID,
         },
         {
           headers: {
@@ -325,7 +324,8 @@ const ExperiencePointTable = ({
         }
       );
 
-      const data = await response.data.data;
+      const data = response.data.data;
+      console.log(data);
       if (response.status === 200 || response.status === 201) {
         const newTab = {
           eventID: data.eventID,
@@ -356,44 +356,6 @@ const ExperiencePointTable = ({
     setCurrentPage(0);
   };
 
-  // Filter rows based on search query
-  // const filteredRows = searchQuery
-  //   ? rows.filter((row) =>
-  //       Object.values(row).some(
-  //         (value) =>
-  //           typeof value === "string" &&
-  //           value.toLowerCase().includes(searchQuery)
-  //       )
-  //     )
-  //   : rows;
-
-  // Handler for organization selection change (admin only)
-  const handleOrganizationChange = async (event) => {
-    const organization = event.target.value;
-    setSelectedOrganization(organization);
-
-    try {
-      const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
-        params: {
-          organization: organization.organizationID,
-          year: semesters[0]?.year,
-          semester: semesters[0]?.semester,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const eventData = response.data.data;
-      setEvents(eventData);
-      setupTables(eventData);
-      setCurrentTab(eventData.length > 0 ? eventData[0].eventID : 0);
-    } catch (err) {
-      console.log("Error fetching events for selected organization:", err);
-    }
-  };
-
   const handleTabDelete = async (eventID) => {
     try {
       const response = await axios.delete(
@@ -401,18 +363,23 @@ const ExperiencePointTable = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: ` Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
       if (response.status === 200 || response.status === 204) {
         const newTables = tables.filter((table) => table.eventID !== eventID);
         setTables(newTables);
-        if (currentTab >= newTables.length) {
-          setCurrentTab(newTables.length - 1 !== -1 ? newTables.length - 1 : 0);
+
+        if (newTables.length === 0) {
+          setCurrentTab(0);
+        } else if (currentTab >= newTables.length) {
+          setCurrentTab(newTables.length - 1);
+        } else {
+          setCurrentTab(currentTab);
         }
       }
-    } catch {
+    } catch (err) {
       console.log("Error deleting event:", err);
     }
   };
@@ -420,11 +387,6 @@ const ExperiencePointTable = ({
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage.page);
   };
-  console.log(currentPage);
-  // const handlePageSizeChange = (newPage) => {
-  //   setPageSize(newPage);
-  //   setCurrentPage(0);
-  // };
 
   const years = Array.from(
     new Set(
@@ -436,7 +398,6 @@ const ExperiencePointTable = ({
         .filter((year) => year !== null)
     )
   );
-
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -568,6 +529,7 @@ const ExperiencePointTable = ({
                 accessToken={accessToken}
                 role={role}
                 formConfig={formConfig}
+                currentPage={currentPage}
               />
             )}
           </Box>
@@ -582,56 +544,58 @@ const ExperiencePointTable = ({
             borderBottom: "1px solid #E0E0E0",
           }}
         >
-          {tables.map((table, index) => (
-            <Tab
-              key={table.eventID}
-              value={table.eventID}
-              sx={{
-                position: "relative",
-                "& .css-qdjdaa-MuiButtonBase-root-MuiTab-root": {
-                  padding: 0,
-                },
-                color: "text.dark",
-                "&:focus": {
-                  color: "primary.main",
-                },
-              }}
-              label={
-                <Box
-                  tabIndex={0}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  <IconButton
-                    edge="end"
+          {events.length > 0 &&
+            tables.map((table, index) => (
+              <Tab
+                key={table.eventID}
+                value={table.eventID}
+                sx={{
+                  position: "relative",
+                  "& .MuiTab-root": {
+                    padding: 0,
+                  },
+                  color: "text.dark",
+                  "&:focus": {
+                    color: "primary.main",
+                  },
+                }}
+                label={
+                  <Box
+                    tabIndex={0}
                     sx={{
-                      position: "absolute",
-                      left: "80%",
-                      top: "-10px",
-                      "& .css-i4bv87-MuiSvgIcon-root": {
-                        width: "12px",
-                      },
-                      "&:hover": {
-                        backgroundColor: "transparent",
-                        boxShadow: "none",
-                        color: "text.dark",
-                      },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleTabDelete(table.eventID);
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: 12,
+                      width: "100%",
                     }}
                   >
-                    <ClearIcon />
-                  </IconButton>
-                  {table?.eventName}
-                </Box>
-              }
-            />
-          ))}
+                    <IconButton
+                      edge="end"
+                      sx={{
+                        position: "absolute",
+                        left: "80%",
+                        top: "-10px",
+                        "& .MuiSvgIcon-root": {
+                          width: "12px",
+                        },
+                        "&:hover": {
+                          backgroundColor: "transparent",
+                          boxShadow: "none",
+                          color: "text.dark",
+                        },
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTabDelete(table.eventID);
+                      }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                    {table?.eventName}
+                  </Box>
+                }
+              />
+            ))}
           <Button onClick={handleAddTable}>
             <AddIcon className="text-xl text-dark-text-color" />
           </Button>
@@ -641,7 +605,7 @@ const ExperiencePointTable = ({
             <Box
               key={table.eventID}
               role="tabpanel"
-              hidden={currentTab !== table.eventID}
+              hidden={currentTab !== table.eventID || !(events.length > 0)}
             >
               {currentTab === table.eventID && (
                 <DataGrid
@@ -656,23 +620,6 @@ const ExperiencePointTable = ({
                   autoHeight
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
-                  // pageSize={pageSize}
-                  // onPageSizeChange={(newPageSize) =>
-                  //   handlePageSizeChange(newPageSize)
-                  // }
-                  // rowsPerPageOptions={[10]}
-                  // pagination
-                  // paginationMode="server"
-                  // onPageChange={(newPage) => {
-                  //   return handlePageChange(newPage);
-                  // }}
-                  // loading={pageLoading}
-                  // initialState={{
-                  //   pagination: {
-                  //     paginationModel: { pageSize: 10, page: 1 },
-                  //   },
-                  // }}
-
                   rowsPerPageOptions={[10]}
                   pagination
                   paginationMode="server"

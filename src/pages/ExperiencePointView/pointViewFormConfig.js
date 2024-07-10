@@ -1,12 +1,5 @@
 export const formConfig = {
-  fields: [
-    { name: "studentID", label: "MSSV", type: "text" },
-    {
-      name: "point",
-      label: "Điểm cộng",
-      type: "number",
-    },
-  ],
+  fields: [{ name: "studentID", label: "MSSV", type: "text" }],
 
   selectFields: [
     {

@@ -82,7 +82,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       type: "actions",
       headerClassName: "header",
       headerName: "Hành động",
-      width: 230,
+      width: 200,
       cellClassName: "actions",
       getActions: ({ row }) => [
         <GridActionsCellItem

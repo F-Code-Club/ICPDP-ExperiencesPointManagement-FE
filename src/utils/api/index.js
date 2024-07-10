@@ -44,10 +44,10 @@ export const API_ENDPOINTS = {
     DELETE: `/events`,
   },
   EVENTS_POINT: {
-    GET_ALL: `/eventpoint`,
-    GET: `/eventpoint`,
-    ADD: `/eventpoint`,
-    UPDATE: `/eventpoint`,
-    DELETE: `/eventpoint`,
+    GET_ALL: `/event-point`,
+    GET: `/event-point`,
+    ADD: `/event-point`,
+    UPDATE: `/event-point`,
+    DELETE: `/event-point`,
   },
 };

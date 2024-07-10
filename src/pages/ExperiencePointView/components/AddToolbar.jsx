@@ -16,6 +16,7 @@ const AddToolbar = ({
   setTables,
   currentTable,
   formConfig,
+  currentPage
 }) => {
   const [showForm, setShowForm] = useState(false);
 
@@ -47,7 +48,7 @@ const AddToolbar = ({
         point: data?.point,
         role: data?.role,
         eventID: currentTable,
-        id: rows.length + 1,
+        id: currentPage !== 0 ? (rows.length + 1) + currentPage * 10 : rows.length + 1,
       };
       setRows((prevRows) => [...prevRows, newRow]);
       setOriginalRows((prevRows) => [...prevRows, newRow]);
