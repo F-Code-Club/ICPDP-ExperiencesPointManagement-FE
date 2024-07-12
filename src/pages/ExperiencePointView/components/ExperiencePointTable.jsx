@@ -22,12 +22,11 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { set } from "react-hook-form";
+import { toastError, toastWarning } from "../../../utils/toast";
 
 const ExperiencePointTable = ({
   title,
   columnsSchema,
-  initialRows,
   API_ENDPOINTS,
   accessToken,
   role,
@@ -113,7 +112,7 @@ const ExperiencePointTable = ({
           fetchEvents(semestersResponse, organizationsResponse);
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
+        toastError("Getting semester informations error!!!");
       }
     };
 
@@ -140,7 +139,7 @@ const ExperiencePointTable = ({
         setEvents(eventData);
         setupTables(eventData);
       } catch (err) {
-        console.log("Error fetching events:", err);
+          
       }
     };
 
@@ -152,6 +151,7 @@ const ExperiencePointTable = ({
     selectedYear,
     selectedSemester,
     selectedOrganization,
+    currentTab,
   ]);
   useEffect(() => {
     const fetchRows = async (eventID) => {
@@ -173,8 +173,7 @@ const ExperiencePointTable = ({
           }
         );
         const data = response.data.data || [];
-        const totalPage = response.data.totalPage;
-        console.log("Rows Fetching ", data);
+        const totalPage = response.data.totalPage || [];
         const rowsWithIds =
           data.map((row, index) => ({
             ...row,
@@ -189,7 +188,7 @@ const ExperiencePointTable = ({
         setTables(updatedTables);
         setTotal(totalPage);
       } catch (err) {
-        console.log("Error fetching rows:", err);
+        
       }
       setPageLoading(false);
     };
@@ -253,9 +252,8 @@ const ExperiencePointTable = ({
       );
       setTables(updatedTables);
       handleClose();
-      console.log(response);
     } catch (err) {
-      console.log("Error updating row:", err);
+      toastError("Updating information error!!!");
     }
   };
 
@@ -272,22 +270,20 @@ const ExperiencePointTable = ({
       const response = await axios.delete(
         `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`
       );
-      if (response.status === 200 || response.status === 204) {
-        const newRows = rows.filter((row) => row.studentID !== studentID);
-        const updatedRows = newRows.map((row, index) => ({
-          ...row,
-          id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
-        }));
-        setRows(updatedRows);
-        setOriginalRows(updatedRows);
-        const updatedTables = tables.map((table) =>
-          table.eventID === currentTab ? { ...table, rows: updatedRows } : table
-        );
-        setTables(updatedTables);
-        handleClose();
-      }
+      const newRows = rows.filter((row) => row.studentID !== studentID);
+      const updatedRows = newRows.map((row, index) => ({
+        ...row,
+        id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
+      }));
+      setRows(updatedRows);
+      setOriginalRows(updatedRows);
+      const updatedTables = tables.map((table) =>
+        table.eventID === currentTab ? { ...table, rows: updatedRows } : table
+      );
+      setTables(updatedTables);
+      handleClose();
     } catch (err) {
-      console.log("Error deleting row:", err);
+      toastError("Deleting error!!!");
     }
   };
 
@@ -303,7 +299,7 @@ const ExperiencePointTable = ({
         !organizations ||
         organizations.length === 0
       ) {
-        console.error("Semesters or organizations data not available.");
+        toastError("Semesters or organizations data not available!!!");
         return;
       }
 
@@ -325,19 +321,17 @@ const ExperiencePointTable = ({
       );
 
       const data = response.data.data;
-      console.log(data);
-      if (response.status === 200 || response.status === 201) {
-        const newTab = {
-          eventID: data.eventID,
-          index: tables.length,
-          eventName: data.eventName,
-          rows: [],
-        };
-        setTables((prevTables) => [...prevTables, newTab]);
-        setCurrentTab(newTab.eventID);
-      }
+
+      const newTab = {
+        eventID: data.eventID,
+        index: tables.length,
+        eventName: data.eventName,
+        rows: [],
+      };
+      setTables((prevTables) => [...prevTables, newTab]);
+      setCurrentTab(newTab.eventID);
     } catch (err) {
-      console.log("Error adding event:", err);
+      toastError("Adding event error!!!");
     }
   };
   // Handler for closing modals
@@ -367,20 +361,17 @@ const ExperiencePointTable = ({
           },
         }
       );
-      if (response.status === 200 || response.status === 204) {
-        const newTables = tables.filter((table) => table.eventID !== eventID);
-        setTables(newTables);
-
-        if (newTables.length === 0) {
-          setCurrentTab(0);
-        } else if (currentTab >= newTables.length) {
-          setCurrentTab(newTables.length - 1);
-        } else {
-          setCurrentTab(currentTab);
-        }
+      const newTables = tables.filter((table) => table.eventID !== eventID);
+      setTables(newTables);
+      if (newTables.length === 0) {
+        setCurrentTab(0);
+      } else if (currentTab >= newTables.length) {
+        setCurrentTab(newTables.length - 1);
+      } else {
+        setCurrentTab(currentTab);
       }
     } catch (err) {
-      console.log("Error deleting event:", err);
+      toastError("Deleting event error!!!");
     }
   };
 

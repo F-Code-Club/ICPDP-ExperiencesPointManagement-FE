@@ -22,10 +22,6 @@ function AddEventModal({
   title,
   handleAddTable,
   func,
-  isEdit,
-  editedRow,
-  API_ENDPOINTS,
-  accessToken,
 }) {
   const [info, setInfo] = useState({});
 
