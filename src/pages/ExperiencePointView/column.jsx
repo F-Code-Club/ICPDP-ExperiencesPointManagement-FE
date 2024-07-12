@@ -59,7 +59,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       renderCell: (params) => {
         return (
           <span>
-            {params.value === "member" ? "Thành viên" : "Ban tổ chức"}
+            {params.value}
           </span>
         );
       },

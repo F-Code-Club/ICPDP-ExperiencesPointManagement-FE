@@ -1,28 +1,10 @@
 import { useState, useEffect } from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import { ManagementFormStyles as styles } from "../../../components/Form/style";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { toastError } from "../../../utils/toast/index";
 
-function AddEventModal({
-  open,
-  handleClose,
-  title,
-  handleAddTable,
-  func,
-}) {
+function AddEventModal({ open, handleClose, title, handleAddTable, func }) {
   const [info, setInfo] = useState({});
 
   useEffect(() => {

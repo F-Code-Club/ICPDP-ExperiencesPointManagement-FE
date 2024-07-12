@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -22,7 +22,7 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { toastError, toastWarning } from "../../../utils/toast";
+import { toastError } from "../../../utils/toast";
 
 const ExperiencePointTable = ({
   title,
@@ -138,9 +138,7 @@ const ExperiencePointTable = ({
         const eventData = response.data.data;
         setEvents(eventData);
         setupTables(eventData);
-      } catch (err) {
-          
-      }
+      } catch (err) {}
     };
 
     fetchData();
@@ -187,9 +185,7 @@ const ExperiencePointTable = ({
         );
         setTables(updatedTables);
         setTotal(totalPage);
-      } catch (err) {
-        
-      }
+      } catch (err) {}
       setPageLoading(false);
     };
     fetchRows(currentTab);
