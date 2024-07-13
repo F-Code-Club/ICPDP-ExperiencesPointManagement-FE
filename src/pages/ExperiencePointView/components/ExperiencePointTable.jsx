@@ -23,14 +23,13 @@ import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { toastError } from "../../../utils/toast";
-
+import useFetchRole from "../hooks/useFetchRole";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
   API_ENDPOINTS,
   accessToken,
   role,
-  formConfig,
   organizationID,
 }) => {
   const [rows, setRows] = useState([]);
@@ -55,7 +54,7 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-
+  const { config, participantRole } = useFetchRole(API_ENDPOINTS, accessToken, role);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -143,7 +142,7 @@ const ExperiencePointTable = ({
 
     fetchData();
   }, [
-    role,
+    role,    
     organizationID,
     accessToken,
     selectedYear,
@@ -228,11 +227,14 @@ const ExperiencePointTable = ({
 
   // Handler for save button click in the edit form
   const handleSaveClick = async (formData) => {
+    const roleData = participantRole.find((role) => role.role === selectedRole);
+    const point = roleData?.point;
     try {
       const response = await axios.patch(
         `${API_ENDPOINTS.EVENTS_POINT.UPDATE}/${currentTab}&${rowToEdit.studentID}`,
         {
           ...formData,
+          point: point,
           name: rowToEdit?.studentName,
         }
       );
@@ -515,7 +517,6 @@ const ExperiencePointTable = ({
                 API_ENDPOINTS={API_ENDPOINTS}
                 accessToken={accessToken}
                 role={role}
-                formConfig={formConfig}
                 currentPage={currentPage}
               />
             )}
@@ -682,7 +683,7 @@ const ExperiencePointTable = ({
         isEdit={isEdit}
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
-        formConfig={formConfig}
+        formConfig={config}
       />
       <AddEventModal
         open={showAddEventModal}
