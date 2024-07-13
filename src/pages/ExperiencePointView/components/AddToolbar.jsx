@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
+import useFetchRole from "../hooks/useFetchRole";
 import StudentForm from "../../../components/Form/StudentForm";
 import { toastError, toastWarning } from "../../../utils/toast";
 
@@ -15,9 +15,10 @@ const AddToolbar = ({
   tables,
   setTables,
   currentTable,
-  formConfig,
   currentPage,
+  role,
 }) => {
+  const { config, participantRole } = useFetchRole(API_ENDPOINTS, accessToken, role);
   const [showForm, setShowForm] = useState(false);
 
   const handleOpenForm = () => setShowForm(true);
@@ -29,42 +30,51 @@ const AddToolbar = ({
       return;
     }
 
-    const studentID = formData?.studentID.toUpperCase().trim();
-    const point = parseInt(formData?.point) || 5;
+    const newRows = formData.map((entry) => {
+      const studentID = entry?.studentID.toUpperCase().trim();
+      const selectedRole = entry?.role;
+      const roleData = participantRole.find((role) => role.role === selectedRole);
+      const point = roleData?.point;
 
-    if (rows.some((row) => row.studentID === studentID)) {
-      toastWarning("Student ID already exists.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `https://epm-be-dev.f-code.tech${API_ENDPOINTS.EVENTS_POINT.ADD}/${currentTable}`,
-        { ...formData, studentID, point },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-
-      const data = response.data.data;
-      const newRow = {
-        ...data,
-        name: data?.studentName,
-        point: data?.point,
-        role: data?.role,
+      return {
+        ...entry,
+        studentID,
+        point,
         eventID: currentTable,
         id:
           currentPage !== 0
             ? rows.length + 1 + currentPage * 10
             : rows.length + 1,
       };
+    });
 
-      setRows((prevRows) => [...prevRows, newRow]);
-      setOriginalRows((prevRows) => [...prevRows, newRow]);
+    
+
+    try {
+      const response = await axios.post(
+        `${API_ENDPOINTS.EVENTS_POINT.ADD}/${currentTable}`,
+        uniqueNewRows,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = response.data.data;
+      const updatedRows = uniqueNewRows.map((newRow, index) => ({
+        ...newRow,
+        name: data[index]?.studentName,
+        point: data[index]?.point,
+        role: data[index]?.role,
+      }));
+
+      setRows((prevRows) => [...prevRows, ...updatedRows]);
+      setOriginalRows((prevRows) => [...prevRows, ...updatedRows]);
 
       const updatedTables = tables.map((table) =>
         table?.eventID === currentTable
-          ? { ...table, rows: [...table.rows, newRow] }
+          ? { ...table, rows: [...table.rows, ...updatedRows] }
           : table
       );
 
@@ -101,7 +111,7 @@ const AddToolbar = ({
         title={title}
         accessToken={accessToken}
         func={"Thêm"}
-        formConfig={formConfig}
+        formConfig={config}
       />
     </>
   );

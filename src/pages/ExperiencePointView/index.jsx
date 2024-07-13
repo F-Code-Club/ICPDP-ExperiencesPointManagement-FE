@@ -1,9 +1,8 @@
 import ExperiencePointTable from "./components/ExperiencePointTable";
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { decodeToken } from "react-jwt";
 import columnsSchema from "./column";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { formConfig } from "../../pages/ExperiencePointView/pointViewFormConfig";
 import { AuthContext } from "../../context/auth.context";
 import { API_ENDPOINTS } from "../../utils/api";
 const ExperiencePointView = () => {
@@ -23,7 +22,6 @@ const ExperiencePointView = () => {
         accessToken={accessToken}
         organizationID={role === "admin" ? " " : organizationID}
         role={role}
-        formConfig={formConfig}
       />
     </>
   );

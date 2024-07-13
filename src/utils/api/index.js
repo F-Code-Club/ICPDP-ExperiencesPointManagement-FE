@@ -50,4 +50,18 @@ export const API_ENDPOINTS = {
     UPDATE: `/event-point`,
     DELETE: `/event-point`,
   },
+  ROLE_CLUBS: {
+    GET_ALL: `role-clubs`,
+    GET: `role-clubs`,
+    ADD: `role-clubs`,
+    UPDATE: `role-clubs`,
+    DELETE: `role-clubs`,
+  },
+  ROLE_DEPARTMENTS: {
+    GET_ALL: `role-departments`,
+    GET: `role-departments`,
+    ADD: `role-departments`,
+    UPDATE: `role-departments`,
+    DELETE: `role-departments`,
+  }
 };

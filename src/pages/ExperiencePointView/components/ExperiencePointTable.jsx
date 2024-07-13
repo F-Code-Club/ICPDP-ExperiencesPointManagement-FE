@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Box,
   TextField,
@@ -22,14 +22,14 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-
+import { toastError } from "../../../utils/toast";
+import useFetchRole from "../hooks/useFetchRole";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
   API_ENDPOINTS,
   accessToken,
   role,
-  formConfig,
   organizationID,
 }) => {
   const [rows, setRows] = useState([]);
@@ -54,7 +54,11 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-
+  const { config, participantRole } = useFetchRole(
+    API_ENDPOINTS,
+    accessToken,
+    role
+  );
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,7 +106,6 @@ const ExperiencePointTable = ({
           ]);
 
           semestersResponse = semestersResponse.data.data;
-          console.log(semestersResponse);
           organizationsResponse = [organizationsResponse.data.data];
         }
         setSemesters(semestersResponse);
@@ -111,7 +114,7 @@ const ExperiencePointTable = ({
           fetchEvents(semestersResponse, organizationsResponse);
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
+        toastError("Getting semester information error!!!");
       }
     };
 
@@ -137,9 +140,7 @@ const ExperiencePointTable = ({
         const eventData = response.data.data;
         setEvents(eventData);
         setupTables(eventData);
-      } catch (err) {
-        console.log("Error fetching events:", err);
-      }
+      } catch (err) {}
     };
 
     fetchData();
@@ -150,12 +151,11 @@ const ExperiencePointTable = ({
     selectedYear,
     selectedSemester,
     selectedOrganization,
+    currentTab,
   ]);
   useEffect(() => {
     const fetchRows = async (eventID) => {
       setPageLoading(true);
-      setTables([]);
-      setTotal(0);
       try {
         const response = await axios.get(
           `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
@@ -172,27 +172,32 @@ const ExperiencePointTable = ({
         );
         const data = response.data.data || [];
         const totalPage = response.data.totalPage;
-        console.log("Rows Fetching ", data);
-        const rowsWithIds =
-          data.map((row, index) => ({
-            ...row,
-            name: row?.studentName,
-            id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
-          })) || [];
+        const rowsWithIds = data.map((row, index) => ({
+          ...row,
+          name: row?.studentName,
+          id:
+            currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
+        }));
+
         setRows(rowsWithIds);
         setOriginalRows(rowsWithIds);
-        const updatedTables = tables.map((table) =>
-          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+        setTables((prevTables) =>
+          prevTables.map((table) =>
+            table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+          )
         );
-        setTables(updatedTables);
         setTotal(totalPage);
       } catch (err) {
-        console.log("Error fetching rows:", err);
+        console.error("Error fetching rows:", err);
+      } finally {
+        setPageLoading(false);
       }
-      setPageLoading(false);
     };
-    fetchRows(currentTab);
-  }, [currentPage, pageSize, currentTab, selectedOrganization]);
+
+    if (currentTab) {
+      fetchRows(currentTab);
+    }
+  }, [currentPage, pageSize, currentTab, selectedOrganization, accessToken]);
 
   const setupTables = (eventsData) => {
     const newTables = eventsData.map((event, index) => ({
@@ -231,11 +236,14 @@ const ExperiencePointTable = ({
 
   // Handler for save button click in the edit form
   const handleSaveClick = async (formData) => {
+    const roleData = participantRole.find((role) => role.role === selectedRole);
+    const point = roleData?.point;
     try {
       const response = await axios.patch(
         `${API_ENDPOINTS.EVENTS_POINT.UPDATE}/${currentTab}&${rowToEdit.studentID}`,
         {
           ...formData,
+          point: point,
           name: rowToEdit?.studentName,
         }
       );
@@ -251,9 +259,8 @@ const ExperiencePointTable = ({
       );
       setTables(updatedTables);
       handleClose();
-      console.log(response);
     } catch (err) {
-      console.log("Error updating row:", err);
+      toastError("Updating information error!!!");
     }
   };
 
@@ -270,22 +277,20 @@ const ExperiencePointTable = ({
       const response = await axios.delete(
         `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`
       );
-      if (response.status === 200 || response.status === 204) {
-        const newRows = rows.filter((row) => row.studentID !== studentID);
-        const updatedRows = newRows.map((row, index) => ({
-          ...row,
-          id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
-        }));
-        setRows(updatedRows);
-        setOriginalRows(updatedRows);
-        const updatedTables = tables.map((table) =>
-          table.eventID === currentTab ? { ...table, rows: updatedRows } : table
-        );
-        setTables(updatedTables);
-        handleClose();
-      }
+      const newRows = rows.filter((row) => row.studentID !== studentID);
+      const updatedRows = newRows.map((row, index) => ({
+        ...row,
+        id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
+      }));
+      setRows(updatedRows);
+      setOriginalRows(updatedRows);
+      const updatedTables = tables.map((table) =>
+        table.eventID === currentTab ? { ...table, rows: updatedRows } : table
+      );
+      setTables(updatedTables);
+      handleClose();
     } catch (err) {
-      console.log("Error deleting row:", err);
+      toastError("Deleting error!!!");
     }
   };
 
@@ -301,7 +306,7 @@ const ExperiencePointTable = ({
         !organizations ||
         organizations.length === 0
       ) {
-        console.error("Semesters or organizations data not available.");
+        toastError("Semesters or organizations data not available!!!");
         return;
       }
 
@@ -323,19 +328,17 @@ const ExperiencePointTable = ({
       );
 
       const data = response.data.data;
-      console.log(data);
-      if (response.status === 200 || response.status === 201) {
-        const newTab = {
-          eventID: data.eventID,
-          index: tables.length,
-          eventName: data.eventName,
-          rows: [],
-        };
-        setTables((prevTables) => [...prevTables, newTab]);
-        setCurrentTab(newTab.eventID);
-      }
+
+      const newTab = {
+        eventID: data.eventID,
+        index: tables.length,
+        eventName: data.eventName,
+        rows: [],
+      };
+      setTables((prevTables) => [...prevTables, newTab]);
+      setCurrentTab(newTab.eventID);
     } catch (err) {
-      console.log("Error adding event:", err);
+      toastError("Adding event error!!!");
     }
   };
   // Handler for closing modals
@@ -365,20 +368,17 @@ const ExperiencePointTable = ({
           },
         }
       );
-      if (response.status === 200 || response.status === 204) {
-        const newTables = tables.filter((table) => table.eventID !== eventID);
-        setTables(newTables);
-
-        if (newTables.length === 0) {
-          setCurrentTab(0);
-        } else if (currentTab >= newTables.length) {
-          setCurrentTab(newTables.length - 1);
-        } else {
-          setCurrentTab(currentTab);
-        }
+      const newTables = tables.filter((table) => table.eventID !== eventID);
+      setTables(newTables);
+      if (newTables.length === 0) {
+        setCurrentTab(0);
+      } else if (currentTab >= newTables.length) {
+        setCurrentTab(newTables.length - 1);
+      } else {
+        setCurrentTab(currentTab);
       }
     } catch (err) {
-      console.log("Error deleting event:", err);
+      toastError("Deleting event error!!!");
     }
   };
 
@@ -386,16 +386,18 @@ const ExperiencePointTable = ({
     setCurrentPage(newPage.page);
   };
 
-  const years = Array.from(
-    new Set(
-      semesters
-        .map((semester) => {
-          const year = semester?.year;
-          return year && !isNaN(year) ? year : null;
-        })
-        .filter((year) => year !== null)
-    )
-  );
+  const years = useMemo(() => {
+    return Array.from(
+      new Set(
+        semesters
+          .map((semester) => {
+            const year = semester?.year;
+            return year && !isNaN(year) ? year : null;
+          })
+          .filter((year) => year !== null)
+      )
+    );
+  }, [semesters]);
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -526,7 +528,6 @@ const ExperiencePointTable = ({
                 API_ENDPOINTS={API_ENDPOINTS}
                 accessToken={accessToken}
                 role={role}
-                formConfig={formConfig}
                 currentPage={currentPage}
               />
             )}
@@ -626,7 +627,7 @@ const ExperiencePointTable = ({
                     page: currentPage,
                   }}
                   onPaginationModelChange={handlePageChange}
-                  rowCount={total * 10}
+                  rowCount={total * pageSize}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
@@ -693,7 +694,7 @@ const ExperiencePointTable = ({
         isEdit={isEdit}
         API_ENDPOINTS={API_ENDPOINTS}
         accessToken={accessToken}
-        formConfig={formConfig}
+        formConfig={config}
       />
       <AddEventModal
         open={showAddEventModal}
