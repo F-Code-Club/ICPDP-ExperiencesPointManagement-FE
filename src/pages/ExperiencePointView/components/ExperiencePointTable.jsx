@@ -412,15 +412,19 @@ const ExperiencePointTable = ({
     setCurrentPage(newPage.page);
   };
 
-  const years = Array.from(
-    new Set(
-      semesters
-        .map((semester) => {
-          const year = semester?.year;
-          return year && !isNaN(year) ? year : null;
-        })
-        .filter((year) => year !== null)
-    )
+  const years = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          state.semesters
+            .map((semester) => {
+              const year = semester?.year;
+              return year && !isNaN(year) ? year : null;
+            })
+            .filter((year) => year !== null)
+        )
+      ),
+    [state.semesters]
   );
   return (
     <Box sx={styles.pageContainer}>
