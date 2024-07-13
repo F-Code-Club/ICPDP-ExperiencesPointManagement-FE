@@ -22,12 +22,10 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { set } from "react-hook-form";
 
 const ExperiencePointTable = ({
   title,
   columnsSchema,
-  initialRows,
   API_ENDPOINTS,
   accessToken,
   role,

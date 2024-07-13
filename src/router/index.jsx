@@ -21,10 +21,6 @@ const RouterComponent = () => {
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
-    // {
-    //   path: "transcripts/experience-point",
-    //   element: <ExperiencePointView />,
-    // },
 
     // Protected routes
     {
@@ -58,7 +54,7 @@ const RouterComponent = () => {
                 { index: true, element: <Home /> },
                 {
                   path: "transcripts/experience-point",
-                  element: <ExperiencePointView />,
+                  element: <ExperiencePointView title="Bảng điểm phong trào" />,
                 },
                 {
                   path: "transcripts/final-point",
@@ -86,7 +82,7 @@ const RouterComponent = () => {
         },
         {
           // club
-          path: "club",
+          path: "club" || "department",
           element: <RequireAuth allowedRoles={[ROLE.CLUB]} />,
           children: [
             {
@@ -95,7 +91,7 @@ const RouterComponent = () => {
                 { index: true, element: <Home /> },
                 {
                   path: "transcripts/experience-point",
-                  element: <ExperiencePointView />,
+                  element: <ExperiencePointView title="Bảng điểm phong trào" />,
                 },
                 {
                   path: "transcripts/final-point",
