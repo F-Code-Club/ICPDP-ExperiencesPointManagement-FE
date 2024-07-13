@@ -22,11 +22,12 @@ import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { toastError } from "../../../utils/toast";
-import useFetchRole from "../hooks/useFetchRole";
+import { set } from "react-hook-form";
+
 const ExperiencePointTable = ({
   title,
   columnsSchema,
+  initialRows,
   API_ENDPOINTS,
   accessToken,
   role,
@@ -54,11 +55,7 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-  const { config, participantRole } = useFetchRole(
-    API_ENDPOINTS,
-    accessToken,
-    role
-  );
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
