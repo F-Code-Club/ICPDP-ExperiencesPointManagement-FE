@@ -181,7 +181,7 @@ const ExperiencePointTable = ({
           data.map((row, index) => ({
             ...row,
             name: row?.studentName,
-            id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
+            id: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
           })) || [];
         setRows(rowsWithIds);
         setOriginalRows(rowsWithIds);
@@ -201,7 +201,7 @@ const ExperiencePointTable = ({
   const setupTables = (eventsData) => {
     const newTables = eventsData.map((event, index) => ({
       eventID: event.eventID,
-      index: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
+      index: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
       eventName: event.eventName,
       rows: [],
     }));
@@ -303,7 +303,7 @@ const ExperiencePointTable = ({
         const newRows = rows.filter((row) => row.studentID !== studentID);
         const updatedRows = newRows.map((row, index) => ({
           ...row,
-          id: currentPage !== 0 ? index + 1 + currentPage * 10 : index + 1,
+          id: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
         }));
         setRows(updatedRows);
         setOriginalRows(updatedRows);

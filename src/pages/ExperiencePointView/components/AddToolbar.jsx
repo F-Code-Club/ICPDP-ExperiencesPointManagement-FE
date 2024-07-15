@@ -5,6 +5,7 @@ import useFetchRole from "../hooks/useFetchRole";
 import StudentForm from "../../../components/Form/StudentForm";
 import { toastError } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { PAGE_SIZE } from "../../../constant/core";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -45,7 +46,7 @@ const AddToolbar = ({
       eventID: currentTable,
       id:
         currentPage !== 0
-          ? rows.length + 1 + currentPage * 10
+          ? rows.length + 1 + currentPage * PAGE_SIZE
           : rows.length + 1,
     };
 
