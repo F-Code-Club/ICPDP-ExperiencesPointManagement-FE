@@ -17,4 +17,5 @@ const ROLE = {
   STUDENT: "student"
 };
 
-export { STRING_EMPTY, HTTP_STATUS, ROLE };
+const PAGE_SIZE = 10
+export { STRING_EMPTY, HTTP_STATUS, ROLE, PAGE_SIZE };

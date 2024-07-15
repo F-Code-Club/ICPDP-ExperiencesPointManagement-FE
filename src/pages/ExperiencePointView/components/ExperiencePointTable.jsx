@@ -24,6 +24,7 @@ import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useFetchRole from "../hooks/useFetchRole";
 import { toastError } from "../../../utils/toast";
+import { PAGE_SIZE } from "../../../constant/core";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -51,7 +52,6 @@ const ExperiencePointTable = ({
   const [events, setEvents] = useState([]);
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedSemester, setSelectedSemester] = useState("");
-  const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
@@ -60,6 +60,7 @@ const ExperiencePointTable = ({
     accessToken,
     role
   );
+  const pageSize = PAGE_SIZE;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -646,7 +647,7 @@ const ExperiencePointTable = ({
                   autoHeight
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
-                  rowsPerPageOptions={[10]}
+                  rowsPerPageOptions={[pageSize]}
                   pagination
                   paginationMode="server"
                   paginationModel={{
@@ -654,7 +655,7 @@ const ExperiencePointTable = ({
                     page: currentPage,
                   }}
                   onPaginationModelChange={handlePageChange}
-                  rowCount={total * 10}
+                  rowCount={total * pageSize}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
