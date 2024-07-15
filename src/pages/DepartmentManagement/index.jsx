@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import DataTable from "../../components/DataTable";
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";

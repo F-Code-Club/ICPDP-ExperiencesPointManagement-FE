@@ -57,11 +57,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       width: 300,
       editable: true,
       renderCell: (params) => {
-        return (
-          <span>
-            {params.value}
-          </span>
-        );
+        return <span>{params.value}</span>;
       },
     },
     {
@@ -87,6 +83,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       getActions: ({ row }) => [
         <GridActionsCellItem
           icon={<EditIcon />}
+          key={row.studentID}
           label="Edit"
           className="textPrimary"
           onClick={() => handleEditClick(row)}
@@ -94,6 +91,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
+          key={row.studentID}
           label="Delete"
           onClick={() => handleDeleteClick(row)}
           color="inherit"

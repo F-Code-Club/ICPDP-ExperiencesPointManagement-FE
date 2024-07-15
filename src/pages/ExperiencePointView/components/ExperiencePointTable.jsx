@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Box,
   TextField,
@@ -412,20 +412,18 @@ const ExperiencePointTable = ({
     setCurrentPage(newPage.page);
   };
 
-  const years = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          state.semesters
-            .map((semester) => {
-              const year = semester?.year;
-              return year && !isNaN(year) ? year : null;
-            })
-            .filter((year) => year !== null)
-        )
-      ),
-    [state.semesters]
-  );
+  const years = useMemo(() => {
+    return Array.from(
+      new Set(
+        semesters
+          .map((semester) => {
+            const year = parseInt(semester?.year, 10);
+            return !isNaN(year) ? year : null;
+          })
+          .filter((year) => year !== null)
+      )
+    );
+  }, [semesters]);
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -573,7 +571,7 @@ const ExperiencePointTable = ({
           }}
         >
           {events.length > 0 &&
-            tables.map((table, index) => (
+            tables.map((table) => (
               <Tab
                 key={table.eventID}
                 value={table.eventID}
@@ -629,7 +627,7 @@ const ExperiencePointTable = ({
           </Button>
         </Tabs>
         <Box>
-          {tables.map((table, index) => (
+          {tables.map((table) => (
             <Box
               key={table.eventID}
               role="tabpanel"
