@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useMemo} from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Box,
   TextField,
@@ -27,7 +27,7 @@ import useFetchRole from "../hooks/useFetchRole";
 import { toastError } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
-
+import useDebounce from "../hooks/useDebounce";
 
 const ExperiencePointTable = ({
   title,
@@ -56,70 +56,84 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
+
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
     accessToken,
     role
   );
-  const pageSize = PAGE_SIZE;
-  
-  const {events, semesters, organizations } = useFetchSemesters(selectedSemester, selectedYear, selectedOrganization);
+
+  const { events, semesters, organizations } = useFetchSemesters(
+    selectedSemester,
+    selectedYear,
+    selectedOrganization
+  );
   useEffect(() => {
     const setupTables = (eventsData) => {
       const newTables = eventsData.map((event, index) => ({
         eventID: event.eventID,
-        index: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
+        index:
+          currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
         eventName: event.eventName,
         rows: [],
       }));
       setTables(newTables);
     };
     setupTables(events);
-  }, [events, currentPage, pageSize])
-  
-  useEffect(() => {
-    const fetchRows = async (eventID) => {
-      setPageLoading(true);
-      setTables([]);
-      setTotal(0);
-      try {
-        const response = await axios.get(
-          `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
-          {
-            params: {
-              page: currentPage + 1,
-              take: pageSize,
-            },
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const data = response.data.data || [];
-        const totalPage = response.data.totalPage;
-        const rowsWithIds =
-          data.map((row, index) => ({
-            ...row,
-            name: row?.studentName,
-            id: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
-          })) || [];
-        setRows(rowsWithIds);
-        setOriginalRows(rowsWithIds);
-        const updatedTables = tables.map((table) =>
-          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
-        );
-        setTables(updatedTables);
-        setTotal(totalPage);
-      } catch (err) {
-        toastError("Getting data fail!!!");
-      }
-      setPageLoading(false);
-    };
-    fetchRows(currentTab);
-  }, [currentPage, pageSize, currentTab, selectedOrganization]);
+  }, [events, currentPage, PAGE_SIZE]);
 
-  
+  const fetchRows = async (eventID) => {
+    setPageLoading(true);
+    setTables([]);
+    setTotal(0);
+    try {
+      const response = await axios.get(
+        `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
+        {
+          params: {
+            page: currentPage + 1,
+            take: PAGE_SIZE,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const data = response.data.data || [];
+      if (data !== null) {
+        setPageLoading(false);
+      }
+      const totalPage = response.data.totalPage;
+      const rowsWithIds =
+        data.map((row, index) => ({
+          ...row,
+          name: row?.studentName,
+          id:
+            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
+        })) || [];
+      setRows(rowsWithIds);
+      setOriginalRows(rowsWithIds);
+      const updatedTables = tables.map((table) =>
+        table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+      );
+      setTables(updatedTables);
+      setTotal(totalPage);
+    } catch (err) {
+      toastError("Getting data fail!!!");
+    }
+  };
+
+  const debouncedFetchRows = useDebounce(fetchRows, 300);
+
+  useEffect(() => {
+    debouncedFetchRows(currentTab);
+  }, [
+    currentPage,
+    PAGE_SIZE,
+    currentTab,
+    selectedOrganization,
+    debouncedFetchRows,
+  ]);
 
   useEffect(() => {
     const filteredRows = originalRows.filter(
@@ -216,7 +230,8 @@ const ExperiencePointTable = ({
         const newRows = rows.filter((row) => row.studentID !== studentID);
         const updatedRows = newRows.map((row, index) => ({
           ...row,
-          id: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
+          id:
+            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
         }));
         setRows(updatedRows);
         setOriginalRows(updatedRows);
@@ -560,15 +575,15 @@ const ExperiencePointTable = ({
                   autoHeight
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
-                  rowsPerPageOptions={[pageSize]}
+                  rowsPerPageOptions={[PAGE_SIZE]}
                   pagination
                   paginationMode="server"
                   paginationModel={{
-                    pageSize: pageSize,
+                    pageSize: PAGE_SIZE,
                     page: currentPage,
                   }}
                   onPaginationModelChange={handlePageChange}
-                  rowCount={total * pageSize}
+                  rowCount={total * PAGE_SIZE}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,

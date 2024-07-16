@@ -22,7 +22,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       headerClassName: "header",
       type: "string",
       width: 200,
-      editable: true,
+      editable: false,
     },
     {
       field: "name",
@@ -47,7 +47,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       width: 500,
       align: "left",
       headerAlign: "left",
-      editable: true,
+      editable: false,
     },
     {
       field: "role",
@@ -55,7 +55,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       headerClassName: "header",
       type: "string",
       width: 300,
-      editable: true,
+      editable: false,
       renderCell: (params) => {
         return <span>{params.value}</span>;
       },
@@ -68,7 +68,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       headerAlign: "left",
       align: "left",
       width: 150,
-      editable: true,
+      editable: false,
     },
   ];
 

@@ -1,10 +1,8 @@
-import React from "react";
 import { Box, Avatar, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { styles } from "../../components/DataTable/style";
-import { render } from "react-dom";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -40,7 +38,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     width: 350,
     align: "left",
     headerAlign: "left",
-    editable: true,
+    editable: false,
   },
   {
     field: "email",
@@ -48,7 +46,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     type: "string",
     width: 500,
-    editable: true,
+    editable: false,
   },
   {
     field: "active",
@@ -56,7 +54,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     type: "string",
     width: 300,
-    editable: true,
+    editable: false,
     renderCell: (params) => (
       <span>{params.value ? "Đang hoạt động" : "Ngừng hoạt động"}</span>
     ),
@@ -72,6 +70,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
       <GridActionsCellItem
         icon={<EditIcon />}
         label="Edit"
+        key={row.id}
         className="textPrimary"
         onClick={() => handleEditClick(row)}
         color="inherit"
@@ -79,6 +78,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
       <GridActionsCellItem
         icon={<DeleteIcon />}
         label="Delete"
+        key={row.id}
         onClick={handleDeleteClick(row.id)}
         color="inherit"
       />,
