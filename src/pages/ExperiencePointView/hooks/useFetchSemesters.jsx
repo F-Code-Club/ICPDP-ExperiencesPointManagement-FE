@@ -1,13 +1,13 @@
-import { useEffect, useState, useMemo} from "react";
+import { useEffect, useState, useMemo } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
-import { toastError } from "../../../utils/toast";
+// import { toastError } from "../../../utils/toast";
 import { API_ENDPOINTS } from "../../../utils/api";
 const useFetchSemester = (
   selectedSemester,
   selectedYear,
-  selectedOrganization,
+  selectedOrganization
 ) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
@@ -69,11 +69,16 @@ const useFetchSemester = (
         }
         setSemesters(semestersResponse);
         setOrganizations(organizationsResponse);
-        if (semestersResponse && organizationsResponse) {
+
+        if (
+          selectedSemester &&
+          selectedYear &&
+          (selectedOrganization || decoded?.organizationID)
+        ) {
           fetchEvents(semestersResponse, organizationsResponse);
         }
       } catch (err) {
-        toastError("Getting semesters fail!!!");
+        //empty
       }
     };
 
@@ -97,7 +102,7 @@ const useFetchSemester = (
         const eventData = response.data.data;
         setEvents(eventData);
       } catch (err) {
-        toastError("Getting events fail!!!");
+        //empty
       }
     };
 
@@ -123,7 +128,7 @@ const useFetchSemester = (
       )
     );
   }, [semesters]);
-  return { semesters, events, organizations, years};
+  return { semesters, events, organizations, years };
 };
 
 export default useFetchSemester;

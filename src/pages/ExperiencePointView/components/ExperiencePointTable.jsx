@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   TextField,
@@ -20,7 +20,8 @@ import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useFetchRole from "../hooks/useFetchRole";
-import { toastError } from "../../../utils/toast";
+import { toastError, toastSuccess } from "../../../utils/toast";
+import { errorToastHandler } from "../../../utils/toast/actions";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../hooks/useDebounce";
@@ -82,48 +83,61 @@ const ExperiencePointTable = ({
     setupTables(events);
   }, [events, currentPage]);
 
-  const fetchRows = async (eventID) => {
-    setPageLoading(true);
-    setTotal(0);
-    try {
-      const response = await axios.get(
-        `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
-        {
-          params: {
-            page: currentPage + 1,
-            take: PAGE_SIZE,
-          },
-          headers: {
-            Authorization: `Bearer ${auth?.accessToken}`,
-            "Content-Type": "application/json",
-          },
+  const fetchRows = useCallback(
+    async (eventID) => {
+      setPageLoading(true);
+      setTotal(0);
+
+      try {
+        const response = await axios.get(
+          `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
+          {
+            params: {
+              page: currentPage + 1,
+              take: PAGE_SIZE,
+            },
+            headers: {
+              Authorization: `Bearer ${auth?.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          toastSuccess("Get data successful!!!");
         }
-      );
+        const data = response.data.data || [];
+        const totalPage = response.data.totalPage || 0;
 
-      const data = response.data.data || [];
-      const totalPage = response.data.totalPage || 0;
+        const rowsWithIds = data.map((row, index) => ({
+          ...row,
+          name: row?.studentName,
+          id:
+            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
+        }));
 
-      const rowsWithIds = data.map((row, index) => ({
-        ...row,
-        name: row?.studentName,
-        id: currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
-      }));
+        setRows(rowsWithIds);
+        setOriginalRows(rowsWithIds);
 
-      setRows(rowsWithIds);
-      setOriginalRows(rowsWithIds);
+        const updatedTables = tables.map((table) =>
+          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
+        );
 
-      const updatedTables = tables.map((table) =>
-        table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
-      );
-
-      setTables(updatedTables);
-      setTotal(totalPage);
-    } catch (err) {
-      toastError("Getting data failed!!!");
-    } finally {
-      setPageLoading(false);
-    }
-  };
+        setTables(updatedTables);
+        setTotal(totalPage);
+      } catch (err) {
+        //empty
+      } finally {
+        setPageLoading(false);
+      }
+    },
+    [
+      axios,
+      API_ENDPOINTS.EVENTS_POINT.GET,
+      currentPage,
+      auth?.accessToken,
+      tables,
+    ]
+  );
 
   const debouncedFetchRows = useDebounce(fetchRows, 300);
 
@@ -137,7 +151,6 @@ const ExperiencePointTable = ({
     }
   }, [
     currentPage,
-    PAGE_SIZE,
     currentTab,
     selectedOrganization,
     selectedSemester,
