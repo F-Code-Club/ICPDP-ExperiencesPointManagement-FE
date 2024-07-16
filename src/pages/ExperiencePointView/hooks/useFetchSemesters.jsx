@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState, useMemo} from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
@@ -111,7 +111,19 @@ const useFetchSemester = (
     selectedOrganization,
     axios,
   ]);
-  return { semesters, events, organizations };
+  const years = useMemo(() => {
+    return Array.from(
+      new Set(
+        semesters
+          .map((semester) => {
+            const year = parseInt(semester?.year, 10);
+            return !isNaN(year) ? year : null;
+          })
+          .filter((year) => year !== null)
+      )
+    );
+  }, [semesters]);
+  return { semesters, events, organizations, years};
 };
 
 export default useFetchSemester;
