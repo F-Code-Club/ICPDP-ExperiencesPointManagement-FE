@@ -24,6 +24,7 @@ import { toastError } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../hooks/useDebounce";
+import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 
 const ExperiencePointTable = ({
@@ -48,11 +49,13 @@ const ExperiencePointTable = ({
   const axios = useAxiosPrivate();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(0);
-  const [selectedSemester, setSelectedSemester] = useState("");
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
+
+  const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
@@ -77,11 +80,10 @@ const ExperiencePointTable = ({
       setTables(newTables);
     };
     setupTables(events);
-  }, [events, currentPage, PAGE_SIZE]);
+  }, [events, currentPage]);
 
   const fetchRows = async (eventID) => {
     setPageLoading(true);
-    setTables([]);
     setTotal(0);
     try {
       const response = await axios.get(
@@ -92,43 +94,55 @@ const ExperiencePointTable = ({
             take: PAGE_SIZE,
           },
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${auth?.accessToken}`,
+            "Content-Type": "application/json",
           },
         }
       );
+
       const data = response.data.data || [];
-      if (data !== null) {
-        setPageLoading(false);
-      }
-      const totalPage = response.data.totalPage;
-      const rowsWithIds =
-        data.map((row, index) => ({
-          ...row,
-          name: row?.studentName,
-          id:
-            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
-        })) || [];
+      const totalPage = response.data.totalPage || 0;
+
+      const rowsWithIds = data.map((row, index) => ({
+        ...row,
+        name: row?.studentName,
+        id: currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
+      }));
+
       setRows(rowsWithIds);
       setOriginalRows(rowsWithIds);
+
       const updatedTables = tables.map((table) =>
         table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
       );
+
       setTables(updatedTables);
       setTotal(totalPage);
     } catch (err) {
-      toastError("Getting data fail!!!");
+      toastError("Getting data failed!!!");
+    } finally {
+      setPageLoading(false);
     }
   };
 
-  const debouncedFetchRows = useDebounce(fetchRows, 500);
+  const debouncedFetchRows = useDebounce(fetchRows, 300);
 
   useEffect(() => {
-    fetchRows(currentTab);
+    if (
+      selectedSemester &&
+      selectedYear &&
+      (organizationID || selectedOrganization)
+    ) {
+      debouncedFetchRows(currentTab);
+    }
   }, [
     currentPage,
     PAGE_SIZE,
     currentTab,
     selectedOrganization,
+    selectedSemester,
+    selectedYear,
+    organizationID,
     debouncedFetchRows,
   ]);
 

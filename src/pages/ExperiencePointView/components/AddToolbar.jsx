@@ -7,22 +7,26 @@ import StudentForm from "../../../components/Form/StudentForm";
 import { toastError } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
+import useAuth from "../../../hooks/useAuth";
+import { decodeToken } from "react-jwt";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
   rows,
   title,
   API_ENDPOINTS,
-  accessToken,
   tables,
   setTables,
   currentTable,
   currentPage,
-  role,
 }) => {
+  const { auth } = useAuth();
+  const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
+  const role = decoded?.role || "";
+
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
-    accessToken,
+    auth?.accessToken,
     role
   );
   const [showForm, setShowForm] = useState(false);
@@ -31,7 +35,7 @@ const AddToolbar = ({
   const handleCloseForm = () => setShowForm(false);
 
   const handleSave = async (formData) => {
-    if (!accessToken) {
+    if (!auth?.accessToken) {
       return;
     }
 
@@ -54,16 +58,18 @@ const AddToolbar = ({
     try {
       const response = await axios.post(
         `${API_ENDPOINTS.EVENTS_POINT.ADD}/${currentTable}`,
-        newRow,
+        {
+          studentID,
+          role: formData.role,
+        },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${auth?.accessToken}`,
+            "Content-Type": `application/json`,
           },
         }
       );
-
       const data = response.data.data;
-
       const updatedRow = {
         ...newRow,
         name: data.studentName,
@@ -111,7 +117,7 @@ const AddToolbar = ({
         handleClose={handleCloseForm}
         handleSave={handleSave}
         title={title}
-        accessToken={accessToken}
+        accessToken={auth?.accessToken}
         func={"Thêm"}
         formConfig={config}
       />
