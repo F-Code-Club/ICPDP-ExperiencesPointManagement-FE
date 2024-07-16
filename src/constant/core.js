@@ -13,7 +13,9 @@ const ROLE = {
   ADMIN: "admin",
   USER: "user",
   CLUB: "club",
-  DEPARTMENT: "department"
+  DEPARTMENT: "department",
+  STUDENT: "student"
 };
 
-export { STRING_EMPTY, HTTP_STATUS, ROLE };
+const PAGE_SIZE = 10
+export { STRING_EMPTY, HTTP_STATUS, ROLE, PAGE_SIZE };

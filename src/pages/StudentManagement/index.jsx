@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import DataTable from "../../components/DataTable";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import StudentDataTable from './components/StudentDataTable';
+
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -8,8 +9,9 @@ import { exportOptions } from "./exportOptions";
 import { toastError } from "../../utils/toast";
 import { ROLE } from "../../constant/core";
 import { formConfig } from "./formConfig";
-const DepartmentManagement = () => {
-  const [departments, setDepartments] = useState([]);
+
+const StudentManagement = () => {
+  const [students, setStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const axios = useAxiosPrivate();
   const { auth } = useContext(AuthContext);
@@ -17,10 +19,10 @@ const DepartmentManagement = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(API_ENDPOINTS.DEPARTMENTS.GET_ALL, {
+      const response = await axios.get(API_ENDPOINTS.STUDENTS.GET_ALL, {
         params: {
           page: currentPage,
-          take: 0,
+          take: 10,
         },
         headers: {
           "Content-Type": "application/json",
@@ -28,12 +30,15 @@ const DepartmentManagement = () => {
         },
       });
       if (response.status === 200 || response.status === 201) {
-        setDepartments(response.data.data);
+        setStudents(response.data.data);
+      } else {
+        console.error("Unexpected status:", response.status);
       }
     } catch (error) {
-      toastError("Error fetching data");
+      console.error("Fetch error:", error);
+      toastError(`Error fetching data: ${error.message}`);
     }
-  }, [axios, currentPage, departments?.length]);
+  }, [axios, currentPage, students?.length]);
 
   useEffect(() => {
     fetchData();
@@ -45,19 +50,19 @@ const DepartmentManagement = () => {
 
   return (
     <>
-      <DataTable
-        title="phòng ban"
-        initialRows={departments}
+      <StudentDataTable
+        title="sinh viên"
+        initialRows={students}
         columnsSchema={columnsSchema}
         onPageChange={handlePageChange}
-        API_ENDPOINTS={API_ENDPOINTS.DEPARTMENTS}
+        API_ENDPOINTS={API_ENDPOINTS.STUDENTS}
         accessToken={accessToken}
         exportOptions={exportOptions}
-        role={ROLE.DEPARTMENT}
+        role={ROLE.STUDENT}
         formConfig={formConfig}
       />
     </>
   );
 };
 
-export default DepartmentManagement;
+export default StudentManagement;

@@ -1,8 +1,8 @@
-import { Box, Avatar, Typography } from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { styles } from "../../components/DataTable/style";
 const columnsSchema = (handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -10,13 +10,13 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 70,
+    width: 120,
     align: "left",
     editable: false,
   },
   {
-    field: "name",
-    headerName: "Tên",
+    field: "studentID",
+    headerName: "MSSV",
     headerClassName: "header",
     renderCell: (params) => (
       <Box
@@ -27,7 +27,6 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
           gap: "18px",
         }}
       >
-        <Avatar src={params.row.avatar} alt="Avatar" sx={styles.avatar} />
         <Typography variant="body1" className="ml-[12px]">
           {params.value}
         </Typography>
@@ -35,29 +34,35 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     ),
 
     type: "string",
-    width: 350,
+    width: 200,
     align: "left",
     headerAlign: "left",
-    editable: false,
+    editable: true,
   },
   {
-    field: "email",
-    headerName: "Email",
+    field: "name",
+    headerName: "Họ và Tên",
     headerClassName: "header",
-    type: "string",
-    width: 500,
-    editable: false,
-  },
-  {
-    field: "active",
-    headerName: "Trạng thái",
-    headerClassName: "header",
-    type: "string",
-    width: 300,
-    editable: false,
     renderCell: (params) => (
-      <span>{params.value ? "Đang hoạt động" : "Ngừng hoạt động"}</span>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          padding: "12px 18px 12px 0px",
+          gap: "18px",
+        }}
+      >
+        <Typography variant="body1" className="ml-[12px]">
+          {params.value}
+        </Typography>
+      </Box>
     ),
+
+    type: "string",
+    width: 900,
+    align: "left",
+    headerAlign: "left",
+    editable: true,
   },
   {
     field: "actions",
@@ -70,7 +75,6 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
       <GridActionsCellItem
         icon={<EditIcon />}
         label="Edit"
-        key={row.id}
         className="textPrimary"
         onClick={() => handleEditClick(row)}
         color="inherit"
@@ -78,7 +82,6 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
       <GridActionsCellItem
         icon={<DeleteIcon />}
         label="Delete"
-        key={row.id}
         onClick={handleDeleteClick(row.id)}
         color="inherit"
       />,

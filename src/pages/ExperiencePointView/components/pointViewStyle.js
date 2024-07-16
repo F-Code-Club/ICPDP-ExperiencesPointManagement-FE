@@ -50,9 +50,9 @@ export const styles = {
   },
   dataGrid: {
     color: "text.dark",
+    width: "1376px",
     borderRadius: "8px",
     height: 650,
-    width: "full",
     overflow: "hidden",
     "& .actions": { color: "text.dark" },
     "& .textPrimary": { color: "text.dark" },
@@ -61,12 +61,26 @@ export const styles = {
       color: "text.light",
     },
     border: "1px solid",
-    
   },
   avatar: {
     width: 32,
     height: 32,
     color: "text.light",
     backgroundColor: "text.dark",
+  },
+  selectField: {
+    width: 130,
+    borderRadius: 1,
+    "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select":
+      {
+        position: "relative",
+        padding: "0",
+        height: 36,
+        display: "flex",
+      },
+    "& .css-ub0vj5-MuiFormLabel-root-MuiInputLabel-root ": {
+      padding: "0",
+      top: "-25%",
+    },
   },
 };

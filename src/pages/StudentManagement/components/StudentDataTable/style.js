@@ -1,3 +1,4 @@
+
 export const styles = {
   addButton: {
     borderRadius: 1,
@@ -8,6 +9,7 @@ export const styles = {
     padding: "10px",
     fontSize: 12,
     textTransform: "none",
+   
   },
   pageContainer: {
     padding: "24px 20px",
@@ -50,6 +52,8 @@ export const styles = {
   },
   dataGrid: {
     color: "text.dark",
+    width: "1376px",
+    border: "2px solid",
     borderRadius: "8px",
     height: 650,
     width: "full",
@@ -61,12 +65,7 @@ export const styles = {
       color: "text.light",
     },
     border: "1px solid",
+    borderRadius: 1,
     
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    color: "text.light",
-    backgroundColor: "text.dark",
   },
 };

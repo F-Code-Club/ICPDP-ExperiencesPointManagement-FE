@@ -13,6 +13,7 @@ const ClubManagement = () => {
   const axios = useAxiosPrivate();
   const { auth } = useContext(AuthContext);
   const { accessToken } = auth;
+  
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {

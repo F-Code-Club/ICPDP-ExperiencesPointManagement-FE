@@ -7,15 +7,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import { toastError } from "../../utils/toast";
-import WarningForm from "../Form/WarningModal";
-import ManagementForm from "../Form/ManagementForm";
-import ExportForm from "../Form/ExportModal";
+import { toastError } from "../../../../utils/toast";
+import WarningForm from "../../../../components/Form/WarningModal";
+import ExportForm from "../../../../components/Form/ExportModal";
 import { styles } from "./style";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import AddToolbar from "./AddToolbar";
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
+import AddStudentToolbar from "./AddStudentToolbar";
+import StudentForm from "../../../../components/Form/StudentForm";
 
-const DataTable = ({
+const StudentDataTable = ({
   title,
   columnsSchema,
   initialRows,
@@ -50,8 +50,8 @@ const DataTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name.toLowerCase().includes(searchQuery) ||
-        row.email.toLowerCase().includes(searchQuery)
+        row.studentID.toLowerCase().includes(searchQuery) ||
+        row.name.toLowerCase().includes(searchQuery)
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows]);
@@ -71,27 +71,16 @@ const DataTable = ({
     const ID = currentRow?.[`${role}ID`];
 
     try {
-      const updatedFormData = {
-        ...formData,
-        id: rowToEdit,
-        active: formData.active,
-      };
-
-      if (!formData.password || formData.password === currentRow?.password) {
-        delete updatedFormData.password;
-      }
-
       const response = await axios.patch(
         `${API_ENDPOINTS.UPDATE}/${ID}`,
-        { ...updatedFormData, id: rowToEdit, active: formData.active },
+        { ...formData, id: rowToEdit},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+
       if (response.status === 200 || response.status === 201) {
         const updatedRow = {
           ...formData,
           id: rowToEdit,
-          avatar: formData.avatar || currentRow?.avatar,
-          active: formData.active,
         };
         const updatedRows = rows.map((row) =>
           row.id === rowToEdit ? updatedRow : row
@@ -101,6 +90,7 @@ const DataTable = ({
         handleClose();
       }
     } catch (error) {
+      console.error("Update error:", error);
       toastError("Updating Fail..");
     }
   };
@@ -110,8 +100,8 @@ const DataTable = ({
     setShowDeleteForm(true);
   };
 
-  const handleDelete = async (rowID) => {
-    const currentRow = rows.find((row) => row.id === rowID);
+  const handleDelete = async (rowId) => {
+    const currentRow = rows.find((row) => row.id === rowId);
     const ID = currentRow?.[`${role}ID`];
     try {
       const response = await axios.delete(`${API_ENDPOINTS.DELETE}/${ID}`, {
@@ -119,7 +109,7 @@ const DataTable = ({
       });
 
       if (response.status === 200 || response.status === 201) {
-        const newRows = rows.filter((row) => row.id !== rowID);
+        const newRows = rows.filter((row) => row.id !== rowId);
         setRows(newRows.map((row, index) => ({ ...row, id: index + 1 })));
         setOriginalRows(
           newRows.map((row, index) => ({ ...row, id: index + 1 }))
@@ -127,6 +117,7 @@ const DataTable = ({
         handleClose();
       }
     } catch (error) {
+      console.error("Delete error:", error);
       toastError("Deleting Fail..");
     }
   };
@@ -191,7 +182,7 @@ const DataTable = ({
               ),
             }}
           />
-          <AddToolbar
+          <AddStudentToolbar
             setRows={setRows}
             setOriginalRows={setOriginalRows}
             rows={rows}
@@ -289,7 +280,7 @@ const DataTable = ({
         handleDelete={handleDelete}
         rowId={rowToDelete}
       />
-      <ManagementForm
+      <StudentForm
         open={showEditForm}
         handleClose={handleClose}
         title={`Chỉnh sửa ${title}`}
@@ -312,4 +303,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default StudentDataTable;
