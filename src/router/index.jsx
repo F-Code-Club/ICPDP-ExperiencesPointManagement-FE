@@ -14,6 +14,8 @@ import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
+import ExperiencePointView from "../pages/ExperiencePointView";
+import SemesterManagement from "../pages/SemesterManagement";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -43,7 +45,44 @@ const RouterComponent = () => {
                 { index: true, element: <Home /> },
                 {
                   path: "transcripts/experience-point",
-                  element: <div>Điểm phong trào</div>,
+                  element: <ExperiencePointView />,
+                },
+                {
+                  path: "transcripts/final-point",
+                  element: <div>Điểm tổng kết</div>,
+                },
+                {
+                  path: "settings/students",
+                  element: <StudentManagement title="Quản lí sinh viên" />,
+                },
+                {
+                  path: "settings/clubs",
+                  element: <ClubManagement title="Quản lí câu lạc bộ" />,
+                },
+                {
+                  path: "settings/departments",
+                  element: <DepartmentManagement title="Quản lí phòng ban" />,
+                },
+                {
+                  path: "settings/semesters",
+                  element: <SemesterManagement />,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          // club
+          path: "club",
+          element: <RequireAuth allowedRoles={[ROLE.CLUB]} />,
+          children: [
+            {
+              element: <Layout />,
+              children: [
+                { index: true, element: <Home /> },
+                {
+                  path: "transcripts/experience-point",
+                  element: <ExperiencePointView />,
                 },
                 {
                   path: "transcripts/final-point",
