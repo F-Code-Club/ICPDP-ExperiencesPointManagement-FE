@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useMemo} from "react";
 import {
   Box,
   TextField,
@@ -25,6 +26,9 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useFetchRole from "../hooks/useFetchRole";
 import { toastError } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
+import useFetchSemesters from "../hooks/useFetchSemesters";
+
+
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -45,11 +49,8 @@ const ExperiencePointTable = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [currentTab, setCurrentTab] = useState(0);
   const axios = useAxiosPrivate();
-  const [semesters, setSemesters] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
-  const [events, setEvents] = useState([]);
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedSemester, setSelectedSemester] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -61,101 +62,21 @@ const ExperiencePointTable = ({
     role
   );
   const pageSize = PAGE_SIZE;
+  
+  const {events, semesters, organizations } = useFetchSemesters(selectedSemester, selectedYear, selectedOrganization);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        };
-        let semestersResponse, organizationsResponse;
-
-        if (role === "admin") {
-          const [semestersRes, clubsRes, departmentsRes] = await Promise.all([
-            axios.get(API_ENDPOINTS.SEMESTERS.GET, {
-              params: { page: 1, take: 0 },
-              headers,
-            }),
-            axios.get(API_ENDPOINTS.CLUBS.GET_ALL, {
-              params: { page: 1, take: 0 },
-              headers,
-            }),
-            axios.get(API_ENDPOINTS.DEPARTMENTS.GET_ALL, {
-              params: { page: 1, take: 0 },
-              headers,
-            }),
-          ]);
-
-          semestersResponse = semestersRes.data.data;
-          const clubsData = clubsRes.data.data;
-          const departmentsData = departmentsRes.data.data;
-
-          organizationsResponse = [...clubsData, ...departmentsData];
-        } else {
-          [semestersResponse, organizationsResponse] = await Promise.all([
-            axios.get(API_ENDPOINTS.SEMESTERS.GET, {
-              params: { page: 1, take: 0 },
-              headers,
-            }),
-            role === "club"
-              ? axios.get(`${API_ENDPOINTS.CLUBS.GET}/${organizationID}`, {
-                  headers,
-                })
-              : axios.get(
-                  `${API_ENDPOINTS.DEPARTMENTS.GET}/${organizationID}`,
-                  { headers }
-                ),
-          ]);
-
-          semestersResponse = semestersResponse.data.data;
-          organizationsResponse = [organizationsResponse.data.data];
-        }
-        setSemesters(semestersResponse);
-        setOrganizations(organizationsResponse);
-        if (semestersResponse && organizationsResponse) {
-          fetchEvents(semestersResponse, organizationsResponse);
-        }
-      } catch (err) {
-        toastError("Getting semesters fail!!!");
-      }
+    const setupTables = (eventsData) => {
+      const newTables = eventsData.map((event, index) => ({
+        eventID: event.eventID,
+        index: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
+        eventName: event.eventName,
+        rows: [],
+      }));
+      setTables(newTables);
     };
-
-    const fetchEvents = async (semestersData, organizationData) => {
-      if (!semestersData || !organizationData) {
-        return;
-      }
-      setEvents([]);
-      setupTables([]);
-      try {
-        const response = await axios.get(API_ENDPOINTS.EVENTS.GET_ALL, {
-          params: {
-            organization: selectedOrganization || organizationID,
-            year: selectedYear,
-            semester: selectedSemester,
-          },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const eventData = response.data.data;
-        setEvents(eventData);
-        setupTables(eventData);
-      } catch (err) {
-        toastError("Getting events fail!!!");
-      }
-    };
-
-    fetchData();
-  }, [
-    role,
-    organizationID,
-    accessToken,
-    selectedYear,
-    selectedSemester,
-    selectedOrganization,
-  ]);
+    setupTables(events);
+  }, [events, currentPage, pageSize])
+  
   useEffect(() => {
     const fetchRows = async (eventID) => {
       setPageLoading(true);
@@ -198,15 +119,7 @@ const ExperiencePointTable = ({
     fetchRows(currentTab);
   }, [currentPage, pageSize, currentTab, selectedOrganization]);
 
-  const setupTables = (eventsData) => {
-    const newTables = eventsData.map((event, index) => ({
-      eventID: event.eventID,
-      index: currentPage !== 0 ? index + 1 + currentPage * pageSize : index + 1,
-      eventName: event.eventName,
-      rows: [],
-    }));
-    setTables(newTables);
-  };
+  
 
   useEffect(() => {
     const filteredRows = originalRows.filter(
@@ -276,7 +189,7 @@ const ExperiencePointTable = ({
       setOriginalRows(updatedRows);
 
       const updatedTables = tables.map((table) =>
-        table.eventID === currentTable ? { ...table, rows: updatedRows } : table
+        table.eventID === currentTab ? { ...table, rows: updatedRows } : table
       );
 
       setTables(updatedTables);
