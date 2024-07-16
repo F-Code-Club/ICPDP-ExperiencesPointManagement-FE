@@ -4,6 +4,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import { ManagementFormStyles as styles } from "../../../components/Form/style";
 
+// eslint-disable-next-line react/prop-types
 function AddEventModal({ open, handleClose, title, handleAddTable, func }) {
   const [info, setInfo] = useState({});
 

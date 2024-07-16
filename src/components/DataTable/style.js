@@ -50,8 +50,6 @@ export const styles = {
   },
   dataGrid: {
     color: "text.dark",
-    width: "1376px",
-    border: "2px solid",
     borderRadius: "8px",
     height: 650,
     width: "full",
@@ -63,7 +61,6 @@ export const styles = {
       color: "text.light",
     },
     border: "1px solid",
-    borderRadius: 1,
     
   },
   avatar: {

@@ -12,6 +12,7 @@ function debounce(func, timeout = 300) {
 }
 
 const useDebounce = (cb, delay) => {
+  console.log("In debounce");
     const cbRef = useRef(cb);
     useLayoutEffect(() => {
         cbRef.current = cb;

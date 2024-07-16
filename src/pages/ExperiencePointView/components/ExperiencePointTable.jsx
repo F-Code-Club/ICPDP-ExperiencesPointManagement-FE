@@ -123,10 +123,10 @@ const ExperiencePointTable = ({
     }
   };
 
-  const debouncedFetchRows = useDebounce(fetchRows, 300);
+  const debouncedFetchRows = useDebounce(fetchRows, 500);
 
   useEffect(() => {
-    debouncedFetchRows(currentTab);
+    fetchRows(currentTab);
   }, [
     currentPage,
     PAGE_SIZE,
