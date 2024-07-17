@@ -21,10 +21,9 @@ import AddEventModal from "./AddEventModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useFetchRole from "../hooks/useFetchRole";
 import { toastError, toastSuccess } from "../../../utils/toast";
-import { errorToastHandler } from "../../../utils/toast/actions";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
-import useDebounce from "../hooks/useDebounce";
+import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 
