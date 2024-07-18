@@ -8,6 +8,7 @@ const useFetchSemester = (
   selectedSemester,
   selectedYear,
   selectedOrganization,
+  setCurrentPage
 ) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
@@ -101,6 +102,7 @@ const useFetchSemester = (
 
         const eventData = response.data.data;
         setEvents(eventData);
+        setCurrentPage(eventData[0].eventID)
       } catch (err) {
         //empty
       }

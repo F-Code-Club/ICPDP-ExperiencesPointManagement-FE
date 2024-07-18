@@ -6,6 +6,7 @@ import {
   IconButton,
   Button,
   InputAdornment,
+  FormControl,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -66,7 +67,8 @@ const ExperiencePointTable = ({
   const { events, semesters, organizations } = useFetchSemesters(
     selectedSemester,
     selectedYear,
-    selectedOrganization
+    selectedOrganization,
+    setCurrentPage
   );
   // Indexing
   useEffect(() => {
@@ -86,6 +88,10 @@ const ExperiencePointTable = ({
   // Fetch data in each tables
   const fetchRows = useCallback(
     async (eventID) => {
+      if (!eventID) {
+        return;
+      }
+
       setPageLoading(true);
       setTotal(0);
 
@@ -148,7 +154,8 @@ const ExperiencePointTable = ({
     if (
       selectedSemester &&
       selectedYear &&
-      (organizationID || selectedOrganization)
+      (organizationID || selectedOrganization) &&
+      currentPage !== null
     ) {
       debouncedFetchRows(currentTab);
     }
@@ -379,25 +386,27 @@ const ExperiencePointTable = ({
             selectedSemester={selectedSemester}
           />
           <Box className="flex gap-3">
-            <TextField
-              className="rounded-sm border-2"
-              placeholder="Tìm kiếm"
-              autoComplete="off"
-              variant="outlined"
-              onChange={handleSearch}
-              sx={styles.searchBar}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <IconButton>
-                      <SearchIcon
-                        sx={{ color: "text.dark", width: 15, height: 15 }}
-                      />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <FormControl>
+              <TextField
+                className="rounded-sm border-2"
+                placeholder="Tìm kiếm"
+                autoComplete="off"
+                variant="outlined"
+                onChange={handleSearch}
+                sx={styles.searchBar}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton>
+                        <SearchIcon
+                          sx={{ color: "text.dark", width: 15, height: 15 }}
+                        />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
             {role !== "admin" && (
               <AddToolbar
                 setRows={setRows}
