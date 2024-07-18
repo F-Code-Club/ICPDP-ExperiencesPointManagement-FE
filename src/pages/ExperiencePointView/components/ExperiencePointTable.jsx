@@ -253,7 +253,7 @@ const ExperiencePointTable = ({
         handleClose();
       }
     } catch (err) {
-      toastError("Deleting row fail!!!");
+      toastError("Deleting row fail");
     }
   };
 
@@ -301,7 +301,7 @@ const ExperiencePointTable = ({
         setCurrentTab(newTab.eventID);
       }
     } catch (err) {
-      toastError("Adding fail!!!!");
+      toastError("Adding fail");
     }
   };
   // Handler for closing modals
@@ -479,7 +479,7 @@ const ExperiencePointTable = ({
             >
               {currentTab === table.eventID && (
                 <DataGrid
-                  rows={table.rows}
+                  rows={rows}
                   columns={columns}
                   rowHeight={55}
                   onCellDoubleClick={(e) => e.preventDefault()}

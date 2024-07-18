@@ -73,7 +73,7 @@ const useFetchSemester = (
           fetchEvents(semestersResponse, organizationsResponse);
         }
       } catch (err) {
-        toastError("Getting semesters fail!!!");
+        //empty
       }
     };
 
@@ -97,7 +97,7 @@ const useFetchSemester = (
         const eventData = response.data.data;
         setEvents(eventData);
       } catch (err) {
-        toastError("Getting events fail!!!");
+        toastError("Getting events fail");
       }
     };
 
