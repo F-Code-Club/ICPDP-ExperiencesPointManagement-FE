@@ -60,7 +60,6 @@ const SemesterSelect = ({
         <Select
           label="Kì học"
           size="small"
-          defaultValue={semesters[0]?.semester}
           id="semester-select"
           onChange={(e) => setSelectedSemester(e.target.value)}
           sx={{ ...styles.selectField }}
