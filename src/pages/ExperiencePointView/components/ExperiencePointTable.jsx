@@ -54,7 +54,7 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-
+  const [hovered, setHovered] = useState(false);
   const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
@@ -102,7 +102,7 @@ const ExperiencePointTable = ({
           }
         );
         if (response.status === 200) {
-          toastSuccess("Get data successful!!!");
+          toastSuccess("Get data successful");
         }
         const data = response.data.data || [];
         const totalPage = response.data.totalPage || 0;
@@ -232,7 +232,7 @@ const ExperiencePointTable = ({
       setTables(updatedTables);
       handleClose();
     } catch (err) {
-      toastError("Updating fail!!!!");
+      toastError("Updating fail");
     }
   };
 
@@ -265,7 +265,7 @@ const ExperiencePointTable = ({
         handleClose();
       }
     } catch (err) {
-      toastError("Deleting row fail!!!");
+      toastError("Deleting row fail");
     }
   };
 
@@ -279,7 +279,7 @@ const ExperiencePointTable = ({
         !semesters ||
         !semesters[0] ||
         !organizations ||
-        organizations.length === 0
+        !organizations.length
       ) {
         return;
       }
@@ -313,7 +313,7 @@ const ExperiencePointTable = ({
         setCurrentTab(newTab.eventID);
       }
     } catch (err) {
-      toastError("Adding fail!!!!");
+      toastError("Adding fail");
     }
   };
   // Handler for closing modals
@@ -356,7 +356,7 @@ const ExperiencePointTable = ({
         }
       }
     } catch (err) {
-      toastError("Deleting event fail!!!");
+      toastError("Deleting event fail");
     }
   };
 
@@ -431,6 +431,8 @@ const ExperiencePointTable = ({
               <Tab
                 key={table.eventID}
                 value={table.eventID}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
                 sx={{
                   position: "relative",
                   "& .MuiTab-root": {
@@ -471,16 +473,22 @@ const ExperiencePointTable = ({
                         handleTabDelete(table.eventID);
                       }}
                     >
-                      <ClearIcon />
+                      <ClearIcon
+                        className={`object-cover w-full h-full ${
+                          hovered ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
                     </IconButton>
                     {table?.eventName}
                   </Box>
                 }
               />
             ))}
-          <Button onClick={handleAddTable}>
-            <AddIcon className="text-xl text-dark-text-color" />
-          </Button>
+          {role !== "admin" && (
+            <Button onClick={handleAddTable}>
+              <AddIcon className="text-xl text-dark-text-color" />
+            </Button>
+          )}
         </Tabs>
         <Box>
           {tables.map((table) => (
