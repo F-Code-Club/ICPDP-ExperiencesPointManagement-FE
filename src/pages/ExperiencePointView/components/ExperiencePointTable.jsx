@@ -54,7 +54,7 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(null);
   const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
@@ -68,6 +68,8 @@ const ExperiencePointTable = ({
     selectedYear,
     selectedOrganization
   );
+
+  // Indexing table
   useEffect(() => {
     const setupTables = (eventsData) => {
       const newTables = eventsData.map((event, index) => ({
@@ -82,6 +84,7 @@ const ExperiencePointTable = ({
     setupTables(events);
   }, [events, currentPage]);
 
+  // Fetch data in each tables
   const fetchRows = useCallback(
     async (eventID) => {
       setPageLoading(true);
@@ -138,8 +141,10 @@ const ExperiencePointTable = ({
     ]
   );
 
+  // Add debounce
   const debouncedFetchRows = useDebounce(fetchRows, 300);
 
+  // Re-render rows when switch tab
   useEffect(() => {
     if (
       selectedSemester &&
@@ -431,8 +436,8 @@ const ExperiencePointTable = ({
               <Tab
                 key={table.eventID}
                 value={table.eventID}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
+                onMouseEnter={() => setHovered(table.eventID)}
+                onMouseLeave={() => setHovered(null)}
                 sx={{
                   position: "relative",
                   "& .MuiTab-root": {
@@ -475,7 +480,7 @@ const ExperiencePointTable = ({
                     >
                       <ClearIcon
                         className={`object-cover w-full h-full ${
-                          hovered ? "opacity-100" : "opacity-0"
+                          hovered === table.eventID ? "opacity-100" : "opacity-0"
                         }`}
                       />
                     </IconButton>
