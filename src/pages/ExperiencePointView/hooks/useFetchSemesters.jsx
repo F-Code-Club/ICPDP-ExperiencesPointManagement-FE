@@ -7,7 +7,7 @@ import { API_ENDPOINTS } from "../../../utils/api";
 const useFetchSemester = (
   selectedSemester,
   selectedYear,
-  selectedOrganization
+  selectedOrganization,
 ) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;

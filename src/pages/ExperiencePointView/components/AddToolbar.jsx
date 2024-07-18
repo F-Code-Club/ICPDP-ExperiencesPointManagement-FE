@@ -40,6 +40,10 @@ const AddToolbar = ({
     }
 
     const studentID = formData.studentID.toUpperCase().trim();
+    if (rows.some(val => val.studentID === studentID)) {
+      toastError("Student is existed in this event");
+      return;
+    }
     const selectedRole = formData.role;
     const roleData = participantRole.find((role) => role.role === selectedRole);
     const point = roleData?.point;

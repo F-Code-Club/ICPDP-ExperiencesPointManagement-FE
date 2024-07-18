@@ -45,13 +45,13 @@ const ExperiencePointTable = ({
   const [rowToEdit, setRowToEdit] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState("");
   const axios = useAxiosPrivate();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(null);
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
@@ -68,8 +68,7 @@ const ExperiencePointTable = ({
     selectedYear,
     selectedOrganization
   );
-
-  // Indexing table
+  // Indexing
   useEffect(() => {
     const setupTables = (eventsData) => {
       const newTables = eventsData.map((event, index) => ({
@@ -336,7 +335,6 @@ const ExperiencePointTable = ({
     setCurrentTab(newValue);
     setCurrentPage(0);
   };
-
   const handleTabDelete = async (eventID) => {
     try {
       const response = await axios.delete(
@@ -368,7 +366,6 @@ const ExperiencePointTable = ({
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage.page);
   };
-
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -422,7 +419,7 @@ const ExperiencePointTable = ({
           </Box>
         </Box>
         <Tabs
-          value={currentTab}
+          value={currentTab !== "" ? currentTab : false}
           onChange={handleTabChange}
           sx={{
             marginBottom: 2,
@@ -480,7 +477,9 @@ const ExperiencePointTable = ({
                     >
                       <ClearIcon
                         className={`object-cover w-full h-full ${
-                          hovered === table.eventID ? "opacity-100" : "opacity-0"
+                          hovered === table.eventID
+                            ? "opacity-100"
+                            : "opacity-0"
                         }`}
                       />
                     </IconButton>
@@ -518,6 +517,7 @@ const ExperiencePointTable = ({
                   rowsPerPageOptions={[PAGE_SIZE]}
                   pagination
                   paginationMode="server"
+                  pageSizeOptions={[PAGE_SIZE]}
                   paginationModel={{
                     pageSize: PAGE_SIZE,
                     page: currentPage,
