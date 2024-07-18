@@ -89,7 +89,7 @@ const AddToolbar = ({
       setTables(updatedTables);
       setShowForm(false);
     } catch (error) {
-      toastError("Saving failed!!!!");
+      toastError("Saving failed");
     }
   };
 

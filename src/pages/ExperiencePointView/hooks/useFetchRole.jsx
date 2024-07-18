@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-
+import { toastError } from "../../../utils/toast";
 const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
   const axios = useAxiosPrivate();
   const [config, setConfig] = useState({
@@ -42,7 +42,7 @@ const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
           ],
         }));
       } catch (err) {
-        console.log(err);
+        toastError("Failed to fetch roles. Please try again later.");
       }
     };
     fetchRole();
