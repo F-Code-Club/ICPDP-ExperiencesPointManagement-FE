@@ -4,6 +4,7 @@ import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
 // import { toastError } from "../../../utils/toast";
 import { API_ENDPOINTS } from "../../../utils/api";
+import { ROLE } from "../../../constant/core";
 const useFetchSemester = (
   selectedSemester,
   selectedYear,
@@ -25,7 +26,7 @@ const useFetchSemester = (
         };
         let semestersResponse, organizationsResponse;
 
-        if (role === "admin") {
+        if (role === ROLE.ADMIN) {
           const [semestersRes, clubsRes, departmentsRes] = await Promise.all([
             axios.get(API_ENDPOINTS.SEMESTERS.GET, {
               params: { page: 1, take: 0 },
@@ -52,7 +53,7 @@ const useFetchSemester = (
               params: { page: 1, take: 0 },
               headers,
             }),
-            role === "club"
+            role === ROLE.CLUB
               ? axios.get(
                   `${API_ENDPOINTS.CLUBS.GET}/${decoded?.organizationID}`,
                   {
@@ -102,7 +103,7 @@ const useFetchSemester = (
 
         const eventData = response.data.data;
         setEvents(eventData);
-        setCurrentPage(eventData[0].eventID)
+        setCurrentPage(eventData[0].eventID);
       } catch (err) {
         //empty
       }
