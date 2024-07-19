@@ -57,6 +57,7 @@ const ExperiencePointTable = ({
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
+  const [deleteEvent, setDeleteEvent] = useState(null)
   const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
@@ -242,6 +243,7 @@ const ExperiencePointTable = ({
       );
 
       setTables(updatedTables);
+      toastSuccess("Update student successfully")
       handleClose();
     } catch (err) {
       toastError("Updating fail");
@@ -324,10 +326,11 @@ const ExperiencePointTable = ({
         };
         setTables((prevTables) => [...prevTables, newTab]);
         setCurrentTab(newTab.eventID);
+        toastSuccess("Add event successfully")
       }
     } catch (err) {
       toastError("Adding fail");
-    }
+    } 
   };
   
   // Handler for closing modals
@@ -345,6 +348,14 @@ const ExperiencePointTable = ({
     setCurrentTab(newValue);
     setCurrentPage(0);
   };
+
+  // Open delete form
+  const onTabDelete = (eventID) => {
+    setShowDeleteForm(true);
+    setDeleteEvent(eventID);
+  }
+
+  // Delete Tab
   const handleTabDelete = async (eventID) => {
     try {
       const response = await axios.delete(
@@ -362,6 +373,8 @@ const ExperiencePointTable = ({
         setTables(newTables);
         setCurrentTab(newTables[newTables.length - 1].eventID || null);
       }
+      setShowDeleteForm(false)
+      toastSuccess("Delete successfully")
     } catch (err) {
       toastError("Deleting event fail");
     }
@@ -478,7 +491,7 @@ const ExperiencePointTable = ({
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleTabDelete(table.eventID);
+                        onTabDelete(table.eventID)
                       }}
                     >
                       <ClearIcon
@@ -585,6 +598,12 @@ const ExperiencePointTable = ({
         handleClose={handleClose}
         handleDelete={handleDelete}
         rowId={rowToDelete}
+      />
+      <WarningForm
+        open={showDeleteForm}
+        handleClose={handleClose}
+        handleDelete={handleTabDelete}
+        rowId={deleteEvent}
       />
       <StudentForm
         open={showEditForm}

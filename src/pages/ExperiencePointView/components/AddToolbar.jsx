@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
 import StudentForm from "../../../components/Form/StudentForm";
-import { toastError } from "../../../utils/toast";
+import { toastError, toastSuccess } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
 import useAuth from "../../../hooks/useAuth";
@@ -92,6 +92,7 @@ const AddToolbar = ({
 
       setTables(updatedTables);
       setShowForm(false);
+      toastSuccess("Add student successfully")
     } catch (error) {
       toastError("Saving failed");
     }
