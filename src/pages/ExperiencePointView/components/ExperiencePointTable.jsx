@@ -27,6 +27,7 @@ import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
+import { ROLE } from "../../../constant/core";
 
 const ExperiencePointTable = ({
   title,
@@ -56,7 +57,7 @@ const ExperiencePointTable = ({
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
-  const [deleteEvent, setDeleteEvent] = useState(null)
+  const [deleteEvent, setDeleteEvent] = useState(null);
   const [showDeleteEvent, setShowDeleteEvent] = useState(null);
   const { auth } = useAuth();
 
@@ -243,7 +244,7 @@ const ExperiencePointTable = ({
       );
 
       setTables(updatedTables);
-      toastSuccess("Update student successfully")
+      toastSuccess("Update student successfully");
       handleClose();
     } catch (err) {
       toastError("Updating fail");
@@ -259,7 +260,6 @@ const ExperiencePointTable = ({
 
   // Handler for delete confirmation
   const handleDelete = async (deleteRow) => {
-    
     const studentID = deleteRow.studentID;
     try {
       const response = await axios.delete(
@@ -277,9 +277,9 @@ const ExperiencePointTable = ({
         const updatedTables = tables.map((table) =>
           table.eventID === currentTab ? { ...table, rows: updatedRows } : table
         );
-      
+
         setTables(updatedTables);
-        toastSuccess("Delete student successfully")
+        toastSuccess("Delete student successfully");
         handleClose();
       }
     } catch (err) {
@@ -300,9 +300,9 @@ const ExperiencePointTable = ({
         return;
       }
       setShowAddEventModal(true);
-      
+
       // eslint-disable-next-line no-prototype-builtins
-      if (formData.hasOwnProperty('eventName')) {
+      if (formData.hasOwnProperty("eventName")) {
         const response = await axios.post(
           API_ENDPOINTS.EVENTS.ADD,
           {
@@ -330,18 +330,18 @@ const ExperiencePointTable = ({
         };
         setTables((prevTables) => [...prevTables, newTab]);
         setCurrentTab(newTab.eventID);
-        toastSuccess("Add event successfully")
+        toastSuccess("Add event successfully");
       }
     } catch (err) {
       toastError("Adding fail");
-    } 
+    }
   };
-  
+
   // Handler for closing modals
   const handleClose = () => {
     setShowDeleteForm(false);
     setShowEditForm(false);
-    setShowDeleteEvent(false)
+    setShowDeleteEvent(false);
     setShowAddEventModal(false);
     setRowToDelete(null);
     setRowToEdit(null);
@@ -358,7 +358,7 @@ const ExperiencePointTable = ({
   const onTabDelete = (eventID) => {
     setShowDeleteEvent(true);
     setDeleteEvent(eventID);
-  }
+  };
 
   // Delete Tab
   const handleTabDelete = async (eventID) => {
@@ -379,7 +379,7 @@ const ExperiencePointTable = ({
         setCurrentTab(newTables[newTables.length - 1].eventID || null);
       }
       handleClose();
-      toastSuccess("Delete successfully")
+      toastSuccess("Delete successfully");
     } catch (err) {
       toastError("Deleting event fail");
     }
@@ -422,7 +422,7 @@ const ExperiencePointTable = ({
                 }}
               />
             </FormControl>
-            {role !== "admin" && (
+            {role === ROLE.ADMIN ? null : (
               <AddToolbar
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
@@ -479,40 +479,42 @@ const ExperiencePointTable = ({
                       width: "100%",
                     }}
                   >
-                    {role ==="admin" ? null : (<IconButton
-                      edge="end"
-                      sx={{
-                        position: "absolute",
-                        left: "80%",
-                        top: "-10px",
-                        "& .MuiSvgIcon-root": {
-                          width: "12px",
-                        },
-                        "&:hover": {
-                          backgroundColor: "transparent",
-                          boxShadow: "none",
-                          color: "text.dark",
-                        },
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onTabDelete(table.eventID)
-                      }}
-                    >
-                      <ClearIcon
-                        className={`object-cover w-full h-full ${
-                          hovered === table.eventID
-                            ? "opacity-100"
-                            : "opacity-0"
-                        }`}
-                      />
-                    </IconButton>)}
+                    {role === ROLE.ADMIN ? null : (
+                      <IconButton
+                        edge="end"
+                        sx={{
+                          position: "absolute",
+                          left: "80%",
+                          top: "-10px",
+                          "& .MuiSvgIcon-root": {
+                            width: "12px",
+                          },
+                          "&:hover": {
+                            backgroundColor: "transparent",
+                            boxShadow: "none",
+                            color: "text.dark",
+                          },
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTabDelete(table.eventID);
+                        }}
+                      >
+                        <ClearIcon
+                          className={`object-cover w-full h-full ${
+                            hovered === table.eventID
+                              ? "opacity-100"
+                              : "opacity-0"
+                          }`}
+                        />
+                      </IconButton>
+                    )}
                     {table?.eventName}
                   </Box>
                 }
               />
             ))}
-          {role !== "admin" && (
+          {role === ROLE.ADMIN ? null : (
             <Button onClick={handleAddTable}>
               <AddIcon className="text-xl text-dark-text-color" />
             </Button>
