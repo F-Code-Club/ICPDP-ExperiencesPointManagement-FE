@@ -27,7 +27,6 @@ import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
-import { set } from "react-hook-form";
 
 const ExperiencePointTable = ({
   title,
