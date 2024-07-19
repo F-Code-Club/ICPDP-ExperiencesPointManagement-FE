@@ -11,13 +11,14 @@ import { styles } from "./pointViewStyle";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
 import useFetchSemesters from "../hooks/useFetchSemesters";
+import { ROLE } from "../../../constant/core";
 const SemesterSelect = ({
   setSelectedYear,
   setSelectedOrganization,
   setSelectedSemester,
   selectedYear,
   selectedOrganization,
-  selectedSemester
+  selectedSemester,
 }) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
@@ -30,11 +31,7 @@ const SemesterSelect = ({
   return (
     <Box className="flex gap-3 h-full">
       <FormControl fullWidth size="small">
-        <InputLabel
-          htmlFor="year-select"
-          size="small"
-          sx={{}}
-        >
+        <InputLabel htmlFor="year-select" size="small" sx={{}}>
           Năm học
         </InputLabel>
         <Select
@@ -43,7 +40,7 @@ const SemesterSelect = ({
           value={semesters[0]?.year}
           onChange={(e) => setSelectedYear(e.target.value)}
           id="year-select"
-          sx={{ ...styles.selectField}}
+          sx={{ ...styles.selectField }}
         >
           {years.map((year) => (
             <MenuItem key={year} value={year}>
@@ -74,7 +71,7 @@ const SemesterSelect = ({
         </Select>
       </FormControl>
 
-      {role === "admin" ? (
+      {role === ROLE.ADMIN ? (
         <FormControl fullWidth size="small">
           <InputLabel
             htmlFor="organization-select"
