@@ -82,5 +82,8 @@ export const styles = {
       padding: "0",
       top: "-25%",
     },
+    "& #year-select ": {
+      textAlign: "left"
+    }
   },
 };

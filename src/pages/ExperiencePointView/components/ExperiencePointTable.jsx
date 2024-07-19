@@ -27,6 +27,7 @@ import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
+import { set } from "react-hook-form";
 
 const ExperiencePointTable = ({
   title,
@@ -279,12 +280,10 @@ const ExperiencePointTable = ({
       toastError("Deleting row fail");
     }
   };
-
   const columns = columnsSchema(handleEditClick, handleDeleteClick, role);
 
   // Handler for adding a new table/event
   const handleAddTable = async (formData) => {
-    setShowAddEventModal(true);
     try {
       if (
         !semesters ||
@@ -294,26 +293,29 @@ const ExperiencePointTable = ({
       ) {
         return;
       }
+      setShowAddEventModal(true);
+      
+      // eslint-disable-next-line no-prototype-builtins
+      if (formData.hasOwnProperty('eventName')) {
+        const response = await axios.post(
+          API_ENDPOINTS.EVENTS.ADD,
+          {
+            ...formData,
 
-      const response = await axios.post(
-        API_ENDPOINTS.EVENTS.ADD,
-        {
-          ...formData,
-
-          year: selectedYear,
-          semester: selectedSemester,
-          organization: selectedOrganization || organizationID,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            year: selectedYear,
+            semester: selectedSemester,
+            organization: selectedOrganization || organizationID,
           },
-        }
-      );
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
-      const data = response.data.data;
-      if (response.status === 200 || response.status === 201) {
+        const data = response.data.data;
+
         const newTab = {
           eventID: data.eventID,
           index: tables.length,
@@ -327,6 +329,7 @@ const ExperiencePointTable = ({
       toastError("Adding fail");
     }
   };
+  
   // Handler for closing modals
   const handleClose = () => {
     setShowDeleteForm(false);
@@ -355,15 +358,9 @@ const ExperiencePointTable = ({
       );
       if (response.status === 200 || response.status === 204) {
         const newTables = tables.filter((table) => table.eventID !== eventID);
-        setTables(newTables);
 
-        if (newTables.length === 0) {
-          setCurrentTab(0);
-        } else if (currentTab >= newTables.length) {
-          setCurrentTab(newTables.length - 1);
-        } else {
-          setCurrentTab(currentTab);
-        }
+        setTables(newTables);
+        setCurrentTab(newTables[newTables.length - 1].eventID || null);
       }
     } catch (err) {
       toastError("Deleting event fail");

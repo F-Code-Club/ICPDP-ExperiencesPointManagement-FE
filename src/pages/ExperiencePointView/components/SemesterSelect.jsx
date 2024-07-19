@@ -33,7 +33,7 @@ const SemesterSelect = ({
         <InputLabel
           htmlFor="year-select"
           size="small"
-          sx={{ textAlign: "start" }}
+          sx={{}}
         >
           Năm học
         </InputLabel>
@@ -43,7 +43,7 @@ const SemesterSelect = ({
           value={semesters[0]?.year}
           onChange={(e) => setSelectedYear(e.target.value)}
           id="year-select"
-          sx={{ ...styles.selectField }}
+          sx={{ ...styles.selectField}}
         >
           {years.map((year) => (
             <MenuItem key={year} value={year}>
