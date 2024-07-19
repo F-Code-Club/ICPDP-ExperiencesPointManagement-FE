@@ -304,7 +304,6 @@ export const StudentFormStyles = {
   },
   inputField: {
     width: "100%",
-    
 
     "& .MuiInputLabel-root": {
       fontSize: "16px",
@@ -391,7 +390,7 @@ export const StudentFormStyles = {
     width: "15px",
     height: "15px",
   },
- 
+
   deleteButton: {
     width: "64px",
     height: "32px",
