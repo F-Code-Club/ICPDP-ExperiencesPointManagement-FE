@@ -27,6 +27,7 @@ import useFetchSemesters from "../hooks/useFetchSemesters";
 import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
+import { toast } from "react-toastify";
 
 const ExperiencePointTable = ({
   title,
@@ -57,6 +58,7 @@ const ExperiencePointTable = ({
   const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
   const [deleteEvent, setDeleteEvent] = useState(null)
+  const [showDeleteEvent, setShowDeleteEvent] = useState(null);
   const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
@@ -111,7 +113,7 @@ const ExperiencePointTable = ({
           }
         );
         if (response.status === 200) {
-          toastSuccess("Get data successful");
+          toastSuccess("Get data successfully");
         }
         const data = response.data.data || [];
         const totalPage = response.data.totalPage || 0;
@@ -251,12 +253,14 @@ const ExperiencePointTable = ({
 
   // Handler for delete button click
   const handleDeleteClick = (deleteRow) => {
+    console.log(deleteRow);
     setRowToDelete(deleteRow);
     setShowDeleteForm(true);
   };
 
   // Handler for delete confirmation
   const handleDelete = async (deleteRow) => {
+    
     const studentID = deleteRow.studentID;
     try {
       const response = await axios.delete(
@@ -274,7 +278,9 @@ const ExperiencePointTable = ({
         const updatedTables = tables.map((table) =>
           table.eventID === currentTab ? { ...table, rows: updatedRows } : table
         );
+      
         setTables(updatedTables);
+        toastSuccess("Delete student successfully")
         handleClose();
       }
     } catch (err) {
@@ -336,6 +342,7 @@ const ExperiencePointTable = ({
   const handleClose = () => {
     setShowDeleteForm(false);
     setShowEditForm(false);
+    setShowDeleteEvent(false)
     setShowAddEventModal(false);
     setRowToDelete(null);
     setRowToEdit(null);
@@ -348,9 +355,9 @@ const ExperiencePointTable = ({
     setCurrentPage(0);
   };
 
-  // Open delete form
+  // show delete form
   const onTabDelete = (eventID) => {
-    setShowDeleteForm(true);
+    setShowDeleteEvent(true);
     setDeleteEvent(eventID);
   }
 
@@ -372,7 +379,7 @@ const ExperiencePointTable = ({
         setTables(newTables);
         setCurrentTab(newTables[newTables.length - 1].eventID || null);
       }
-      setShowDeleteForm(false)
+      handleClose();
       toastSuccess("Delete successfully")
     } catch (err) {
       toastError("Deleting event fail");
@@ -473,7 +480,7 @@ const ExperiencePointTable = ({
                       width: "100%",
                     }}
                   >
-                    <IconButton
+                    {role ==="admin" ? null : (<IconButton
                       edge="end"
                       sx={{
                         position: "absolute",
@@ -500,7 +507,7 @@ const ExperiencePointTable = ({
                             : "opacity-0"
                         }`}
                       />
-                    </IconButton>
+                    </IconButton>)}
                     {table?.eventName}
                   </Box>
                 }
@@ -599,7 +606,7 @@ const ExperiencePointTable = ({
         rowId={rowToDelete}
       />
       <WarningForm
-        open={showDeleteForm}
+        open={showDeleteEvent}
         handleClose={handleClose}
         handleDelete={handleTabDelete}
         rowId={deleteEvent}
