@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { StudentFormStyles as styles } from "./style";
@@ -16,12 +26,18 @@ function StudentForm({
   editedRow,
   formConfig,
 }) {
-  const { fields } = formConfig;
-
+  const { fields, selectFields } = formConfig;
   // Initialize state dynamically based on formConfig
   const initState = () => {
     const initState = {};
-    fields.forEach((field) => (initState[field.name] = ""));
+    fields.forEach((field) => {
+      initState[field.name] = "";
+    });
+    if (selectFields) {
+      selectFields.forEach((selectField) => {
+        initState[selectField.name] = selectField.options[0].value; // selectField.options[0].value is the default value
+      });
+    }
     return initState;
   };
 
@@ -34,7 +50,6 @@ function StudentForm({
 
   const [info, setInfo] = useState(initState);
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
-  const axios = useAxiosPrivate();
 
   // Handle input changes for text fields
   const handleChange = (e) => {
@@ -68,6 +83,7 @@ function StudentForm({
     }
 
     let finalInfo = { ...info };
+
     handleSave(finalInfo);
     handleClose();
   };
@@ -114,6 +130,32 @@ function StudentForm({
                   sx={styles.inputField}
                 />
               ))}
+              {selectFields &&
+                selectFields.map((selectField) => (
+                  <FormControl
+                    variant="outlined"
+                    sx={styles.inputField}
+                    key={selectField.name}
+                  >
+                    <InputLabel id={`${selectField.name}-label`}>
+                      {selectField.label}
+                    </InputLabel>
+                    <Select
+                      labelId={`${selectField.name}-label`}
+                      id={selectField.name}
+                      value={info[selectField.name]}
+                      label={selectField.label}
+                      name={selectField.name}
+                      onChange={handleChange}
+                    >
+                      {selectField.options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ))}
             </Box>
           </Box>
           <Box sx={styles.buttonContainer}>

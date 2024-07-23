@@ -23,6 +23,10 @@ const RouterComponent = () => {
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
+    // {
+    //   path: "transcripts/experience-point",
+    //   element: <ExperiencePointView />,
+    // },
 
     // Protected routes
     {
@@ -32,7 +36,18 @@ const RouterComponent = () => {
           // User routes
           path: "user",
           element: <RequireAuth allowedRoles={[ROLE.USER]} />,
-          children: [],
+          children: [
+            {
+              element: <Layout />,
+              children: [
+                { index: true, element: <Home /> },
+                // {
+                //   path: "transcripts/experience-point",
+                //   element: <ExperiencePointView />,
+                // },
+              ],
+            },
+          ],
         },
         {
           // Admin routes
