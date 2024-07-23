@@ -117,7 +117,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "settings/semesters",
-                  element: <div>Quản lí kì học</div>,
+                  element: <SemesterManagement />,
                 },
               ],
             },

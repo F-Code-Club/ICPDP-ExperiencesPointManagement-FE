@@ -5,9 +5,10 @@ import columnsSchema from "./column";
 import { AuthContext } from "../../context/auth.context";
 import { API_ENDPOINTS } from "../../utils/api";
 const ExperiencePointView = () => {
-  const { auth } = useContext(AuthContext);
-  const { accessToken } = auth;
-  const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
+  const {
+    auth: { accessToken },
+  } = useContext(AuthContext);
+  const decoded = accessToken ? decodeToken(accessToken) : undefined;
   const role = decoded?.role || "";
   const organizationID = decoded?.organizationID || "";
 

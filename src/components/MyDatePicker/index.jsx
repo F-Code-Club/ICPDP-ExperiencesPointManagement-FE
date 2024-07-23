@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import CustomInputAdornment from "./CustomInputAdornment";
 
@@ -27,6 +28,7 @@ const MyDatePicker = ({
         }}
         slotProps={{
           inputAdornment: { hasError: !!error },
+          openPickerIcon: CalendarMonthIcon,
         }}
         minDate={minDate}
         {...rest}

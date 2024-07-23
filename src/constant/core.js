@@ -14,7 +14,7 @@ const ROLE = {
   USER: "user",
   CLUB: "club",
   DEPARTMENT: "department",
-  STUDENT: "student"
+  STUDENT: "student",
 };
 
 const PAGE_SIZE = 10
