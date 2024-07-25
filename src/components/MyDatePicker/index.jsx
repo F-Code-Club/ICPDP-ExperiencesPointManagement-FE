@@ -10,7 +10,7 @@ const MyDatePicker = ({
   value,
   onChange,
   label = "Date",
-  disablePast = true,
+  disablePast = false,
   minDate,
   ...rest
 }) => {

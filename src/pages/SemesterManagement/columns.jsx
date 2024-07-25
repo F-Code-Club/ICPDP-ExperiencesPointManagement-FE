@@ -37,6 +37,15 @@ const semesterColumnsSchema = (handleEditClick) => [
     width: 150,
     align: "left",
     editable: false,
+    renderCell: (params) => (
+      <Typography variant="body1" className="capitalize contents">
+        {params.value.toLocaleString("en-US", {
+          minimumIntegerDigits: 4,
+          maximumFractionDigits: 0,
+          useGrouping: false,
+        })}
+      </Typography>
+    ),
   },
   {
     field: "startDate",
@@ -44,7 +53,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "string",
-    width: 300,
+    width: 200,
     align: "left",
     editable: false,
   },
@@ -54,7 +63,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "string",
-    width: 300,
+    width: 200,
     align: "left",
     editable: false,
   },

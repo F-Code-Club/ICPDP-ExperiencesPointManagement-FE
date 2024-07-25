@@ -10,6 +10,7 @@ const useAddSemester = () => {
     handleSubmit,
     control,
     formState: { isSubmitting },
+    watch,
   } = useForm({
     resolver: zodResolver(AddSemesterFormSchema),
     defaultValues: {
@@ -39,7 +40,7 @@ const useAddSemester = () => {
     }
   };
 
-  return [handleSubmit(onSubmit), control, isSubmitting];
+  return [handleSubmit(onSubmit), control, isSubmitting, watch];
 };
 
 export default useAddSemester;

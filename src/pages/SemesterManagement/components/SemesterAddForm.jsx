@@ -9,7 +9,12 @@ import useAddSemester from "../hooks/useAddSemester";
 
 // eslint-disable-next-line react/prop-types
 const SemesterAddForm = ({ open, handleClose, title, func }) => {
-  const [handleSubmit, control, isSubmitting] = useAddSemester();
+  const [handleSubmit, control, isSubmitting, watch] = useAddSemester();
+  const [springStartDate, summerStartDate, fallStartDate] = watch([
+    "springStartDate",
+    "summerStartDate",
+    "fallStartDate",
+  ]);
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={styles.managementModal}>
@@ -41,24 +46,32 @@ const SemesterAddForm = ({ open, handleClose, title, func }) => {
           sx={{ ...styles.formContainer }}
         >
           <Box sx={styles.formColumn}>
-            <Grid container>
-              <Grid container item spacing={2}>
-                <Grid item xs={2}></Grid>
-                <Grid item xs={10}>
-                  <FormSelect
-                    control={control}
-                    name="year"
-                    label="Năm học"
-                    options={[
-                      { value: 2023, label: "2023" },
-                      { value: 2024, label: "2024" },
-                    ]}
-                    sx={styles.inputField}
-                    margin="dense"
-                  />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={10}>
+                <FormSelect
+                  control={control}
+                  name="year"
+                  label="Năm học"
+                  options={[
+                    { value: 2023, label: "2023" },
+                    { value: 2024, label: "2024" },
+                  ]}
+                  sx={styles.inputField}
+                  margin="dense"
+                />
               </Grid>
-              <Grid container item spacing={2}>
+            </Grid>
+            <Grid container gap={2}>
+              <Grid
+                container
+                item
+                spacing={2}
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
                 <Grid item xs={2}>
                   <Typography variant="h6">Spring</Typography>
                 </Grid>
@@ -75,11 +88,20 @@ const SemesterAddForm = ({ open, handleClose, title, func }) => {
                     control={control}
                     name="springEndDate"
                     label="Ngày kết thúc"
+                    minDate={springStartDate}
                     sx={styles.inputField}
                   />
                 </Grid>
               </Grid>
-              <Grid container item spacing={2}>
+              <Grid
+                container
+                item
+                spacing={2}
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
                 <Grid item xs={2}>
                   <Typography variant="h6">Summer</Typography>
                 </Grid>
@@ -95,12 +117,20 @@ const SemesterAddForm = ({ open, handleClose, title, func }) => {
                   <FormDatePicker
                     control={control}
                     name="summerEndDate"
+                    minDate={summerStartDate}
                     label="Ngày kết thúc"
                     sx={styles.inputField}
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2}>
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
                 <Grid item xs={2}>
                   <Typography variant="h6">Fall</Typography>
                 </Grid>
@@ -108,6 +138,7 @@ const SemesterAddForm = ({ open, handleClose, title, func }) => {
                   <FormDatePicker
                     control={control}
                     name="fallStartDate"
+                    minDate={fallStartDate}
                     label="Ngày bắt đầu"
                     sx={styles.inputField}
                   />

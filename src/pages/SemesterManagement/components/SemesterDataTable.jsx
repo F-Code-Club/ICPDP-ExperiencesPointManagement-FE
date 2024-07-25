@@ -17,7 +17,7 @@ import AddToolbar from "./AddToolBar";
 import SememsterEditForm from "./SemesterEditForm";
 // import semesterApi from "../../../utils/api/semesterApi";
 
-const SemesterDataTable = ({ title, columnsSchema, role, formConfig }) => {
+const SemesterDataTable = ({ title, columnsSchema, role }) => {
   const { isEdit, showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
     useEdit();
   const { paginationModel, setPaginationModel, rows } =
@@ -126,7 +126,10 @@ const SemesterDataTable = ({ title, columnsSchema, role, formConfig }) => {
           scrollbarSize={0}
           pagination
           paginationMode="server"
-          pageSizeOptions={[PAGE_SIZE]}
+          pageSizeOptions={[
+            { value: PAGE_SIZE, label: PAGE_SIZE },
+            { value: 0, label: "All" },
+          ]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           rowCount={total}

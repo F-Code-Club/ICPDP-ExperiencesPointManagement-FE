@@ -6,7 +6,7 @@ const SemesterContext = createContext({
   originalRows: [],
   paginationModel: {
     pageSize: PAGE_SIZE,
-    page: 1,
+    page: 0,
   },
   setRows: () => {},
   setOriginalRows: () => {},
@@ -19,7 +19,7 @@ const SemesterProvider = ({ children }) => {
   const [originalRows, setOriginalRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
-    page: 1,
+    page: 0,
   });
 
   const value = {
