@@ -107,6 +107,10 @@ export const ManagementFormStyles = {
       fontSize: "16px",
       color: "text.dark",
     },
+    "& .MuiFormHelperText-root": {
+      color: "red",
+      width: "max-content",
+    },
   },
   formColumn: {
     display: "flex",

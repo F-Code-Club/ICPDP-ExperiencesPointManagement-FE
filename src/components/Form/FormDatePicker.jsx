@@ -9,13 +9,14 @@ const FormDatePicker = ({ name, control, label = "Date", ...rest }) => (
     name={name || "date"}
     control={control}
     rules={{ required: true }}
-    render={({ field: { value, ref, onChange } }) => (
+    render={({ field: { value, ref, onChange }, fieldState: { error } }) => (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MyDatePicker
           label={label}
           value={value}
           inputRef={ref}
           onChange={onChange}
+          controlError={error}
           {...rest}
         />
       </LocalizationProvider>

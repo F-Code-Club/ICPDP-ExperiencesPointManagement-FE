@@ -33,6 +33,7 @@ const useAddSemester = () => {
 
     try {
       // call api here
+      console.log("data", data);
     } catch (error) {
       if (error.name !== "CanceledError") {
         errorToastHandler(error.response);

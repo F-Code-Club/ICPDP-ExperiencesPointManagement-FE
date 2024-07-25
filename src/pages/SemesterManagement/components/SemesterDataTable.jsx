@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useCallback, useContext } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -7,75 +7,26 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 
-import useEdit from "../../../components/DataTable/hooks/useEdit";
-import { toastError } from "../../../utils/toast";
-import { PAGE_SIZE } from "../../../constant/core";
-import { styles } from "../../../components/DataTable/style";
-import useFetchSemesters from "../hooks/useFetchSemesters";
-import { SemesterContext } from "../semester.context";
 import AddToolbar from "./AddToolBar";
 import SememsterEditForm from "./SemesterEditForm";
-// import semesterApi from "../../../utils/api/semesterApi";
+
+import useEdit from "../../../components/DataTable/hooks/useEdit";
+import useFetchSemesters from "../hooks/useFetchSemesters";
+import useSearchSemester from "../hooks/useSearchSemseter";
+
+import { PAGE_SIZE } from "../../../constant/core";
+import { styles } from "../../../components/DataTable/style";
+import { SemesterContext } from "../semester.context";
 
 const SemesterDataTable = ({ title, columnsSchema, role }) => {
-  const { isEdit, showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const { total, isLoading } = useFetchSemesters();
+  const { showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
     useEdit();
   const { paginationModel, setPaginationModel, rows } =
     useContext(SemesterContext);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
-  const { total, isLoading } = useFetchSemesters();
   const apiRef = useGridApiRef();
-
-  // useEffect(() => {
-  //   const filteredRows = originalRows.filter(
-  //     (row) =>
-  //       row.name.toLowerCase().includes(searchQuery) ||
-  //       row.email.toLowerCase().includes(searchQuery)
-  //   );
-  //   setRows(filteredRows);
-  // }, [searchQuery, originalRows]);
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value.trim().toLowerCase());
-  };
-
-  const handleSaveClick = async (formData) => {
-    const currentRow = rows.find((row) => row.id === rowToEdit);
-    const ID = currentRow?.[`${role}ID`];
-
-    try {
-      // const res = await semesterApi.updateOne(
-      //   ID,
-      //   {
-      //     ...formData,
-      //   },
-      //   axios,
-      //   accessToken
-      // );
-      // const response = await axios.patch(
-      //   `${API_ENDPOINTS.UPDATE}/${ID}`,
-      //   { ...updatedFormData, id: rowToEdit },
-      //   { headers: { Authorization: `Bearer ${accessToken}` } }
-      // );
-      // if (response.status === 200 || response.status === 201) {
-      //   const updatedRow = {
-      //     ...formData,
-      //     id: rowToEdit,
-      //     avatar: formData.avatar || currentRow?.avatar,
-      //     active: formData.active,
-      //   };
-      //   const updatedRows = rows.map((row) =>
-      //     row.id === rowToEdit ? updatedRow : row
-      //   );
-      //   setRows(updatedRows);
-      //   setOriginalRows(updatedRows);
-      //   handleClose();
-      // }
-    } catch (error) {
-      toastError("Updating Fail..");
-    }
-  };
+  const handleSearch = useSearchSemester();
 
   const handleClose = useCallback(() => {
     setShowEditForm(false);

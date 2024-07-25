@@ -1,11 +1,6 @@
-import {
-  Box,
-  FormControl,
-  FormHelperText,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
+import { STRING_EMPTY } from "../../constant/core";
 
 const parseValue = (value) => {
   if (value === "true") return true;
@@ -24,22 +19,21 @@ const FormSelect = ({ name, control, label, options, ...rest }) => {
         name={name}
         control={control}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
-          <FormControl fullWidth error={!!error} sx={{ mt: 1.5 }}>
-            <Select
-              labelId={`${name}-label`}
-              value={value}
-              label={label}
-              onChange={(event) => onChange(parseValue(event.target.value))}
-              {...rest}
-            >
-              {options.map((option, index) => (
-                <MenuItem key={index} value={option.value.toString()}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>{error ? error.message : " "}</FormHelperText>
-          </FormControl>
+          <TextField
+            select
+            value={value}
+            label={label}
+            onChange={(event) => onChange(parseValue(event.target.value))}
+            error={!!error}
+            helperText={error ? error.message : STRING_EMPTY}
+            {...rest}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={index} value={option.value.toString()}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         )}
       />
     </Box>

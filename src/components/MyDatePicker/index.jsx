@@ -5,6 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import CustomInputAdornment from "./CustomInputAdornment";
+import { STRING_EMPTY } from "../../constant/core";
 
 const MyDatePicker = ({
   value,
@@ -12,6 +13,7 @@ const MyDatePicker = ({
   label = "Date",
   disablePast = false,
   minDate,
+  controlError,
   ...rest
 }) => {
   const [error, setError] = useState(null);
@@ -23,12 +25,16 @@ const MyDatePicker = ({
         onChange={onChange}
         disablePast={disablePast}
         onError={setError}
+        onAccept={() => setError(null)}
         slots={{
           inputAdornment: CustomInputAdornment,
+          openPickerIcon: CalendarMonthIcon,
         }}
         slotProps={{
-          inputAdornment: { hasError: !!error },
-          openPickerIcon: CalendarMonthIcon,
+          inputAdornment: { hasError: !!error || !!controlError },
+          textField: {
+            helperText: controlError?.message || STRING_EMPTY,
+          },
         }}
         minDate={minDate}
         {...rest}

@@ -1,9 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 import SememsterAddForm from "./SemesterAddForm";
-import { SemesterContext } from "../semester.context";
 
 // eslint-disable-next-line react/prop-types
 const AddToolbar = ({ title }) => {
@@ -33,8 +32,7 @@ const AddToolbar = ({ title }) => {
       <SememsterAddForm
         open={showForm}
         handleClose={handleCloseForm}
-        title={`Thêm ${title}`}
-        func={"Thêm"}
+        title={title}
       />
     </>
   );
