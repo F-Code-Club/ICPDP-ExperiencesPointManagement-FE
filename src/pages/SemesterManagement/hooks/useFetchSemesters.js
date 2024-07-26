@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import semesterApi from "../../../utils/api/semesterApi";
-import { errorToastHandler } from "../../../utils/toast/actions";
+
 import useAuth from "../../../hooks/useAuth";
 import { SemesterContext } from "../semester.context";
+import semesterApi from "../../../utils/api/semesterApi";
+
+import { errorToastHandler } from "../../../utils/toast/actions";
 
 const useFetchSemesters = () => {
-  const { setRows, setOriginalRows, paginationModel } =
+  const { setRows, setOriginalRows, paginationModel, setTotal } =
     useContext(SemesterContext);
-  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const {
     auth: { accessToken },
@@ -56,7 +57,11 @@ const useFetchSemesters = () => {
     const fetchRemote = async () => {
       try {
         const result = await semesterApi.fetchPagination(
-          paginationModel,
+          {
+            page: paginationModel.page,
+            pageSize:
+              paginationModel.pageSize === -1 ? 0 : paginationModel.pageSize,
+          },
           accessToken,
           abortController.signal
         );
@@ -83,9 +88,9 @@ const useFetchSemesters = () => {
 
     return () => abortController.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, paginationModel.page]);
+  }, [accessToken, paginationModel.page, paginationModel.pageSize]);
 
-  return { total, isLoading };
+  return { isLoading };
 };
 
 export default useFetchSemesters;

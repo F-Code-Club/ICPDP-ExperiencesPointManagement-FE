@@ -6,7 +6,6 @@ import SememsterAddForm from "./SemesterAddForm";
 
 // eslint-disable-next-line react/prop-types
 const AddToolbar = ({ title }) => {
-  // const { rows } = useContext(SemesterContext);
   const [showForm, setShowForm] = useState(false);
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
@@ -31,6 +30,7 @@ const AddToolbar = ({ title }) => {
       </Button>
       <SememsterAddForm
         open={showForm}
+        setShowForm={setShowForm}
         handleClose={handleCloseForm}
         title={title}
       />

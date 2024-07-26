@@ -19,6 +19,17 @@ const semesterApi = {
       })
       .then((response) => response.data);
   },
+  createBulkInYear: async (data, accessToken, signal) => {
+    console.log(accessToken);
+    return await axios.post(API_ENDPOINTS.SEMESTERS.ADD, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      signal,
+    });
+  },
 };
 
 export default semesterApi;

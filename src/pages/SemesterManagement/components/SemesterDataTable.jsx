@@ -20,10 +20,10 @@ import { SemesterContext } from "../semester.context";
 
 const SemesterDataTable = ({ title, columnsSchema, role }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
-  const { total, isLoading } = useFetchSemesters();
+  const { isLoading } = useFetchSemesters();
   const { showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
     useEdit();
-  const { paginationModel, setPaginationModel, rows } =
+  const { paginationModel, setPaginationModel, rows, total } =
     useContext(SemesterContext);
   const apiRef = useGridApiRef();
   const handleSearch = useSearchSemester();
@@ -79,7 +79,7 @@ const SemesterDataTable = ({ title, columnsSchema, role }) => {
           paginationMode="server"
           pageSizeOptions={[
             { value: PAGE_SIZE, label: PAGE_SIZE },
-            { value: 0, label: "All" },
+            { value: -1, label: "All" },
           ]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}

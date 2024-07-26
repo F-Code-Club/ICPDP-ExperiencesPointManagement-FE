@@ -11,6 +11,8 @@ const SemesterContext = createContext({
   setRows: () => {},
   setOriginalRows: () => {},
   setPaginationModel: () => {},
+  total: 0,
+  setTotal: () => {},
 });
 
 // eslint-disable-next-line react/prop-types
@@ -21,6 +23,7 @@ const SemesterProvider = ({ children }) => {
     pageSize: PAGE_SIZE,
     page: 0,
   });
+  const [total, setTotal] = useState(0);
 
   const value = {
     rows,
@@ -29,6 +32,8 @@ const SemesterProvider = ({ children }) => {
     setOriginalRows,
     paginationModel,
     setPaginationModel,
+    total,
+    setTotal,
   };
 
   return (

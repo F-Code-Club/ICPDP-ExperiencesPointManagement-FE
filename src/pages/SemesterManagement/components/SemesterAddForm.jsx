@@ -7,10 +7,12 @@ import FormSelect from "../../../components/Form/FormSelect";
 import FormDatePicker from "../../../components/Form/FormDatePicker";
 import useAddSemester from "../hooks/useAddSemester";
 import useFetchYears from "../hooks/useFetchYears";
+import CircularIndeterminate from "../../../components/CircularIndeterminate";
 
 // eslint-disable-next-line react/prop-types
-const SemesterAddForm = ({ open, handleClose, title }) => {
-  const [handleSubmit, control, isSubmitting, watch] = useAddSemester();
+const SemesterAddForm = ({ open, handleClose, title, setShowForm }) => {
+  const [handleSubmit, control, isSubmitting, watch] =
+    useAddSemester(setShowForm);
   const [springStartDate, summerStartDate, fallStartDate] = watch([
     "springStartDate",
     "summerStartDate",
@@ -177,6 +179,7 @@ const SemesterAddForm = ({ open, handleClose, title }) => {
               Thêm
               <AddIcon sx={styles.addIcon} />
             </Button>
+            {isSubmitting && <CircularIndeterminate />}
           </Box>
         </Box>
       </Box>
