@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SememsterAddForm from "./SemesterAddForm";
 
 // eslint-disable-next-line react/prop-types
-const AddToolbar = ({ title }) => {
+const AddToolbar = () => {
   const [showForm, setShowForm] = useState(false);
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
@@ -32,7 +32,6 @@ const AddToolbar = ({ title }) => {
         open={showForm}
         setShowForm={setShowForm}
         handleClose={handleCloseForm}
-        title={title}
       />
     </>
   );

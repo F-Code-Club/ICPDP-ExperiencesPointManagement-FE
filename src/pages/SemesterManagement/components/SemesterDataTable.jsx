@@ -18,7 +18,7 @@ import { PAGE_SIZE } from "../../../constant/core";
 import { styles } from "../../../components/DataTable/style";
 import { SemesterContext } from "../semester.context";
 
-const SemesterDataTable = ({ title, columnsSchema, role }) => {
+const SemesterDataTable = ({ columnsSchema }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const { isLoading } = useFetchSemesters();
   const { showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
@@ -55,7 +55,7 @@ const SemesterDataTable = ({ title, columnsSchema, role }) => {
               ),
             }}
           />
-          <AddToolbar title={title} role={role} />
+          <AddToolbar />
         </Box>
         <DataGrid
           checkboxSelection
@@ -129,13 +129,13 @@ const SemesterDataTable = ({ title, columnsSchema, role }) => {
           }}
         />
       </Box>
-      <SememsterEditForm
-        open={showEditForm}
-        handleClose={handleClose}
-        title={`Chỉnh sửa ${title}`}
-        editedRow={rows.find((row) => row.id === rowToEdit)}
-        func={"Sửa"}
-      />
+      {rowToEdit && (
+        <SememsterEditForm
+          open={showEditForm}
+          handleClose={handleClose}
+          editedRow={rows.filter((row) => row.semesterID === rowToEdit)[0]}
+        />
+      )}
     </Box>
   );
 };

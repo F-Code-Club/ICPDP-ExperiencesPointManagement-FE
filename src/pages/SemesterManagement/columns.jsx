@@ -80,7 +80,7 @@ const semesterColumnsSchema = (handleEditClick) => [
         key="edit"
         label="Edit"
         className="textPrimary"
-        onClick={() => handleEditClick(row.id)}
+        onClick={() => handleEditClick(row.semesterID)}
         color="inherit"
       />,
     ],

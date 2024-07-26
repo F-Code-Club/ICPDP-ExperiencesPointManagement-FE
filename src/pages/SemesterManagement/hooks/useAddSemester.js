@@ -9,6 +9,7 @@ import { AddSemesterFormSchema } from "../lib/schema";
 import semesterApi from "../../../utils/api/semesterApi";
 import { handleSubmitForm } from "../../../usecases/handleSubmitForm";
 import { toastError, toastSuccess } from "../../../utils/toast";
+import { DATE_FORMAT } from "../../../constant/core";
 
 const useAddSemester = (setShowForm) => {
   const {
@@ -42,7 +43,6 @@ const useAddSemester = (setShowForm) => {
     }
 
     const resData = result.data;
-    const formatDate = "DD/MM/YYYY";
     try {
       const response = await semesterApi.createBulkInYear(
         {
@@ -50,18 +50,18 @@ const useAddSemester = (setShowForm) => {
           semesters: [
             {
               semester: "spring",
-              startDate: resData.springStartDate.format(formatDate),
-              endDate: resData.springEndDate.format(formatDate),
+              startDate: resData.springStartDate.format(DATE_FORMAT),
+              endDate: resData.springEndDate.format(DATE_FORMAT),
             },
             {
               semester: "summer",
-              startDate: resData.summerStartDate.format(formatDate),
-              endDate: resData.summerEndDate.format(formatDate),
+              startDate: resData.summerStartDate.format(DATE_FORMAT),
+              endDate: resData.summerEndDate.format(DATE_FORMAT),
             },
             {
               semester: "fall",
-              startDate: resData.fallStartDate.format(formatDate),
-              endDate: resData.fallEndDate.format(formatDate),
+              startDate: resData.fallStartDate.format(DATE_FORMAT),
+              endDate: resData.fallEndDate.format(DATE_FORMAT),
             },
           ],
         },

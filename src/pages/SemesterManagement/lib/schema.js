@@ -30,6 +30,6 @@ export const AddSemesterFormSchema = z
   });
 
 export const EditSemesterFormSchema = z.object({
-  startDate: z.instanceof(dayjs),
-  endDate: z.instanceof(dayjs),
+  startDate: z.instanceof(dayjs, { message: "Date is required" }),
+  endDate: z.instanceof(dayjs, { message: "Date is required" }),
 });

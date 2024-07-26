@@ -17,5 +17,7 @@ const ROLE = {
   STUDENT: "student",
 };
 
-const PAGE_SIZE = 10
-export { STRING_EMPTY, HTTP_STATUS, ROLE, PAGE_SIZE };
+const PAGE_SIZE = 10;
+
+const DATE_FORMAT = "DD/MM/YYYY";
+export { STRING_EMPTY, HTTP_STATUS, ROLE, PAGE_SIZE, DATE_FORMAT };

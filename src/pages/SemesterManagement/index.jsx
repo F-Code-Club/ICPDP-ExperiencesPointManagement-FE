@@ -5,11 +5,7 @@ import { SemesterProvider } from "./semester.context";
 const SemesterManagement = () => {
   return (
     <SemesterProvider>
-      <SemesterDataTable
-        title="kì học"
-        columnsSchema={semesterColumnsSchema}
-        role={"semester"}
-      />
+      <SemesterDataTable columnsSchema={semesterColumnsSchema} />
     </SemesterProvider>
   );
 };

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Box, Button, Grid, Modal, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
@@ -10,7 +11,7 @@ import useFetchYears from "../hooks/useFetchYears";
 import CircularIndeterminate from "../../../components/CircularIndeterminate";
 
 // eslint-disable-next-line react/prop-types
-const SemesterAddForm = ({ open, handleClose, title, setShowForm }) => {
+const SemesterAddForm = ({ open, handleClose, setShowForm }) => {
   const [handleSubmit, control, isSubmitting, watch] =
     useAddSemester(setShowForm);
   const [springStartDate, summerStartDate, fallStartDate] = watch([
@@ -40,9 +41,9 @@ const SemesterAddForm = ({ open, handleClose, title, setShowForm }) => {
           <Typography
             variant="h5"
             align="center"
-            sx={{ mt: 3, mb: 2, fontWeight: 600 }}
+            sx={{ mt: 3, fontWeight: 600 }}
           >
-            {`Thêm ${title}`}
+            Thêm kì học
           </Typography>
         </Box>
         <Box
@@ -55,6 +56,7 @@ const SemesterAddForm = ({ open, handleClose, title, setShowForm }) => {
             padding: "40px 24px",
             gap: 1.5,
             alignSelf: "stretch",
+            borderTopWidth: "2px",
           }}
         >
           <Grid container marginBottom={1.5} spacing={3}>
@@ -187,4 +189,4 @@ const SemesterAddForm = ({ open, handleClose, title, setShowForm }) => {
   );
 };
 
-export default SemesterAddForm;
+export default memo(SemesterAddForm);
