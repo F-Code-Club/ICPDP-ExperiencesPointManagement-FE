@@ -6,17 +6,23 @@ import { EditSemesterFormSchema } from "../lib/schema";
 import { handleSubmitForm } from "../../../usecases/handleSubmitForm";
 import semesterApi from "../../../utils/api/semesterApi";
 import { toastError, toastSuccess } from "../../../utils/toast";
-import { useContext } from "react";
+import { useContext, useLayoutEffect, useMemo } from "react";
 import { SemesterContext } from "../semester.context";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../../../constant/core";
 
-const useEditSemester = (editedRow, handleClose) => {
+const useEditSemester = (rowId, handleClose) => {
+  const { rows, setRows, setOriginalRows } = useContext(SemesterContext);
+  const editedRow = useMemo(
+    () => rows.find((row) => row.semesterID === rowId),
+    [rowId, rows]
+  );
   const {
     handleSubmit,
     control,
     formState: { isSubmitting },
     watch,
+    reset,
   } = useForm({
     resolver: zodResolver(EditSemesterFormSchema),
     defaultValues: {
@@ -27,7 +33,6 @@ const useEditSemester = (editedRow, handleClose) => {
   const {
     auth: { accessToken },
   } = useAuth();
-  const { rows, setRows, setOriginalRows } = useContext(SemesterContext);
 
   const onSubmit = async (data) => {
     const result = handleSubmitForm(data, EditSemesterFormSchema);
@@ -53,12 +58,17 @@ const useEditSemester = (editedRow, handleClose) => {
 
       // update optimistic UI
       const updateRows = rows.map((row) =>
-        editedRow.semesterID === row.semesterID ? data : row
+        editedRow.semesterID === row.semesterID
+          ? {
+              id: row.id,
+              ...data,
+            }
+          : row
       );
       setRows(updateRows);
       setOriginalRows(updateRows);
       handleClose();
-      toastSuccess("Semester added successfully.");
+      toastSuccess("Semester edited successfully.");
     } catch (error) {
       console.log(error.response);
       if (error.name !== "CanceledError") {
@@ -66,6 +76,13 @@ const useEditSemester = (editedRow, handleClose) => {
       }
     }
   };
+
+  useLayoutEffect(() => {
+    reset({
+      startDate: dayjs(editedRow?.startDate, DATE_FORMAT),
+      endDate: dayjs(editedRow?.endDate, DATE_FORMAT),
+    });
+  }, [editedRow, reset]);
 
   return [handleSubmit(onSubmit), control, isSubmitting, watch];
 };

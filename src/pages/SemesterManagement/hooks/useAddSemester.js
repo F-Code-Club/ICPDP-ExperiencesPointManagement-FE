@@ -32,8 +32,7 @@ const useAddSemester = (setShowForm) => {
   const {
     auth: { accessToken },
   } = useAuth();
-  const { rows, setRows, setOriginalRows, setTotal } =
-    useContext(SemesterContext);
+  const { rows, setOriginalRows, setTotal } = useContext(SemesterContext);
 
   const onSubmit = async (data) => {
     const result = handleSubmitForm(data, AddSemesterFormSchema);
@@ -79,7 +78,6 @@ const useAddSemester = (setShowForm) => {
         ...row,
         id: Math.max(...rows.map((row) => row.id)) + index + 1,
       }));
-      setRows((prev) => [...prev, ...rowsWithIds]);
       setOriginalRows((prev) => [...prev, ...rowsWithIds]);
       setShowForm(false);
       toastSuccess("Semester added successfully.");

@@ -1,6 +1,12 @@
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+import { DATE_FORMAT, DATE_FORMAT_US } from "../../constant/core";
+
+dayjs.extend(customParseFormat);
 
 const semesterColumnsSchema = (handleEditClick) => [
   {
@@ -9,7 +15,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 120,
+    flex: 0.5,
     align: "left",
     editable: false,
   },
@@ -19,7 +25,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "string",
-    width: 200,
+    flex: 1,
     align: "left",
     editable: false,
     renderCell: (params) => (
@@ -34,7 +40,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 150,
+    flex: 1,
     align: "left",
     editable: false,
     renderCell: (params) => (
@@ -52,27 +58,42 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerName: "Ngày bắt đầu",
     headerClassName: "header",
     headerAlign: "left",
-    type: "string",
-    width: 200,
+    valueGetter: (_, row) => {
+      console.log(row.startDate, dayjs(row.startDate, DATE_FORMAT));
+      return dayjs(row.startDate, DATE_FORMAT).toDate();
+    },
+    type: "date",
+    flex: 1.75,
     align: "left",
     editable: false,
+    renderCell: (params) => (
+      <Typography variant="body1" className="contents">
+        {dayjs(params.value).format(DATE_FORMAT_US)}
+      </Typography>
+    ),
   },
   {
     field: "endDate",
     headerName: "Ngày kết thúc",
     headerClassName: "header",
     headerAlign: "left",
-    type: "string",
-    width: 200,
+    valueGetter: (_, row) => dayjs(row.endDate, DATE_FORMAT).toDate(),
+    type: "date",
+    flex: 1.75,
     align: "left",
     editable: false,
+    renderCell: (params) => (
+      <Typography variant="body1" className="contents">
+        {dayjs(params.value).format(DATE_FORMAT_US)}
+      </Typography>
+    ),
   },
   {
     field: "actions",
     type: "actions",
     headerClassName: "header",
     headerName: "Hành động",
-    width: 180,
+    flex: 0.75,
     cellClassName: "actions",
     getActions: ({ row }) => [
       <GridActionsCellItem

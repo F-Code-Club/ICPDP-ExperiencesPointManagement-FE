@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useCallback, useContext } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -18,6 +17,7 @@ import { PAGE_SIZE } from "../../../constant/core";
 import { styles } from "../../../components/DataTable/style";
 import { SemesterContext } from "../semester.context";
 
+// eslint-disable-next-line react/prop-types
 const SemesterDataTable = ({ columnsSchema }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const { isLoading } = useFetchSemesters();
@@ -133,7 +133,7 @@ const SemesterDataTable = ({ columnsSchema }) => {
         <SememsterEditForm
           open={showEditForm}
           handleClose={handleClose}
-          editedRow={rows.filter((row) => row.semesterID === rowToEdit)[0]}
+          editedRowId={rowToEdit}
         />
       )}
     </Box>

@@ -9,9 +9,9 @@ import { ManagementFormStyles as styles } from "../../../components/Form/style";
 import useEditSemester from "../hooks/useEditSemester";
 
 /* eslint-disable react/prop-types */
-const SememsterEditForm = ({ editedRow, open, handleClose }) => {
+const EditForm = ({ editedRowId, open, handleClose }) => {
   const [handleSubmit, control, isSubmitting, watch] = useEditSemester(
-    editedRow,
+    editedRowId,
     handleClose
   );
   const startDate = watch("startDate");
@@ -79,4 +79,6 @@ const SememsterEditForm = ({ editedRow, open, handleClose }) => {
   );
 };
 
-export default memo(SememsterEditForm);
+const SememsterEditForm = memo(EditForm);
+
+export default SememsterEditForm;

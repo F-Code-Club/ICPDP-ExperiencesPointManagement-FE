@@ -11,7 +11,7 @@ import useFetchYears from "../hooks/useFetchYears";
 import CircularIndeterminate from "../../../components/CircularIndeterminate";
 
 // eslint-disable-next-line react/prop-types
-const SemesterAddForm = ({ open, handleClose, setShowForm }) => {
+const AddForm = ({ open, handleClose, setShowForm }) => {
   const [handleSubmit, control, isSubmitting, watch] =
     useAddSemester(setShowForm);
   const [springStartDate, summerStartDate, fallStartDate] = watch([
@@ -189,4 +189,6 @@ const SemesterAddForm = ({ open, handleClose, setShowForm }) => {
   );
 };
 
-export default memo(SemesterAddForm);
+const SemesterAddForm = memo(AddForm);
+
+export default SemesterAddForm;
