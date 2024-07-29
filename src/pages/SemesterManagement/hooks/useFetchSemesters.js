@@ -32,7 +32,6 @@ const useFetchSemesters = () => {
 
         result.data.length > 0 && setTotal(result.data.length);
       } catch (error) {
-        console.error(error);
         if (error.name !== "CanceledError") {
           errorToastHandler({
             message: "Failed to fetch total semesters. Please try again later.",

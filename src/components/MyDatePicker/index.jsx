@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import CustomInputAdornment from "./CustomInputAdornment";
-import { STRING_EMPTY } from "../../constant/core";
+import { DATE_FORMAT, STRING_EMPTY } from "../../constant/core";
 
 const MyDatePicker = ({
   value,
@@ -37,6 +37,7 @@ const MyDatePicker = ({
           },
         }}
         minDate={minDate}
+        format={DATE_FORMAT}
         {...rest}
       />
     </LocalizationProvider>

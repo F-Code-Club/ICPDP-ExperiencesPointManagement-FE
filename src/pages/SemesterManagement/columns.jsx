@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
-import { DATE_FORMAT, DATE_FORMAT_US } from "../../constant/core";
+import { DATE_FORMAT } from "../../constant/core";
 
 dayjs.extend(customParseFormat);
 
@@ -58,17 +58,14 @@ const semesterColumnsSchema = (handleEditClick) => [
     headerName: "Ngày bắt đầu",
     headerClassName: "header",
     headerAlign: "left",
-    valueGetter: (_, row) => {
-      console.log(row.startDate, dayjs(row.startDate, DATE_FORMAT));
-      return dayjs(row.startDate, DATE_FORMAT).toDate();
-    },
+    valueGetter: (_, row) => dayjs(row.startDate, DATE_FORMAT).toDate(),
     type: "date",
     flex: 1.75,
     align: "left",
     editable: false,
     renderCell: (params) => (
       <Typography variant="body1" className="contents">
-        {dayjs(params.value).format(DATE_FORMAT_US)}
+        {dayjs(params.value).format(DATE_FORMAT)}
       </Typography>
     ),
   },
@@ -84,7 +81,7 @@ const semesterColumnsSchema = (handleEditClick) => [
     editable: false,
     renderCell: (params) => (
       <Typography variant="body1" className="contents">
-        {dayjs(params.value).format(DATE_FORMAT_US)}
+        {dayjs(params.value).format(DATE_FORMAT)}
       </Typography>
     ),
   },

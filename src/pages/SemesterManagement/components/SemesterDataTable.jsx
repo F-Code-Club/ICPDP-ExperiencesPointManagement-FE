@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from "react";
+import { useContext } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -19,18 +19,12 @@ import { SemesterContext } from "../semester.context";
 
 // eslint-disable-next-line react/prop-types
 const SemesterDataTable = ({ columnsSchema }) => {
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const { isLoading } = useFetchSemesters();
-  const { showEditForm, setShowEditForm, rowToEdit, handleEditClick } =
-    useEdit();
+  const { showEditForm, rowToEdit, handleEditClick, handleClose } = useEdit();
   const { paginationModel, setPaginationModel, rows, total } =
     useContext(SemesterContext);
   const apiRef = useGridApiRef();
   const handleSearch = useSearchSemester();
-
-  const handleClose = useCallback(() => {
-    setShowEditForm(false);
-  }, [setShowEditForm]);
 
   return (
     <Box sx={styles.pageContainer}>
@@ -58,11 +52,6 @@ const SemesterDataTable = ({ columnsSchema }) => {
           <AddToolbar />
         </Box>
         <DataGrid
-          checkboxSelection
-          onRowSelectionModelChange={(newRowSelectionModel) => {
-            setRowSelectionModel(newRowSelectionModel);
-          }}
-          rowSelectionModel={rowSelectionModel}
           rows={rows}
           columns={columnsSchema(handleEditClick)}
           apiRef={apiRef}

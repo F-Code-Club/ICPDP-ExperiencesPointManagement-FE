@@ -82,7 +82,6 @@ const useAddSemester = (setShowForm) => {
       setShowForm(false);
       toastSuccess("Semester added successfully.");
     } catch (error) {
-      console.log(error.response);
       if (error.name !== "CanceledError") {
         toastError("Failed to add semester. Please try again.");
       }

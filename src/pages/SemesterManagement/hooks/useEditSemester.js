@@ -70,7 +70,6 @@ const useEditSemester = (rowId, handleClose) => {
       handleClose();
       toastSuccess("Semester edited successfully.");
     } catch (error) {
-      console.log(error.response);
       if (error.name !== "CanceledError") {
         toastError("Failed to edit semester. Please try again.");
       }
