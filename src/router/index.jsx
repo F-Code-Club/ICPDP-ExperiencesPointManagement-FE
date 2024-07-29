@@ -15,6 +15,8 @@ import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
 import ExperiencePointView from "../pages/ExperiencePointView";
+import SemesterManagement from "../pages/SemesterManagement";
+
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
@@ -78,7 +80,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "settings/semesters",
-                  element: <div>Quản lí kì học</div>,
+                  element: <SemesterManagement />,
                 },
               ],
             },
@@ -115,7 +117,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "settings/semesters",
-                  element: <div>Quản lí kì học</div>,
+                  element: <SemesterManagement />,
                 },
               ],
             },

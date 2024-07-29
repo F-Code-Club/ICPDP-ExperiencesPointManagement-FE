@@ -204,7 +204,8 @@ const Sidebar = ({ setTitle }) => {
                   </li>
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
-                      to="/settings/semesters"
+                      to="settings/semesters"
+                      onClick={() => setTitle("Quản lí kì học")}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
