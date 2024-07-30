@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
-import StudentForm from "../../../components/Form/StudentForm";
+import StudentPointForm from "../../../components/Form/StudentPointForm";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
@@ -40,7 +40,7 @@ const AddToolbar = ({
     }
 
     const studentID = formData.studentID.toUpperCase().trim();
-    if (rows.some(val => val.studentID === studentID)) {
+    if (rows.some((val) => val.studentID === studentID)) {
       toastError("Student is existed in this event");
       return;
     }
@@ -92,7 +92,7 @@ const AddToolbar = ({
 
       setTables(updatedTables);
       setShowForm(false);
-      toastSuccess("Add student successfully")
+      toastSuccess("Add student successfully");
     } catch (error) {
       toastError("Saving failed");
     }
@@ -117,7 +117,7 @@ const AddToolbar = ({
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
 
-      <StudentForm
+      <StudentPointForm
         open={showForm}
         handleClose={handleCloseForm}
         handleSave={handleSave}

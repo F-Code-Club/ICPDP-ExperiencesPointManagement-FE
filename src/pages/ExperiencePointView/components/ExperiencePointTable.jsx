@@ -15,7 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
 import WarningForm from "../../../components/Form/WarningModal";
-import StudentForm from "../../../components/Form/StudentForm";
+import StudentPointForm from "../../../components/Form/StudentPointForm";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
@@ -612,7 +612,7 @@ const ExperiencePointTable = ({
         handleDelete={handleTabDelete}
         rowId={deleteEvent}
       />
-      <StudentForm
+      <StudentPointForm
         open={showEditForm}
         handleClose={handleClose}
         title={`Chỉnh sửa ${title}`}
