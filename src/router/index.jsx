@@ -16,6 +16,8 @@ import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
 import ExperiencePointView from "../pages/ExperiencePointView";
 import SemesterManagement from "../pages/SemesterManagement";
+import FinalPointView from "../pages/FinalPointView";
+
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -64,7 +66,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "transcripts/final-point",
-                  element: <div>Điểm tổng kết</div>,
+                  element: <FinalPointView />,
                 },
                 {
                   path: "settings/students",
