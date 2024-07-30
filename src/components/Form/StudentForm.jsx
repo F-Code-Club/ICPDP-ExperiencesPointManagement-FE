@@ -16,12 +16,14 @@ function StudentForm({
   editedRow,
   formConfig,
 }) {
+
   const { fields } = formConfig;
 
   // Initialize state dynamically based on formConfig
   const initState = () => {
     const initState = {};
     fields.forEach((field) => (initState[field.name] = ""));
+
     return initState;
   };
 
