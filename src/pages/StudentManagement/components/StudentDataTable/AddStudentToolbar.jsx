@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { styles } from "./style";
 import theme from "../../../../theme";
-import { toastError } from "../../../../utils/toast";
+import { toastError, toastSuccess } from "../../../../utils/toast"; // Giả sử bạn có hàm toastSuccess
 import axios from "../../../../config/axios";
 import StudentForm from "../../../../components/Form/StudentForm";
 
@@ -19,12 +19,67 @@ const AddStudentToolbar = ({
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const handleOpenForm = () => {
     setShowModal(false);
     setShowForm(true);
   };
+
   const handleCloseForm = () => setShowForm(false);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const validMimeTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ];
+    if (!validMimeTypes.includes(file.type)) {
+      toastError("Vui lòng upload file Excel hợp lệ.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setUploading(true);
+      const response = await axios.post(API_ENDPOINTS.UPLOAD, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const data = response.data.data;
+      if (response.status === 200 || response.status === 201) {
+        const id =
+          rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
+        const newRow = {
+          ...data,
+          id,
+        };
+        setRows((prevRows) => [...prevRows, newRow]);
+        setOriginalRows((prevRows) => [...prevRows, newRow]);
+        setShowModal(false);
+        toastSuccess("Upload thành công!");
+      } else {
+        toastError(`Upload failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      if (error.response) {
+        toastError(`Error uploading file: ${error.response.data.message}`);
+      } else {
+        toastError("Error uploading file.");
+      }
+      console.error("File upload error:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
 
   const handleSave = async (formData) => {
     try {
@@ -39,7 +94,7 @@ const AddStudentToolbar = ({
           },
         }
       );
-      const data = await response.data.data;
+      const data = response.data.data;
       if (response.status === 200 || response.status === 201) {
         const id =
           rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
@@ -50,6 +105,7 @@ const AddStudentToolbar = ({
         setRows((prevRows) => [...prevRows, newRow]);
         setOriginalRows((prevRows) => [...prevRows, newRow]);
         setShowForm(false);
+        toastSuccess("Thêm sinh viên thành công!");
       }
     } catch (error) {
       toastError("Saving Fail..");
@@ -86,6 +142,7 @@ const AddStudentToolbar = ({
           }}
         >
           <Button
+            component="label"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -100,17 +157,23 @@ const AddStudentToolbar = ({
               borderRadius: "0",
               "&:hover": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
               "&:active": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
             }}
           >
-            Thêm từ excel
+            <span>Thêm từ excel</span>
+            <input
+              id="fileInput"
+              onChange={handleFileChange}
+              type="file"
+              hidden
+            />
           </Button>
           <Button
             onClick={handleOpenForm}
@@ -128,12 +191,12 @@ const AddStudentToolbar = ({
               borderRadius: "0",
               "&:hover": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
               "&:active": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
             }}

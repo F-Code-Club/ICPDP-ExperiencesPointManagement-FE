@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import StudentDataTable from './components/StudentDataTable';
-
+import StudentDataTable from "./components/StudentDataTable";
 import columnsSchema from "./columns";
 import { API_ENDPOINTS } from "../../utils/api";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -22,7 +21,7 @@ const StudentManagement = () => {
       const response = await axios.get(API_ENDPOINTS.STUDENTS.GET_ALL, {
         params: {
           page: currentPage,
-          take: 10,
+          take: 0,
         },
         headers: {
           "Content-Type": "application/json",

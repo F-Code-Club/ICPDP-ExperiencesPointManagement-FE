@@ -50,8 +50,8 @@ const StudentDataTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.studentID.toLowerCase().includes(searchQuery) ||
-        row.name.toLowerCase().includes(searchQuery)
+        row.studentID?.toLowerCase().includes(searchQuery) ||
+        row.name?.toLowerCase().includes(searchQuery)
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows]);
