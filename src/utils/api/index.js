@@ -25,9 +25,8 @@ export const API_ENDPOINTS = {
     GET_ALL: "/students",
     GET: `/students`,
     ADD: "/students",
-    UPLOAD: `/local-files`,
+    UPLOAD: `/students/import`,
     UPDATE: `/students`,
     DELETE: `/students`,
   },
-  
 };
