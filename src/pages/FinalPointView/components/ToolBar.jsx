@@ -5,9 +5,18 @@ import SearchIcon from "@mui/icons-material/Search";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { styles } from "./finalPointViewStyle";
+
 import useSearchStudent from "../hooks/useSearchStudent";
+import { useState, useContext } from "react";
+import { FinalPointContext } from "../context/FinalPointContext";
+import ExportModal from "./ExportModal";
 const ToolBar = () => {
+  const { rowSelectionModel } = useContext(FinalPointContext);
   const handleSearch = useSearchStudent();
+  const [showForm, setShowForm] = useState(false);
+  const handleOpenForm = () => setShowForm(true);
+  const handleCloseForm = () => setShowForm(false);
+
   return (
     <>
       <Box className="flex gap-3">
@@ -31,7 +40,6 @@ const ToolBar = () => {
           }}
         />
         <Button
-          //   onClick={handleExportClick}
           sx={{
             borderRadius: 1,
             backgroundColor: "primary.main",
@@ -48,7 +56,7 @@ const ToolBar = () => {
         </Button>
 
         <Button
-          //   onClick={handleExportClick}
+          onClick={handleOpenForm}
           sx={{
             borderRadius: 1,
             backgroundColor: "primary.main",
@@ -65,6 +73,11 @@ const ToolBar = () => {
             sx={{ color: "text.light", width: 15, height: 15 }}
           />
         </Button>
+        <ExportModal
+          open={showForm}
+          handleCloseForm={handleCloseForm}
+          numberOfRow={rowSelectionModel.length}
+        />
       </Box>
     </>
   );

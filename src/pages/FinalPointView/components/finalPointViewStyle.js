@@ -156,3 +156,101 @@ export const styles = {
     },
   },
 };
+
+export const editModal = {
+  modalContainer: {
+    height: 789,
+    width: 784,
+    backgroundColor: "#ffffff",
+    position: "relative",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "8px",
+  },
+  modalHeader: {
+    width: "100%",
+    height: 88,
+    borderBottom: "2px solid #EAEAEA",
+    paddingTop: "30px",
+  },
+  closeIcon: {
+    position: "absolute",
+    left: "725px",
+    top: "10px",
+    width: "24px",
+    height: "24px",
+    color: "text.dark",
+  },
+  inputField: {
+    width: "100%",
+    "& .MuiInputLabel-root": {
+      fontSize: "16px",
+      color: "text.secondary",
+      position: "absolute",
+      top: "-4px",
+      left: "4px",
+      "&.Mui-focused": {
+        color: "primary.main",
+      },
+    },
+    "& .MuiOutlinedInput-root": {
+      height: "45px",
+      "& fieldset": {
+        borderColor: "text.dark",
+        border: "2px solid",
+      },
+      "&:hover fieldset": {
+        borderColor: "text.dark",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "primary.main",
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 14px",
+      fontSize: "16px",
+      color: "text.dark",
+    },
+    "& .MuiFormHelperText-root": {
+      color: "red",
+      width: "max-content",
+    },
+  },
+  editButton: {
+    borderRadius: "5px",
+    backgroundColor: "primary.main",
+    color: "text.light",
+    height: 36,
+    width: 73,
+    boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.25)",
+    fontSize: 12,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: "text.light",
+      color: "primary.main",
+      border: "2px solid",
+      borderColor: "primary.main",
+      "& .MuiSvgIcon-root": {
+        color: "primary.main",
+      },
+    },
+  },
+  cancelButton: {
+    borderRadius: "5px",
+    color: "text.dark",
+    border: "1px solid",
+    borderColor: "text.neutral",
+    height: 36,
+    width: 73,
+    boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.25)",
+    fontSize: 12,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: "text.light",
+      color: "primary.main",
+      border: "2px solid",
+      borderColor: "primary.main",
+    },
+  },
+};

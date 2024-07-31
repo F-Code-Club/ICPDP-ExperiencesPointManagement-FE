@@ -1,11 +1,16 @@
 /* eslint-disable react/prop-types */
 import { FormControl, Box, InputLabel, MenuItem, Select } from "@mui/material";
 import { styles } from "./finalPointViewStyle";
-import useFetchSemesters from "../hooks/useFetchSemesters";
-import { useState } from "react";
+import useFetchSemesters from "../hooks/useFetchSemesters.js";
+import { useContext } from "react";
+import { FinalPointContext } from "../context/FinalPointContext.jsx";
 const SemesterSelect = () => {
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedSemester, setSelectedSemester] = useState("");
+  const {
+    selectedYear,
+    setSelectedYear,
+    selectedSemester,
+    setSelectedSemester,
+  } = useContext(FinalPointContext);
   const { years, semesters } = useFetchSemesters(
     selectedSemester,
     selectedYear

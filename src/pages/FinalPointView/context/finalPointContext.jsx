@@ -24,6 +24,7 @@ const FinalPointContext = createContext({
 // eslint-disable-next-line react/prop-types
 const FinalPointProvider = ({ children }) => {
   const [rows, setRows] = useState([]);
+
   const [originalRows, setOriginalRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,

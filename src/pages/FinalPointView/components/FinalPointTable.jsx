@@ -1,29 +1,20 @@
 /* eslint-disable react/prop-types */
-
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { styles } from "./finalPointViewStyle";
-import { useState, useContext } from "react";
-import { FinalPointContext } from "../context/finalPointContext";
+import { useContext } from "react";
+import { FinalPointContext } from "../context/FinalPointContext.jsx";
 import SemesterSelect from "./SemesterSelect";
 import ToolBar from "./ToolBar";
+import useFetchStudentData from "../hooks/useFetchStudentData.js";
+import useEdit from "../../../components/DataTable/hooks/useEdit.js";
+import EditFinalPointModal from "./EditFinalPointModal.jsx";
 const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
-  const { rowSelectionModel, setRowSelectionModel } =
+  const { rowSelectionModel, setRowSelectionModel, rows } =
     useContext(FinalPointContext);
-  const [rows, setRows] = useState([
-    {
-      id: "1",
-      studentID: "A1809272",
-      name: "Huy",
-    },
-    {
-      id: "2",
-      studentID: "B1829272",
-      name: "Hiếu",
-    },
-  ]);
-  
-  const handleEditClick = () => {};
+  useFetchStudentData();
+  const { handleEditClick, showEditForm, handleClose } = useEdit();
+
   const columns = columnsSchema(handleEditClick);
 
   return (
@@ -54,6 +45,9 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
           sx={styles.dataGrid}
         />
+        {showEditForm && (
+          <EditFinalPointModal handleClose={handleClose} open={showEditForm} />
+        )}
       </Box>
     </Box>
   );
