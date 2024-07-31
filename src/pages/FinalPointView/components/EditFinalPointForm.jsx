@@ -1,6 +1,5 @@
 import { FormControl, FormLabel, Grid, TextField } from "@mui/material";
 import { editModal as styles } from "./finalPointViewStyle";
-
 const EditFinalPointForm = () => {
   return (
     <FormControl
@@ -11,7 +10,7 @@ const EditFinalPointForm = () => {
       <Grid container spacing={3}>
         <Grid xs={12} item>
           <FormLabel>
-            <span className="text-dark-text-color">
+            <span className="text-dark-text-color font-bold">
               Đánh giá Ý thức học (Điểm mặc định: 20, tối đa: 35)
             </span>
           </FormLabel>
@@ -32,7 +31,7 @@ const EditFinalPointForm = () => {
         </Grid>
         <Grid xs={12} item>
           <FormLabel>
-            <span className="text-dark-text-color">
+            <span className="text-dark-text-color font-bold">
               Ý thức tham gia các hoạt động chính trị, văn hóa, văn nghệ, thể
               dục thế thao ( Điểm mặc định 15, tối đa 50)
             </span>
@@ -82,7 +81,7 @@ const EditFinalPointForm = () => {
         </Grid>
         <Grid xs={12} item>
           <FormLabel>
-            <span className="text-dark-text-color">
+            <span className="text-dark-text-color font-bold">
               Phẩm chất công dân và quan hệ cộng đồng (Điểm mặc định: 15, tối đa
               25)
             </span>
@@ -104,7 +103,7 @@ const EditFinalPointForm = () => {
         </Grid>
         <Grid xs={12} item>
           <FormLabel>
-            <span className="text-dark-text-color">
+            <span className="text-dark-text-color font-bold">
               Đánh giá tham gia công tác phụ trách đoàn thể, các tổ chức…
             </span>
           </FormLabel>
