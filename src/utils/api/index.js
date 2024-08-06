@@ -64,5 +64,11 @@ export const API_ENDPOINTS = {
     ADD: `role-departments`,
     UPDATE: `role-departments`,
     DELETE: `role-departments`,
-  }
+  },
+  CLUB_MEMBER: {
+    GET: `club-member`,
+    ADD: `club-member`,
+    UPDATE: `club-member`,
+    DELETE: `club-member`,
+  },
 };

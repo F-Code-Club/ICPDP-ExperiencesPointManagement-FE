@@ -1,22 +1,21 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
+
 import { StudentFormStyles as styles } from "./style";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
 
 function StudentForm({
   open,
   handleClose,
-  title,
   handleSave,
   func,
   isEdit,
   editedRow,
   formConfig,
 }) {
-
   const { fields } = formConfig;
 
   // Initialize state dynamically based on formConfig
@@ -36,7 +35,6 @@ function StudentForm({
 
   const [info, setInfo] = useState(initState);
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
-  const axios = useAxiosPrivate();
 
   // Handle input changes for text fields
   const handleChange = (e) => {
@@ -95,7 +93,7 @@ function StudentForm({
             align="center"
             sx={{ mt: 3, mb: 2, fontWeight: 600 }}
           >
-            {title}
+            Thêm sinh viên
           </Typography>
         </Box>
         <form onSubmit={handleSubmit}>

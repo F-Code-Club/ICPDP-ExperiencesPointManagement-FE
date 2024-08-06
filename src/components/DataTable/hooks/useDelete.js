@@ -9,7 +9,13 @@ const useDelete = () => {
     setShowDeleteForm(true);
   };
 
-  return { showDeleteForm, setShowDeleteForm, rowToDelete, handleDeleteClick };
+  return {
+    showDeleteForm,
+    setShowDeleteForm,
+    rowToDelete,
+    setRowToDelete,
+    handleDeleteClick,
+  };
 };
 
 export default useDelete;

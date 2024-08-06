@@ -1,17 +1,16 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import { styles } from "./style";
-import theme from "../../../../theme";
-import { toastError, toastSuccess } from "../../../../utils/toast"; // Giả sử bạn có hàm toastSuccess
-import axios from "../../../../config/axios";
-import StudentForm from "../../../../components/Form/StudentForm";
+import theme from "../../../theme";
+import { styles } from "../../../components/DataTable/style";
+import { toastError, toastSuccess } from "../../../utils/toast"; // Giả sử bạn có hàm toastSuccess
+import axios from "../../../config/axios";
+import StudentForm from "../../../components/Form/StudentForm";
 
 const AddStudentToolbar = ({
   setRows,
   setOriginalRows,
   rows,
-  title,
   API_ENDPOINTS,
   accessToken,
   role,
@@ -79,7 +78,6 @@ const AddStudentToolbar = ({
       setUploading(false);
     }
   };
-
 
   const handleSave = async (formData) => {
     try {
@@ -209,7 +207,6 @@ const AddStudentToolbar = ({
       <StudentForm
         open={showForm}
         handleClose={handleCloseForm}
-        title={`Thêm ${title}`}
         handleSave={handleSave}
         func={"Thêm"}
         accessToken={accessToken}

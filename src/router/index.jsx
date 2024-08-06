@@ -115,10 +115,6 @@ const RouterComponent = () => {
                   path: "settings/departments",
                   element: <DepartmentManagement title="Quản lí phòng ban" />,
                 },
-                {
-                  path: "settings/semesters",
-                  element: <SemesterManagement />,
-                },
               ],
             },
           ],
