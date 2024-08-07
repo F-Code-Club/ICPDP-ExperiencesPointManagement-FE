@@ -47,6 +47,7 @@ const useFetchStudents = () => {
 
   const fetchData = useCallback(
     async (signal) => {
+      if (!accessToken) return;
       try {
         const result = await studentApi.fetchPagination(
           {
@@ -81,11 +82,10 @@ const useFetchStudents = () => {
     setIsLoading(true);
     const abortController = new AbortController();
 
-    if (!accessToken) return;
     fetchData(abortController.signal);
 
     return () => abortController.abort();
-  }, [fetchData, accessToken]);
+  }, [fetchData]);
 
   return { isLoading };
 };

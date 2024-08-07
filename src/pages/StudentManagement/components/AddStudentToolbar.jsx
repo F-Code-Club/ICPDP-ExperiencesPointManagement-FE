@@ -1,126 +1,39 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import theme from "../../../theme";
-import { styles } from "../../../components/DataTable/style";
-import { toastError, toastSuccess } from "../../../utils/toast"; // Giả sử bạn có hàm toastSuccess
-import axios from "../../../config/axios";
+
+import useAddStudents from "../hooks/useAddStudents";
 import StudentForm from "../../../components/Form/StudentForm";
 
-const AddStudentToolbar = ({
-  setRows,
-  setOriginalRows,
-  rows,
-  API_ENDPOINTS,
-  accessToken,
-  role,
-  formConfig,
-}) => {
+import theme from "../../../theme";
+import { styles } from "../../../components/DataTable/style";
+
+// eslint-disable-next-line react/prop-types
+const AddStudentToolbar = ({ formConfig }) => {
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const { handleSave, handleFileChange, uploading } = useAddStudents(
+    setShowForm,
+    setShowModal
+  );
 
-  const handleOpenForm = () => {
+  const handleOpenForm = useCallback(() => {
     setShowModal(false);
     setShowForm(true);
-  };
+  }, []);
 
-  const handleCloseForm = () => setShowForm(false);
-
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const validMimeTypes = [
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-    ];
-    if (!validMimeTypes.includes(file.type)) {
-      toastError("Vui lòng upload file Excel hợp lệ.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      setUploading(true);
-      const response = await axios.post(API_ENDPOINTS.UPLOAD, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const data = response.data.data;
-      if (response.status === 200 || response.status === 201) {
-        const id =
-          rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-        const newRow = {
-          ...data,
-          id,
-        };
-        setRows((prevRows) => [...prevRows, newRow]);
-        setOriginalRows((prevRows) => [...prevRows, newRow]);
-        setShowModal(false);
-        toastSuccess("Upload thành công!");
-      } else {
-        toastError(`Upload failed with status: ${response.status}`);
-      }
-    } catch (error) {
-      if (error.response) {
-        toastError(`Error uploading file: ${error.response.data.message}`);
-      } else {
-        toastError("Error uploading file.");
-      }
-      console.error("File upload error:", error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleSave = async (formData) => {
-    try {
-      const response = await axios.post(
-        API_ENDPOINTS.ADD,
-        { ...formData, role },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "*/*",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const data = response.data.data;
-      if (response.status === 200 || response.status === 201) {
-        const id =
-          rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-        const newRow = {
-          ...data,
-          id,
-        };
-        setRows((prevRows) => [...prevRows, newRow]);
-        setOriginalRows((prevRows) => [...prevRows, newRow]);
-        setShowForm(false);
-        toastSuccess("Thêm sinh viên thành công!");
-      }
-    } catch (error) {
-      toastError("Saving Fail..");
-      toastError(error.response.data.message);
-    }
-  };
+  const handleCloseForm = useCallback(() => setShowForm(false), []);
 
   return (
     <>
       <Button
         onClick={() => setShowModal((prev) => !prev)}
         sx={styles.addButton}
+        disabled={uploading}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
-
       {showModal && (
         <div
           style={{
@@ -203,16 +116,16 @@ const AddStudentToolbar = ({
           </Button>
         </div>
       )}
-
-      <StudentForm
-        open={showForm}
-        handleClose={handleCloseForm}
-        handleSave={handleSave}
-        func={"Thêm"}
-        accessToken={accessToken}
-        API_ENDPOINTS={API_ENDPOINTS}
-        formConfig={formConfig}
-      />
+      {showForm && (
+        <StudentForm
+          title="Thêm sinh viên"
+          open={showForm}
+          handleClose={handleCloseForm}
+          handleSave={handleSave}
+          func="Thêm"
+          formConfig={formConfig}
+        />
+      )}
     </>
   );
 };

@@ -2,7 +2,9 @@ import { Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
+
 import { ROLE } from "../../constant/core";
+
 const columnsSchema = (role, handleEditClick, handleDeleteClick) => [
   {
     field: "id",
@@ -75,7 +77,7 @@ const columnsSchema = (role, handleEditClick, handleDeleteClick) => [
           icon={<DeleteIcon />}
           key="delete"
           label="Delete"
-          onClick={handleDeleteClick(row.id)}
+          onClick={() => handleDeleteClick(row.id)}
           color="inherit"
         />
       );
@@ -86,7 +88,7 @@ const columnsSchema = (role, handleEditClick, handleDeleteClick) => [
               key="edit"
               label="Edit"
               className="textPrimary"
-              onClick={() => handleEditClick(row)}
+              onClick={() => handleEditClick(row.id)}
               color="inherit"
             />,
             deleteAction,

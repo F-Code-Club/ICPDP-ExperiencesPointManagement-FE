@@ -13,7 +13,8 @@ const useSearch = (originalRows, setRows, filter) => {
   useEffect(() => {
     const filteredRows = originalRows.filter((row) => filter(row, searchQuery));
     setRows(filteredRows);
-  }, [searchQuery, originalRows, setRows, filter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, originalRows]);
 
   return debouncedSearchQuery;
 };

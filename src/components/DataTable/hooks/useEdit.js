@@ -11,7 +11,7 @@ const useEdit = () => {
     setIsEdit(true);
   }, []);
 
-  const handleClose = useCallback(() => {
+  const handleEditClose = useCallback(() => {
     setShowEditForm(false);
   }, []);
 
@@ -20,7 +20,7 @@ const useEdit = () => {
     setShowEditForm,
     rowToEdit,
     handleEditClick,
-    handleClose,
+    handleEditClose,
     isEdit,
   };
 };

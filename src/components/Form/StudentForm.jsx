@@ -15,6 +15,7 @@ function StudentForm({
   isEdit,
   editedRow,
   formConfig,
+  title,
 }) {
   const { fields } = formConfig;
 
@@ -62,13 +63,13 @@ function StudentForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
+      // Show error based on role
       if (errors.studentID || errors.name)
         toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
-    let finalInfo = { ...info };
-    handleSave(finalInfo);
+    handleSave({ ...info });
     handleClose();
   };
 
@@ -93,7 +94,7 @@ function StudentForm({
             align="center"
             sx={{ mt: 3, mb: 2, fontWeight: 600 }}
           >
-            Thêm sinh viên
+            {title}
           </Typography>
         </Box>
         <form onSubmit={handleSubmit}>

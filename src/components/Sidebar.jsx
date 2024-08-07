@@ -1,4 +1,3 @@
-import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -15,6 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
+// eslint-disable-next-line react/prop-types
 const Sidebar = ({ setTitle }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -35,7 +35,9 @@ const Sidebar = ({ setTitle }) => {
               style={{ color: "black" }}
             />
             <div className="flex flex-col justify-center items-center gap-0.5">
-              <h2 className="text-base font-bold text-black">Admin's name</h2>
+              <h2 className="text-base font-bold text-black">
+                Admin&apos;s name
+              </h2>
               <p className="text-primary text-xs font-medium">ADMINISTRATOR</p>
             </div>
           </div>
@@ -226,7 +228,7 @@ const Sidebar = ({ setTitle }) => {
             </li>
           </ul>
         </div>
-        <div class="flex flex-col gap-2 self-stretch">
+        <div className="flex flex-col gap-2 self-stretch">
           <hr className="border-slate-950 w-full h-[1px]" />
           <div className="flex py-3 px-2 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
             <LogoutIcon className="mr-2" sx={{ fontSize: "19px" }} />

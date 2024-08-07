@@ -3,11 +3,10 @@ import { StudentContext } from "../student.context";
 import useAuth from "../../../hooks/useAuth";
 
 import studentApi from "../../../utils/api/studentApi";
-import { toastError } from "../../../utils/toast";
+import { toastError, toastSuccess } from "../../../utils/toast";
 
-const useActionStudents = () => {
-  const { rows, setRows, setOriginalRows, rowToEdit, handleClose } =
-    useContext(StudentContext);
+const useActionStudents = (rowToEdit, handleEditClose, handleDeleteClose) => {
+  const { rows, setRows, setOriginalRows } = useContext(StudentContext);
   const {
     auth: { accessToken },
   } = useAuth();
@@ -15,35 +14,32 @@ const useActionStudents = () => {
   const handleSaveClick = useCallback(
     async (formData) => {
       const currentRow = rows.find((row) => row.id === rowToEdit);
-
+      const data = {
+        ...formData,
+        id: rowToEdit,
+      };
       try {
         const response = await studentApi.updateOne(
           currentRow?.studentID,
-          {
-            ...formData,
-            id: rowToEdit,
-          },
+          data,
           accessToken
         );
 
         if (response.status === 200 || response.status === 201) {
-          const updatedRow = {
-            ...formData,
-            id: rowToEdit,
-          };
           const updatedRows = rows.map((row) =>
-            row.id === rowToEdit ? updatedRow : row
+            row.id === rowToEdit ? data : row
           );
           setRows(updatedRows);
           setOriginalRows(updatedRows);
-          handleClose();
+          handleEditClose();
+          toastSuccess("Chỉnh sửa sinh viên thành công");
         }
       } catch (error) {
         toastError("Updating Fail..");
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, rowToEdit]
+    [accessToken, rowToEdit, rows]
   );
 
   const handleDelete = useCallback(
@@ -61,14 +57,15 @@ const useActionStudents = () => {
           setOriginalRows(
             newRows.map((row, index) => ({ ...row, id: index + 1 }))
           );
-          handleClose();
+          handleDeleteClose();
+          toastSuccess("Xóa sinh viên thành công");
         }
       } catch (error) {
         toastError("Deleting Fail..");
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken]
+    [accessToken, rows]
   );
 
   return { handleSaveClick, handleDelete };

@@ -17,14 +17,31 @@ const studentApi = {
       })
       .then((response) => response.data);
   },
+  addOne: async (data, accessToken) => {
+    return await axios.post(API_ENDPOINTS.STUDENTS.ADD, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  },
   updateOne: async (id, data, accessToken) => {
-    return await axios.patch(`${API_ENDPOINTS.UPDATE}/${id}`, data, {
+    return await axios.patch(`${API_ENDPOINTS.STUDENTS.UPDATE}/${id}`, data, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
   },
   deleteOne: async (id, accessToken) => {
-    return await axios.delete(`${API_ENDPOINTS.DELETE}/${id}`, {
+    return await axios.delete(`${API_ENDPOINTS.STUDENTS.DELETE}/${id}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  },
+  uploadFile: async (formData, accessToken) => {
+    return await axios.post(API_ENDPOINTS.STUDENTS.UPLOAD, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
     });
   },
 };

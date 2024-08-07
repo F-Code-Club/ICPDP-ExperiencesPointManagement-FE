@@ -12,11 +12,8 @@ import Toast from "./components/Toast/index.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ThemeProvider theme={theme}>
     <AuthProvider>
-      <React.StrictMode>
-        <App />
-        <Toast />
-      </React.StrictMode>
+      <App />
+      <Toast />
     </AuthProvider>
   </ThemeProvider>
 );
-

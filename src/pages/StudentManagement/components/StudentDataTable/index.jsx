@@ -19,9 +19,9 @@ import useDelete from "../../../../components/DataTable/hooks/useDelete";
 import useExport from "../../../../components/DataTable/hooks/useExport";
 import useFetchStudents from "../../hooks/useFetchStudents";
 import useActionStudents from "../../hooks/useActionStudents";
+import useAuth from "../../../../hooks/useAuth";
 
 import { StudentContext } from "../../student.context";
-import { AuthContext } from "../../../../context/auth.context";
 
 import { styles } from "../../../../components/DataTable/style";
 import { PAGE_SIZE } from "../../../../constant/core";
@@ -29,7 +29,6 @@ import { PAGE_SIZE } from "../../../../constant/core";
 // eslint-disable-next-line react/prop-types
 const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
   const { isLoading } = useFetchStudents();
-  const { handleSaveClick, handleDelete } = useActionStudents();
   const {
     rows,
     setRows,
@@ -40,15 +39,27 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
     setPaginationModel,
     total,
   } = useContext(StudentContext);
-  const { rowToEdit, showEditForm, setShowEditForm, isEdit, handleEditClick } =
-    useEdit();
+  const {
+    rowToEdit,
+    showEditForm,
+    setShowEditForm,
+    isEdit,
+    handleEditClick,
+    handleEditClose,
+  } = useEdit();
   const {
     showDeleteForm,
     setShowDeleteForm,
     rowToDelete,
     setRowToDelete,
     handleDeleteClick,
+    handleDeleteClose,
   } = useDelete();
+  const { handleSaveClick, handleDelete } = useActionStudents(
+    rowToEdit,
+    handleEditClose,
+    handleDeleteClose
+  );
   const {
     showExportForm,
     setShowExportForm,
@@ -63,14 +74,15 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
       row.name?.toLowerCase().includes(searchQuery)
   );
   const apiRef = useGridApiRef();
-  const { role } = useContext(AuthContext);
+  const { role } = useAuth();
 
   const handleClose = useCallback(() => {
     setShowDeleteForm(false);
     setShowEditForm(false);
     setRowToDelete(null);
     setShowExportForm(false);
-  }, [setRowToDelete, setShowDeleteForm, setShowEditForm, setShowExportForm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box sx={styles.pageContainer}>
@@ -95,7 +107,7 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
               ),
             }}
           />
-          <AddStudentToolbar formConfig={formConfig} />
+          <AddStudentToolbar formConfig={formConfig(role)} />
           <Button
             onClick={handleExportClick}
             sx={{
@@ -122,7 +134,7 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
           }}
           rowSelectionModel={rowSelectionModel}
           rows={rows}
-          columns={columnsSchema(handleEditClick, handleDeleteClick)}
+          columns={columnsSchema(role, handleEditClick, handleDeleteClick)}
           apiRef={apiRef}
           rowHeight={55}
           onCellDoubleClick={(e) => e.preventDefault()}
@@ -146,29 +158,39 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
           sx={styles.dataGrid}
         />
       </Box>
-      <WarningForm
-        open={showDeleteForm}
-        handleClose={handleClose}
-        handleDelete={handleDelete}
-        rowId={rowToDelete}
-      />
-      <StudentForm
-        open={showEditForm}
-        handleClose={handleClose}
-        title="Chỉnh sửa sinh viên"
-        handleSave={handleSaveClick}
-        editedRow={rows.find((row) => row.id === rowToEdit)}
-        func={"Sửa"}
-        isEdit={isEdit}
-        formConfig={formConfig(role)}
-      />
-      <ExportForm
-        open={showExportForm}
-        handleClose={handleClose}
-        handleExport={exportSelectedRow(rows, rowSelectionModel, exportOptions)}
-        numberOfRow={rowSelectionModel.length}
-        title="Sinh viên"
-      />
+      {showDeleteForm && (
+        <WarningForm
+          open={showDeleteForm}
+          handleClose={handleClose}
+          handleDelete={handleDelete}
+          rowId={rowToDelete}
+        />
+      )}
+      {rowToEdit && (
+        <StudentForm
+          open={showEditForm}
+          handleClose={handleClose}
+          title="Chỉnh sửa sinh viên"
+          handleSave={handleSaveClick}
+          editedRow={rows.find((row) => row.id === rowToEdit)}
+          func={"Sửa"}
+          isEdit={isEdit}
+          formConfig={formConfig(role)}
+        />
+      )}
+      {showExportForm && (
+        <ExportForm
+          open={showExportForm}
+          handleClose={handleClose}
+          handleExport={exportSelectedRow(
+            rows,
+            rowSelectionModel,
+            exportOptions
+          )}
+          numberOfRow={rowSelectionModel.length}
+          title="Sinh viên"
+        />
+      )}
     </Box>
   );
 };

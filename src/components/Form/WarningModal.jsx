@@ -2,6 +2,7 @@ import { Modal, Box, Button } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
 import { ManagementFormStyles as styles } from "./style";
 
+// eslint-disable-next-line react/prop-types
 function WarningForm({ open, handleClose, handleDelete, rowId }) {
   return (
     <Modal open={open} onClose={handleClose}>
