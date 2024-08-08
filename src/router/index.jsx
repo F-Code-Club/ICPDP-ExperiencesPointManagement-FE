@@ -89,14 +89,6 @@ const RouterComponent = () => {
                   path: "settings/students",
                   element: <StudentManagement title="Quản lí sinh viên" />,
                 },
-                {
-                  path: "settings/clubs",
-                  element: <ClubManagement title="Quản lí câu lạc bộ" />,
-                },
-                {
-                  path: "settings/departments",
-                  element: <DepartmentManagement title="Quản lí phòng ban" />,
-                },
               ],
             },
           ],
