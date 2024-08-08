@@ -70,7 +70,7 @@ export const exportOptions = {
       ],
     },
     { field: "totalFinalPoint", headerName: "Tổng điểm cuối cùng" },
-    { field: "classification", headerName: "Xếp hạng" },
+    { field: "classification", headerName: "Xếp loại" },
   ],
 };
 
