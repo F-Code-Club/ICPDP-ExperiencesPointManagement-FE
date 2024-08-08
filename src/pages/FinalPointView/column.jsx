@@ -52,7 +52,7 @@ export const columnsSchema = (handleEditClick) => {
       editable: false,
     },
     {
-      field: "learningPoint",
+      field: "studyPoint",
       headerName: "Điểm cộng",
       headerClassName: "header",
       cellClassName: "cell",
@@ -63,7 +63,7 @@ export const columnsSchema = (handleEditClick) => {
       editable: false,
     },
     {
-      field: "learningComment",
+      field: "studyComment",
       headerName: "Comment",
       headerClassName: "header",
       cellClassName: "cell",
@@ -74,7 +74,7 @@ export const columnsSchema = (handleEditClick) => {
       editable: false,
     },
     {
-      field: "finalLearningPoint",
+      field: "totalStudyPoint",
       headerName: "Tổng điểm",
       headerClassName: "header",
       cellClassName: "cell",
@@ -289,13 +289,13 @@ export const columnGroupingModel = [
     children: [{ field: "name" }],
   },
   {
-    groupId: "learning",
+    groupId: "study",
     headerClassName: "majorHeader",
     headerName: "Đánh giá Ý thức học tập (Mặc định: 20; tối đa 35)",
     children: [
-      { field: "learningPoint" },
-      { field: "learningComment" },
-      { field: "finalLearningPoint" },
+      { field: "studyPoint" },
+      { field: "studyComment" },
+      { field: "totalStudyPoint" },
     ],
   },
   {
@@ -316,6 +316,7 @@ export const columnGroupingModel = [
   {
     groupId: "quality",
     headerClassName: "majorHeader",
+
     headerName:
       "Phẩm chất công dân và quan hệ cộng đồng (Điểm mặc định: 15, tối đa 25)",
     children: [

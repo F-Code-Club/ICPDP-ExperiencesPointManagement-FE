@@ -9,6 +9,7 @@ import ToolBar from "./ToolBar";
 import useFetchStudentData from "../hooks/useFetchStudentData.js";
 import useEdit from "../../../components/DataTable/hooks/useEdit.js";
 import EditFinalPointModal from "./EditFinalPointModal.jsx";
+import EmptyTable from "./EmptyTable.jsx";
 const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
   const { rowSelectionModel, setRowSelectionModel, rows } =
     useContext(FinalPointContext);
@@ -25,6 +26,9 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           <ToolBar />
         </Box>
         <DataGrid
+          slots={{
+            noRowsOverlay: EmptyTable,
+          }}
           checkboxSelection
           onRowSelectionModelChange={(newRowSelectionModel) => {
             setRowSelectionModel(newRowSelectionModel);

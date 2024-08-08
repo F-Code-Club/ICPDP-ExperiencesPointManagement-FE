@@ -1,6 +1,10 @@
 import { FormControl, FormLabel, Grid, TextField } from "@mui/material";
 import { editModal as styles } from "./finalPointViewStyle";
+// import useEdit from "../../../components/DataTable/hooks/useEdit";
+// import useEditPoint from "../hooks/useEditPoint";
 const EditFinalPointForm = () => {
+  // const { handleClose, rowToEdit, showEditForm } = useEdit();
+  
   return (
     <FormControl
       sx={{
