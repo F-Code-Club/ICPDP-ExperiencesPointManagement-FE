@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { toastError } from "../../../utils/toast";
+
 const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
   const axios = useAxiosPrivate();
   const [config, setConfig] = useState({
@@ -8,6 +9,7 @@ const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
     selectFields: [],
   });
   const [participantRole, setParticipantRole] = useState([]);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const entryRole = role.toUpperCase() + "S";
@@ -41,12 +43,17 @@ const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
             },
           ],
         }));
+
+        setHasError(false);
       } catch (err) {
-        toastError("Failed to fetch roles. Please try again later.");
+        if (!hasError) {
+          toastError("Failed to fetch roles. Please try again later.");
+          setHasError(true);
+        }
       }
     };
     fetchRole();
-  }, [role, API_ENDPOINTS, accessToken, axios]);
+  }, [role, API_ENDPOINTS, accessToken, axios, hasError]);
 
   return { config, participantRole };
 };

@@ -95,10 +95,8 @@ const ExperiencePointTable = ({
         return;
       }
 
-      setPageLoading(true);
-      setTotal(0);
-
       try {
+        setPageLoading(true);
         const response = await axios.get(
           `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
           {
@@ -112,9 +110,11 @@ const ExperiencePointTable = ({
             },
           }
         );
+
         if (response.status === 200) {
           toastSuccess("Get data successfully");
         }
+
         const data = response.data.data || [];
         const totalPage = response.data.totalPage || 0;
 
@@ -124,18 +124,15 @@ const ExperiencePointTable = ({
           id:
             currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
         }));
-
-        setRows(rowsWithIds);
         setOriginalRows(rowsWithIds);
-
+        setRows(rowsWithIds);
         const updatedTables = tables.map((table) =>
           table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
         );
-
         setTables(updatedTables);
         setTotal(totalPage);
       } catch (err) {
-        //empty
+        // Handle errors
       } finally {
         setPageLoading(false);
       }
@@ -150,7 +147,7 @@ const ExperiencePointTable = ({
   );
 
   // Add debounce
-  const debouncedFetchRows = useDebounce(fetchRows, 300);
+  const debouncedFetchRows = useDebounce(fetchRows, 500);
 
   // Re-render rows when switch tab
   useEffect(() => {
@@ -549,7 +546,7 @@ const ExperiencePointTable = ({
                     page: currentPage,
                   }}
                   onPaginationModelChange={handlePageChange}
-                  rowCount={total * PAGE_SIZE}
+                  rowCount={PAGE_SIZE * total}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
