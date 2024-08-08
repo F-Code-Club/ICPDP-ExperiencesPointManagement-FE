@@ -1,8 +1,7 @@
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { styles } from "../../components/DataTable/style";
 
 const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
   const columns = [
@@ -37,10 +36,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
             gap: "18px",
           }}
         >
-          <Avatar src={params.row.avatar} alt="Avatar" sx={styles.avatar} />
-          <Typography variant="body1" className="ml-[12px]">
-            {params.value}
-          </Typography>
+          {params.value}
         </Box>
       ),
       type: "string",
