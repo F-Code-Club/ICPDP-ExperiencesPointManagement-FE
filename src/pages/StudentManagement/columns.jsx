@@ -72,28 +72,27 @@ const columnsSchema = (role, handleEditClick, handleDeleteClick) => [
     flex: 0.75,
     cellClassName: "actions",
     getActions: ({ row }) => {
-      const deleteAction = (
+      const actions = [
         <GridActionsCellItem
           icon={<DeleteIcon />}
           key="delete"
           label="Delete"
           onClick={() => handleDeleteClick(row.id)}
           color="inherit"
-        />
-      );
-      return role === ROLE.ADMIN
-        ? [
-            <GridActionsCellItem
-              icon={<EditIcon />}
-              key="edit"
-              label="Edit"
-              className="textPrimary"
-              onClick={() => handleEditClick(row.id)}
-              color="inherit"
-            />,
-            deleteAction,
-          ]
-        : [deleteAction];
+        />,
+      ];
+      if (role === ROLE.ADMIN)
+        actions.unshift(
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            key="edit"
+            label="Edit"
+            className="textPrimary"
+            onClick={() => handleEditClick(row.id)}
+            color="inherit"
+          />
+        );
+      return actions;
     },
   },
 ];

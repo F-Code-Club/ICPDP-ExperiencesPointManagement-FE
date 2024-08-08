@@ -79,7 +79,7 @@ const SemesterDataTable = ({ columnsSchema }) => {
           pagination
           paginationMode="server"
           pageSizeOptions={[
-            { value: PAGE_SIZE, label: PAGE_SIZE },
+            { value: PAGE_SIZE, label: PAGE_SIZE + "" },
             { value: -1, label: "All" },
           ]}
           paginationModel={paginationModel}

@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 
+import useAuth from "../../hooks/useAuth";
+
 import { StudentFormStyles as styles } from "./style";
 import { toastError } from "../../utils/toast";
+import { ROLE } from "../../constant/core";
 
 function StudentForm({
   open,
@@ -18,6 +21,8 @@ function StudentForm({
   title,
 }) {
   const { fields } = formConfig;
+  const { role } = useAuth();
+  const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
 
   // Initialize state dynamically based on formConfig
   const initState = () => {
@@ -64,7 +69,7 @@ function StudentForm({
 
     if (Object.values(errors).some((error) => error)) {
       // Show error based on role
-      if (errors.studentID || errors.name)
+      if (errors.studentID || (isAdmin && errors?.name))
         toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }

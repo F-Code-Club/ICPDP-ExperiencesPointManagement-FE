@@ -1,3 +1,5 @@
+import { useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -11,13 +13,19 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
+
+import useAuth from "../hooks/useAuth";
+import useLogout from "../hooks/useLogout";
+
+import { ROLE } from "../constant/core";
 
 // eslint-disable-next-line react/prop-types
 const Sidebar = ({ setTitle }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const { role } = useAuth();
+  const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
+  const logout = useLogout();
 
   return (
     <>
@@ -169,60 +177,67 @@ const Sidebar = ({ setTitle }) => {
                       </div>
                     </NavLink>
                   </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="settings/clubs"
-                      onClick={() => setTitle("Quản lí câu lạc bộ")}
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <GroupsIcon className="mr-2" sx={{ fontSize: "19px" }} />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí câu lạc bộ
-                      </div>
-                    </NavLink>
-                  </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="settings/departments"
-                      onClick={() => setTitle("Quản lí phòng ban")}
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <RoomPreferencesIcon
-                        className="mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí phòng ban
-                      </div>
-                    </NavLink>
-                  </li>
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="settings/semesters"
-                      onClick={() => setTitle("Quản lí kì học")}
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <CalendarMonthIcon
-                        className="mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Quản lí kì học
-                      </div>
-                    </NavLink>
-                  </li>
+                  {isAdmin && (
+                    <>
+                      <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                        <NavLink
+                          to="settings/clubs"
+                          onClick={() => setTitle("Quản lí câu lạc bộ")}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                              : "flex items-center py-3 px-2"
+                          }
+                        >
+                          <GroupsIcon
+                            className="mr-2"
+                            sx={{ fontSize: "19px" }}
+                          />
+                          <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                            Quản lí câu lạc bộ
+                          </div>
+                        </NavLink>
+                      </li>
+                      <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                        <NavLink
+                          to="settings/departments"
+                          onClick={() => setTitle("Quản lí phòng ban")}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                              : "flex items-center py-3 px-2"
+                          }
+                        >
+                          <RoomPreferencesIcon
+                            className="mr-2"
+                            sx={{ fontSize: "19px" }}
+                          />
+                          <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                            Quản lí phòng ban
+                          </div>
+                        </NavLink>
+                      </li>
+                      <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                        <NavLink
+                          to="settings/semesters"
+                          onClick={() => setTitle("Quản lí kì học")}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                              : "flex items-center py-3 px-2"
+                          }
+                        >
+                          <CalendarMonthIcon
+                            className="mr-2"
+                            sx={{ fontSize: "19px" }}
+                          />
+                          <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                            Quản lí kì học
+                          </div>
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
                 </ul>
               )}
             </li>
@@ -232,7 +247,11 @@ const Sidebar = ({ setTitle }) => {
           <hr className="border-slate-950 w-full h-[1px]" />
           <div className="flex py-3 px-2 self-stretch border border-transparent rounded cursor-pointer hover:bg-primary-100 hover:border-black hover:shadow-xl">
             <LogoutIcon className="mr-2" sx={{ fontSize: "19px" }} />
-            <NavLink to="/login" className="rounded cursor-pointer">
+            <NavLink
+              to="/login"
+              onClick={logout}
+              className="rounded cursor-pointer"
+            >
               <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
                 Đăng xuất
               </div>

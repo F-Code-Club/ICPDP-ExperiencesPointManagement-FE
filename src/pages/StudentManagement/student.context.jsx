@@ -1,5 +1,11 @@
-import { createContext, useState } from "react";
-import { PAGE_SIZE } from "../../constant/core";
+import { createContext, useMemo, useState } from "react";
+
+import useAuth from "../../hooks/useAuth";
+
+import { PAGE_SIZE, ROLE } from "../../constant/core";
+import studentApi from "../../utils/api/studentApi";
+import clubMemberApi from "../../utils/api/clubMemberApi";
+import departmentMemberApi from "../../utils/api/departmentMemberApi";
 
 const StudentContext = createContext({
   rows: [],
@@ -16,6 +22,7 @@ const StudentContext = createContext({
   role: "",
   rowSelectionModel: [],
   setRowSelectionModel: () => {},
+  api: {},
 });
 
 // eslint-disable-next-line react/prop-types
@@ -29,6 +36,17 @@ const StudentProvider = ({ children }) => {
   });
   const [total, setTotal] = useState(0);
 
+  const { role } = useAuth();
+  const api = useMemo(
+    () =>
+      role === ROLE.ADMIN
+        ? studentApi
+        : role === ROLE.CLUB
+          ? clubMemberApi
+          : departmentMemberApi,
+    [role]
+  );
+
   const value = {
     rows,
     originalRows,
@@ -40,6 +58,7 @@ const StudentProvider = ({ children }) => {
     setTotal,
     rowSelectionModel,
     setRowSelectionModel,
+    api,
   };
 
   return (

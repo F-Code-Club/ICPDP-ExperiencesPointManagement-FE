@@ -33,23 +33,6 @@ const RouterComponent = () => {
       element: <PersistLogin />,
       children: [
         {
-          // User routes
-          path: "user",
-          element: <RequireAuth allowedRoles={[ROLE.USER]} />,
-          children: [
-            {
-              element: <Layout />,
-              children: [
-                { index: true, element: <Home /> },
-                // {
-                //   path: "transcripts/experience-point",
-                //   element: <ExperiencePointView />,
-                // },
-              ],
-            },
-          ],
-        },
-        {
           // Admin routes
           path: "admin",
           element: <RequireAuth allowedRoles={[ROLE.ADMIN]} />,
@@ -86,10 +69,9 @@ const RouterComponent = () => {
             },
           ],
         },
-        {
-          // club
-          path: "club",
-          element: <RequireAuth allowedRoles={[ROLE.CLUB]} />,
+        ...["club", "department"].map((path) => ({
+          path,
+          element: <RequireAuth allowedRoles={[ROLE.CLUB, ROLE.DEPARTMENT]} />,
           children: [
             {
               element: <Layout />,
@@ -118,7 +100,7 @@ const RouterComponent = () => {
               ],
             },
           ],
-        },
+        })),
       ],
     },
   ]);

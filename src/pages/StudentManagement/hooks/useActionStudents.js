@@ -6,7 +6,7 @@ import studentApi from "../../../utils/api/studentApi";
 import { toastError, toastSuccess } from "../../../utils/toast";
 
 const useActionStudents = (rowToEdit, handleEditClose, handleDeleteClose) => {
-  const { rows, setRows, setOriginalRows } = useContext(StudentContext);
+  const { rows, setRows, setOriginalRows, api } = useContext(StudentContext);
   const {
     auth: { accessToken },
   } = useAuth();
@@ -46,7 +46,7 @@ const useActionStudents = (rowToEdit, handleEditClose, handleDeleteClose) => {
     async (rowId) => {
       const currentRow = rows.find((row) => row.id === rowId);
       try {
-        const response = await studentApi.deleteOne(
+        const response = await api.deleteOne(
           currentRow?.studentID,
           accessToken
         );

@@ -70,5 +70,13 @@ export const API_ENDPOINTS = {
     ADD: `club-member`,
     UPDATE: `club-member`,
     DELETE: `club-member`,
+    UPLOAD: `club-member/import`,
+  },
+  DEPARTMENT_MEMBER: {
+    GET: `department-member`,
+    ADD: `department-member`,
+    UPDATE: `department-member`,
+    DELETE: `department-member`,
+    UPLOAD: `department-member/import`,
   },
 };

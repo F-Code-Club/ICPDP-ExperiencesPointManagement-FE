@@ -148,7 +148,7 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
           pagination
           paginationMode="server"
           pageSizeOptions={[
-            { value: PAGE_SIZE, label: PAGE_SIZE },
+            { value: PAGE_SIZE, label: PAGE_SIZE + "" },
             { value: -1, label: "All" },
           ]}
           paginationModel={paginationModel}

@@ -3,11 +3,10 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { StudentContext } from "../student.context";
 
-import studentApi from "../../../utils/api/studentApi";
 import { toastError } from "../../../utils/toast";
 
 const useFetchStudents = () => {
-  const { setRows, setOriginalRows, paginationModel, setTotal } =
+  const { setRows, setOriginalRows, paginationModel, setTotal, api } =
     useContext(StudentContext);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -21,7 +20,7 @@ const useFetchStudents = () => {
 
     const fetchRemote = async () => {
       try {
-        const result = await studentApi.fetchPagination(
+        const result = await api.fetchPagination(
           {
             page: 0,
             pageSize: 0,
@@ -49,7 +48,7 @@ const useFetchStudents = () => {
     async (signal) => {
       if (!accessToken) return;
       try {
-        const result = await studentApi.fetchPagination(
+        const result = await api.fetchPagination(
           {
             page: paginationModel.page,
             pageSize:

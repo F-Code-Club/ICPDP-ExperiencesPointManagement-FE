@@ -4,11 +4,10 @@ import useAuth from "../../../hooks/useAuth";
 
 import { StudentContext } from "../student.context";
 import { toastError, toastSuccess } from "../../../utils/toast";
-import { VALID_MIME_TYPES } from "../../../constant/core";
-import studentApi from "../../../utils/api/studentApi";
+import { ROLE, VALID_MIME_TYPES } from "../../../constant/core";
 
 const useAddStudents = (setShowForm, setShowModal) => {
-  const { rows, setOriginalRows } = useContext(StudentContext);
+  const { rows, setOriginalRows, api } = useContext(StudentContext);
   const [uploading, setUploading] = useState(false);
   const {
     auth: { accessToken },
@@ -28,17 +27,21 @@ const useAddStudents = (setShowForm, setShowModal) => {
 
       try {
         setUploading(true);
-        const response = await studentApi.uploadFile(formData, accessToken);
+        const response = await api.uploadFile(formData, accessToken);
 
-        const data = response.data.data;
+        const data =
+          role === ROLE.ADMIN
+            ? response.data.data
+            : response.data.data.students;
         if (response.status === 200 || response.status === 201) {
           const id =
-            rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
-          const newRow = {
-            ...data,
-            id,
-          };
-          setOriginalRows((prevRows) => [...prevRows, newRow]);
+            rows.length > 0 ? Math.max(...rows.map((row) => row.id)) : 0;
+          const rowsWithIds =
+            data.map((row, index) => ({
+              ...row,
+              id: id + index + 1,
+            })) || [];
+          setOriginalRows((prevRows) => [...prevRows, ...rowsWithIds]);
           setShowModal(false);
           toastSuccess("Upload thành công!");
         } else {
@@ -55,17 +58,17 @@ const useAddStudents = (setShowForm, setShowModal) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken]
+    [accessToken, rows]
   );
 
   const handleSave = useCallback(
     async (formData) => {
       try {
-        const response = await studentApi.addOne(
-          { ...formData, role },
-          accessToken
-        );
-        const data = response.data.data;
+        const response = await api.addOne({ ...formData }, accessToken);
+        const data =
+          role === ROLE.ADMIN
+            ? response.data.data
+            : response.data.data.students;
         if (response.status === 200 || response.status === 201) {
           const id =
             rows.length > 0 ? Math.max(...rows.map((row) => row.id)) + 1 : 1;
@@ -82,7 +85,7 @@ const useAddStudents = (setShowForm, setShowModal) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken]
+    [accessToken, rows]
   );
 
   return { handleFileChange, handleSave, uploading };
