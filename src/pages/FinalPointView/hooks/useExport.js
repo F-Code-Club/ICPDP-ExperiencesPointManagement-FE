@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { FinalPointContext } from "../context/FinalPointContext";
-import { exportOptions } from "../exportOptions";
+import { exportOptions, resolveHeaders } from "../exportOptions";
 
 const useExport = () => {
   const { rows, rowSelectionModel } = useContext(FinalPointContext);
@@ -8,9 +8,8 @@ const useExport = () => {
     const selectedRows = rowSelectionModel.length
       ? rows.filter((row) => rowSelectionModel.includes(row.id))
       : rows;
-    console.log(rows);
     const fieldsToExport = exportOptions.fields;
-    const customHeaders = exportOptions.headers;
+    const customHeaders = resolveHeaders(exportOptions.headers);
     const csvHeader = customHeaders.join(",");
     const csvRows = selectedRows.map((row) =>
       fieldsToExport.map((field) => row[field]).join(",")

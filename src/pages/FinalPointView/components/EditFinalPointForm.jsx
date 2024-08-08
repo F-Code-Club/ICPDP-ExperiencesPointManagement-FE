@@ -68,13 +68,6 @@ const EditFinalPointForm = ({ rowToEdit, handleFormData }) => {
           </Grid>
         ))}
         <Grid xs={12} item>
-          <TextField
-            sx={{ ...styles.inputField }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
-        <Grid xs={12} item>
           <FormLabel>
             <span className="text-dark-text-color font-bold">
               Phẩm chất công dân và quan hệ cộng đồng (Điểm mặc định: 15, tối đa
