@@ -5,19 +5,19 @@ export const exportOptions = {
     "studentName",
     "studyPoint",
     "studyComment",
-    "finalStudyPoint",
+    "totalStudyPoint",
     "activityPoint1",
     "activityPoint2",
     "activityPoint3",
     "activityPoint4",
     "activityPoint5",
-    "finalActivityPoint",
+    "totalActivityPoint",
     "citizenshipPoint",
     "citizenshipComment",
-    "finalCitizenshipPoint",
+    "totalCitizenshipPoint",
     "organizationPoint",
     "organizationComment",
-    "finalOrganizationPoint",
+    "totalOrganizationPoint",
     "totalFinalPoint",
     "classification",
   ],
@@ -40,7 +40,7 @@ export const exportOptions = {
     {
       field: "activityPoints",
       headerName:
-        "Ý thức tham gia các hoạt động chính trị, văn hóa, văn nghệ, thể dục thế thao (Mặc định 15, tối đa 50)",
+        "Ý thức tham gia các hoạt động chính trị; văn hóa; văn nghệ; thể dục thế thao (Mặc định 15; tối đa 50)",
       children: [
         { field: "activityPoint1", headerName: "Điểm cộng 1" },
         { field: "activityPoint2", headerName: "Điểm cộng 2" },
@@ -53,7 +53,7 @@ export const exportOptions = {
     {
       field: "citizenship",
       headerName:
-        "Phẩm chất công dân và quan hệ cộng đồng (Điểm mặc định: 15, tối đa 25)",
+        "Phẩm chất công dân và quan hệ cộng đồng (Điểm mặc định: 15; tối đa 25)",
       children: [
         { field: "citizenshipPoint", headerName: "Điểm cộng" },
         { field: "citizenshipComment", headerName: "Nhận xét" },
@@ -62,7 +62,7 @@ export const exportOptions = {
     },
     {
       field: "organization",
-      headerName: "Đánh giá tham gia công tác phụ trách đoàn thể, các tổ chức…",
+      headerName: "Đánh giá tham gia công tác phụ trách đoàn thể; các tổ chức…",
       children: [
         { field: "organizationPoint", headerName: "Điểm đánh giá" },
         { field: "organizationComment", headerName: "Nhận xét" },
@@ -84,7 +84,7 @@ export const resolveHeaders = (headers) => {
       } else {
         resolved.push(
           parentHeader
-            ? `${parentHeader} - ${header.headerName}`
+            ? `${header.headerName} - ${parentHeader} `
             : header.headerName
         );
       }
