@@ -8,7 +8,7 @@ import { styles } from "./finalPointViewStyle";
 import useFetchStudentData from "../hooks/useFetchStudentData";
 import useSearchStudent from "../hooks/useSearchStudent";
 import { useState, useContext } from "react";
-import { FinalPointContext } from "../context/FinalPointContext";
+import { FinalPointContext } from "../context/finalPointContext";
 import { toastError } from "../../../utils/toast";
 import ExportModal from "./ExportModal";
 const ToolBar = () => {

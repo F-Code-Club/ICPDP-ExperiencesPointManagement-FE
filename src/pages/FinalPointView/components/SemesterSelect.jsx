@@ -3,7 +3,7 @@ import { FormControl, Box, InputLabel, MenuItem, Select } from "@mui/material";
 import { styles } from "./finalPointViewStyle";
 import useFetchSemesters from "../hooks/useFetchSemesters.js";
 import { useContext } from "react";
-import { FinalPointContext } from "../context/FinalPointContext.jsx";
+import { FinalPointContext } from "../context/finalPointContext.jsx";
 const SemesterSelect = () => {
   const {
     selectedYear,

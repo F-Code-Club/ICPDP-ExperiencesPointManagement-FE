@@ -1,5 +1,5 @@
 import { columnGroupingModel, columnsSchema } from "./column";
-import { FinalPointProvider } from "./context/FinalPointContext";
+import { FinalPointProvider } from "./context/finalPointContext";
 import FinalPointTable from "./components/FinalPointTable";
 const FinalPointView = () => {
   return (

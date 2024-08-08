@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { FinalPointContext } from "../context/FinalPointContext";
+import { FinalPointContext } from "../context/finalPointContext";
 import useDebounce from "../../../hooks/useDebounce";
 
 const useSearchStudent = () => {

@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { styles } from "./finalPointViewStyle";
 import { useContext } from "react";
-import { FinalPointContext } from "../context/FinalPointContext.jsx";
+import { FinalPointContext } from "../context/finalPointContext.jsx";
 import SemesterSelect from "./SemesterSelect";
 import ToolBar from "./ToolBar";
 import useEdit from "../../../components/DataTable/hooks/useEdit.js";

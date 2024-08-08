@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FinalPointContext } from "../context/FinalPointContext";
+import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useAuth from "../../../hooks/useAuth";

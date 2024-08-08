@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FinalPointContext } from "../context/FinalPointContext";
+import { FinalPointContext } from "../context/finalPointContext";
 import { exportOptions, resolveHeaders } from "../exportOptions";
 
 const useExport = () => {

@@ -26,10 +26,6 @@ const FinalPointProvider = ({ children }) => {
   const [rows, setRows] = useState([]);
 
   const [originalRows, setOriginalRows] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: PAGE_SIZE,
-    page: 0,
-  });
   const [total, setTotal] = useState(0);
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [selectedYear, setSelectedYear] = useState([]);
@@ -39,8 +35,6 @@ const FinalPointProvider = ({ children }) => {
     originalRows,
     setRows,
     setOriginalRows,
-    paginationModel,
-    setPaginationModel,
     total,
     setTotal,
     rowSelectionModel,
