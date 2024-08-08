@@ -24,7 +24,7 @@ import useAuth from "../../../../hooks/useAuth";
 import { StudentContext } from "../../student.context";
 
 import { styles } from "../../../../components/DataTable/style";
-import { PAGE_SIZE } from "../../../../constant/core";
+import { PAGE_SIZE, ROLE } from "../../../../constant/core";
 
 // eslint-disable-next-line react/prop-types
 const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
@@ -108,24 +108,26 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
             }}
           />
           <AddStudentToolbar formConfig={formConfig(role)} />
-          <Button
-            onClick={handleExportClick}
-            sx={{
-              borderRadius: 1,
-              backgroundColor: "primary.main",
-              color: "text.light",
-              height: 36,
-              width: 73,
-              padding: "10px",
-              fontSize: 12,
-              textTransform: "none",
-            }}
-          >
-            Xuất
-            <ImportExportIcon
-              sx={{ color: "text.light", width: 15, height: 15 }}
-            />
-          </Button>
+          {role === ROLE.ADMIN && (
+            <Button
+              onClick={handleExportClick}
+              sx={{
+                borderRadius: 1,
+                backgroundColor: "primary.main",
+                color: "text.light",
+                height: 36,
+                width: 73,
+                padding: "10px",
+                fontSize: 12,
+                textTransform: "none",
+              }}
+            >
+              Xuất
+              <ImportExportIcon
+                sx={{ color: "text.light", width: 15, height: 15 }}
+              />
+            </Button>
+          )}
         </Box>
         <DataGrid
           checkboxSelection
