@@ -20,9 +20,7 @@ const useFetchStudentData = () => {
   const {
     auth: { accessToken },
   } = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
-
   const fetchData = useCallback(async () => {
     if (selectedSemester && selectedYear) {
       setIsLoading(true);
@@ -34,9 +32,7 @@ const useFetchStudentData = () => {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-
         const data = response.data.data || [];
-
         const formattedData = data.map((item, index) => ({
           ...item,
           id: index + 1,
@@ -46,10 +42,6 @@ const useFetchStudentData = () => {
         setRows(formattedData);
         setOriginalRows(formattedData);
       } catch (error) {
-        if (!selectedSemester || !selectedYear) {
-          toastError("Vui lòng chọn năm học và kì học");
-          return;
-        }
         toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
         setRows([]);
         setOriginalRows([]);
@@ -71,7 +63,7 @@ const useFetchStudentData = () => {
   }, [selectedSemester, selectedYear]);
 
   const debouncedFetchData = useDebounce(fetchData, 300);
-  return { rows, originalRows, debouncedFetchData, isLoading };
+  return { rows, originalRows, debouncedFetchData, isLoading, setIsLoading };
 };
 
 export default useFetchStudentData;
