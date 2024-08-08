@@ -6,18 +6,17 @@ import { useContext } from "react";
 import { FinalPointContext } from "../context/FinalPointContext.jsx";
 import SemesterSelect from "./SemesterSelect";
 import ToolBar from "./ToolBar";
-import useFetchStudentData from "../hooks/useFetchStudentData.js";
 import useEdit from "../../../components/DataTable/hooks/useEdit.js";
 import EditFinalPointModal from "./EditFinalPointModal.jsx";
 import EmptyTable from "./EmptyTable.jsx";
+import useFetchStudentData from "../hooks/useFetchStudentData.js";
 const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
   const { rowSelectionModel, setRowSelectionModel, rows } =
     useContext(FinalPointContext);
-  useFetchStudentData();
-  const { handleEditClick, showEditForm, handleClose } = useEdit();
-
+  const { handleEditClick, showEditForm, handleClose, rowToEdit } = useEdit();
   const columns = columnsSchema(handleEditClick);
 
+  const { isLoading } = useFetchStudentData();
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -26,6 +25,7 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           <ToolBar />
         </Box>
         <DataGrid
+          loading={isLoading}
           slots={{
             noRowsOverlay: EmptyTable,
           }}
@@ -44,13 +44,16 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           disableRowSelectionOnClick
           disableColumnResize
           autoHeight
-          getRowId={(row) => row.id}
           scrollbarSize={0}
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
           sx={styles.dataGrid}
         />
         {showEditForm && (
-          <EditFinalPointModal handleClose={handleClose} open={showEditForm} />
+          <EditFinalPointModal
+            handleClose={handleClose}
+            open={showEditForm}
+            rowToEdit={rowToEdit}
+          />
         )}
       </Box>
     </Box>

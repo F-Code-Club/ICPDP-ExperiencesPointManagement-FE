@@ -63,5 +63,12 @@ export const API_ENDPOINTS = {
     ADD: `role-departments`,
     UPDATE: `role-departments`,
     DELETE: `role-departments`,
-  }
+  },
+  FINAL_POINTS: {
+    GET_ALL: `/final-point`,
+    GET: `/final-point`,
+    ADD: `/final-point`,
+    UPDATE: `/final-point`,
+    DELETE: `/final-point`,
+  },
 };

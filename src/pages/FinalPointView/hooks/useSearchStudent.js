@@ -15,7 +15,7 @@ const useSearchStudent = () => {
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name.toString().toLowerCase().includes(searchQuery) ||
+        row.studentName.toString().toLowerCase().includes(searchQuery) ||
         row.studentID.toLowerCase().includes(searchQuery)
     );
     setRows(filteredRows);

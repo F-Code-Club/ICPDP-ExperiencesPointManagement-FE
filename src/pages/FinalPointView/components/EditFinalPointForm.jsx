@@ -1,10 +1,16 @@
 import { FormControl, FormLabel, Grid, TextField } from "@mui/material";
 import { editModal as styles } from "./finalPointViewStyle";
-// import useEdit from "../../../components/DataTable/hooks/useEdit";
-// import useEditPoint from "../hooks/useEditPoint";
-const EditFinalPointForm = () => {
-  // const { handleClose, rowToEdit, showEditForm } = useEdit();
-  
+import useEditPoint from "../hooks/useEditPoint";
+import { useState } from "react";
+// eslint-disable-next-line react/prop-types
+const EditFinalPointForm = ({ rowToEdit, handleFormData }) => {
+  const { rowData } = useEditPoint(rowToEdit);
+  const [formData, setFormData] = useState(rowData);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  handleFormData(formData);
   return (
     <FormControl
       sx={{
@@ -24,6 +30,10 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Điểm cộng"
+            value={formData?.studyPoint}
+            name="studyPoint"
+            onChange={handleChange}
+            type="number"
           />
         </Grid>
         <Grid xs={8} item>
@@ -31,6 +41,9 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Comment"
+            value={formData?.studyComment}
+            name="studyComment"
+            onChange={handleChange}
           />
         </Grid>
         <Grid xs={12} item>
@@ -41,41 +54,19 @@ const EditFinalPointForm = () => {
             </span>
           </FormLabel>
         </Grid>
-        <Grid xs={2.4} item>
-          <TextField
-            sx={{ ...styles.inputField, width: 130 }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
-        <Grid xs={2.4} item>
-          <TextField
-            sx={{ ...styles.inputField, width: 130 }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
-        <Grid xs={2.4} item>
-          <TextField
-            sx={{ ...styles.inputField, width: 130 }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
-        <Grid xs={2.4} item>
-          <TextField
-            sx={{ ...styles.inputField, width: 130 }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
-        <Grid xs={2.4} item>
-          <TextField
-            sx={{ ...styles.inputField, width: 130 }}
-            autoComplete="false"
-            placeholder="Điểm cộng"
-          />
-        </Grid>
+        {[1, 2, 3, 4, 5].map((num) => (
+          <Grid key={num} xs={2.4} item>
+            <TextField
+              sx={{ ...styles.inputField, width: 130 }}
+              autoComplete="false"
+              placeholder={`Điểm cộng ${num}`}
+              type="number"
+              value={formData?.[`activityPoint${num}`]}
+              name={`activityPoint${num}`}
+              onChange={handleChange}
+            />
+          </Grid>
+        ))}
         <Grid xs={12} item>
           <TextField
             sx={{ ...styles.inputField }}
@@ -96,6 +87,10 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Điểm cộng"
+            value={formData?.citizenshipPoint}
+            name="citizenshipPoint"
+            type="number"
+            onChange={handleChange}
           />
         </Grid>
         <Grid xs={8} item>
@@ -103,6 +98,9 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Comment"
+            value={formData?.citizenshipComment}
+            name="citizenshipComment"
+            onChange={handleChange}
           />
         </Grid>
         <Grid xs={12} item>
@@ -117,6 +115,10 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Điểm cộng"
+            value={formData?.organizationPoint}
+            name="organizationPoint"
+            type="number"
+            onChange={handleChange}
           />
         </Grid>
         <Grid xs={8} item>
@@ -124,6 +126,9 @@ const EditFinalPointForm = () => {
             sx={{ ...styles.inputField }}
             autoComplete="false"
             placeholder="Comment"
+            value={formData?.organizationComment}
+            name="organizationComment"
+            onChange={handleChange}
           />
         </Grid>
       </Grid>

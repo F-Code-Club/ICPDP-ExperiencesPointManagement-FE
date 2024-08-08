@@ -5,18 +5,30 @@ import SearchIcon from "@mui/icons-material/Search";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { styles } from "./finalPointViewStyle";
-
+import useFetchStudentData from "../hooks/useFetchStudentData";
 import useSearchStudent from "../hooks/useSearchStudent";
 import { useState, useContext } from "react";
 import { FinalPointContext } from "../context/FinalPointContext";
+import { toastError } from "../../../utils/toast";
 import ExportModal from "./ExportModal";
 const ToolBar = () => {
-  const { rowSelectionModel } = useContext(FinalPointContext);
+  const { rowSelectionModel, selectedSemester, selectedYear } =
+    useContext(FinalPointContext);
   const handleSearch = useSearchStudent();
   const [showForm, setShowForm] = useState(false);
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
+  const { debouncedFetchData } = useFetchStudentData();
 
+  const handleClick = () => {
+    if (selectedYear && selectedSemester) {
+      debouncedFetchData();
+    } else {
+      console.log("No year or semester selected");
+      toastError("Vui lòng chọn năm học và kì học");
+      return;
+    }
+  };
   return (
     <>
       <Box className="flex gap-3">
@@ -40,6 +52,7 @@ const ToolBar = () => {
           }}
         />
         <Button
+          onClick={handleClick}
           sx={{
             borderRadius: 1,
             backgroundColor: "primary.main",

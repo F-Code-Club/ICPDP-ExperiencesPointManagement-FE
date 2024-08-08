@@ -1,34 +1,77 @@
-import { useEffect, useContext } from "react";
-import axios from "axios";
+import { useContext, useState, useCallback, useEffect } from "react";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { FinalPointContext } from "../context/FinalPointContext";
-
-const init = [
-  
-];
+import { API_ENDPOINTS } from "../../../utils/api";
+import useAuth from "../../../hooks/useAuth";
+import useDebounce from "../../../hooks/useDebounce";
+import { toastError } from "../../../utils/toast";
+import { clientDataFormatter } from "../dataFormatter";
 const useFetchStudentData = () => {
-  const { setRows, setOriginalRows, rows, originalRows } =
-    useContext(FinalPointContext);
-  useEffect(() => {
-    const fetchData = async () => {
+  const {
+    setRows,
+    setOriginalRows,
+    rows,
+    originalRows,
+    selectedSemester,
+    selectedYear,
+  } = useContext(FinalPointContext);
+
+  const axios = useAxiosPrivate();
+  const {
+    auth: { accessToken },
+  } = useAuth();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    if (selectedSemester && selectedYear) {
+      setIsLoading(true);
       try {
-        // const response = await axios.get(
-        //   "https://6672cb866ca902ae11b1d2c9.mockapi.io/api/v1/feedbacks/finalPoint"
-        // );
-        const data = [...init];
-        data.map((item, index) => {
-          item.id = index + 1;
-          return item;
-        });
-        setRows(data);
-        setOriginalRows(data);
-        console.log(data);
+        const response = await axios.get(
+          `${API_ENDPOINTS.FINAL_POINTS.GET}/${selectedYear}&${selectedSemester}`,
+          {
+            params: { page: 1, take: 0 },
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+
+        const data = response.data.data || [];
+
+        const formattedData = data.map((item, index) => ({
+          ...item,
+          id: index + 1,
+          ...clientDataFormatter(item),
+        }));
+
+        setRows(formattedData);
+        setOriginalRows(formattedData);
       } catch (error) {
-        console.log(error);
+        if (!selectedSemester || !selectedYear) {
+          toastError("Vui lòng chọn năm học và kì học");
+          return;
+        }
+        toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
+        setRows([]);
+        setOriginalRows([]);
+      } finally {
+        setIsLoading(false);
       }
-    };
-    fetchData();
-  }, [axios, setRows, setOriginalRows]);
-  return { rows, originalRows };
+    }
+  }, [
+    axios,
+    selectedSemester,
+    selectedYear,
+    accessToken,
+    setRows,
+    setOriginalRows,
+  ]);
+  useEffect(() => {
+    setRows([]);
+    setOriginalRows([]);
+  }, [selectedSemester, selectedYear]);
+
+  const debouncedFetchData = useDebounce(fetchData, 300);
+  return { rows, originalRows, debouncedFetchData, isLoading };
 };
 
 export default useFetchStudentData;

@@ -26,7 +26,7 @@ export const columnsSchema = (handleEditClick) => {
       editable: false,
     },
     {
-      field: "name",
+      field: "studentName",
       headerName: "Họ và Tên",
       headerClassName: "header",
       cellClassName: "cell",
@@ -140,17 +140,6 @@ export const columnsSchema = (handleEditClick) => {
       editable: false,
     },
     {
-      field: "activityComment",
-      headerName: "Comment",
-      headerClassName: "header",
-      cellClassName: "cell",
-      type: "string",
-      headerAlign: "center",
-      align: "left",
-      width: 200,
-      editable: false,
-    },
-    {
       field: "totalActivityPoint",
       headerName: "Tổng điểm",
       headerClassName: "header",
@@ -257,10 +246,10 @@ export const columnsSchema = (handleEditClick) => {
       headerAlign: "center",
       align: "center",
       width: 150,
-      renderCell: (params) => (
+      renderCell: ({ row }) => (
         <GridActionsCellItem
           icon={<EditIcon />}
-          onClick={() => handleEditClick(params.row)}
+          onClick={() => handleEditClick(row)}
         />
       ),
     },
@@ -309,7 +298,6 @@ export const columnGroupingModel = [
       { field: "activityPoint3" },
       { field: "activityPoint4" },
       { field: "activityPoint5" },
-      { field: "activityComment" },
       { field: "totalActivityPoint" },
     ],
   },
