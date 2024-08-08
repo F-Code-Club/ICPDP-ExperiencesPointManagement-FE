@@ -240,7 +240,7 @@ export const columnsSchema = (handleEditClick) => {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: "Hành động",
       headerClassName: "header lastHeader",
       cellClassName: "cell actions lastHeader",
       headerAlign: "center",

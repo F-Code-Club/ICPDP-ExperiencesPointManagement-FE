@@ -99,7 +99,7 @@ const EditFinalPointForm = ({ rowToEdit, handleFormData }) => {
         <Grid xs={12} item>
           <FormLabel>
             <span className="text-dark-text-color font-bold">
-              Đánh giá tham gia công tác phụ trách đoàn thể, các tổ chức…
+              Đánh giá tham gia công tác phụ trách đoàn thể; các tổ chức…
             </span>
           </FormLabel>
         </Grid>
