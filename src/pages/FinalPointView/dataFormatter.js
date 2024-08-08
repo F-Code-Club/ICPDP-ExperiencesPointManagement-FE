@@ -37,3 +37,4 @@ export const clientDataFormatter = (data) => {
     organizationComment: data.organizationPoint.comment ?? "",
   };
 };
+
