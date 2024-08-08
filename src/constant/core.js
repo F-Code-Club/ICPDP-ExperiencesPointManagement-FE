@@ -13,7 +13,19 @@ const ROLE = {
   ADMIN: "admin",
   USER: "user",
   CLUB: "club",
-  DEPARTMENT: "department"
+  DEPARTMENT: "department",
+  STUDENT: "student"
 };
 
-export { STRING_EMPTY, HTTP_STATUS, ROLE };
+const PAGE_SIZE = 10;
+
+const DATE_FORMAT = "DD/MM/YYYY";
+const DATE_FORMAT_US = "MM/DD/YYYY";
+export {
+  STRING_EMPTY,
+  HTTP_STATUS,
+  ROLE,
+  PAGE_SIZE,
+  DATE_FORMAT,
+  DATE_FORMAT_US,
+};

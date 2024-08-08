@@ -4,8 +4,6 @@ services:
   epm-backend-dev:
     image: "${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
     container_name: epm-fe-${DOCKER_IMAGE_TAG}
-    environment:
-      - VITE_REACT_APP_BASE_URL = ${VITE_REACT_APP_BASE_URL}
     ports:
       - ${FE_EXPOSED_PORT}:5173
     networks: 

@@ -5,7 +5,6 @@ import useAuth from "../../../hooks/useAuth";
 import useRefreshToken from "../../../hooks/useRefreshToken";
 import CircularIndeterminate from "../../CircularIndeterminate";
 import { errorToastHandler } from "../../../utils/toast/actions";
-import Layout from "../../../layouts/Layout";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
