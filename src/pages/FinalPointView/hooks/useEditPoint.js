@@ -1,11 +1,11 @@
 
 
-const useEditPoint = ({rowToEdit, open}) => {
-    const [info, setInfo] = useState(rowToEdit);
+// const useEditPoint = ({rowToEdit, open}) => {
+//     const [info, setInfo] = useState(rowToEdit);
 
 
 
-    return {info, setInfo};
-}
+//     return {info, setInfo};
+// }
 
-export default useEditPoint
+// export default useEditPoint
