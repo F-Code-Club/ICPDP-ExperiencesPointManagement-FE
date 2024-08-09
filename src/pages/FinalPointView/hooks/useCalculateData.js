@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
 import { clientDataFormatter } from "../dataFormatter";
@@ -9,12 +9,10 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 const useCalculateData = () => {
   const { setRows, setOriginalRows, selectedSemester, selectedYear } =
     useContext(FinalPointContext);
-
   const axios = useAxiosPrivate();
   const {
     auth: { accessToken },
   } = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
   const calculateData = useCallback(async () => {
     if (selectedSemester && selectedYear) {
@@ -37,7 +35,7 @@ const useCalculateData = () => {
         setOriginalRows(formattedData);
         toastSuccess("Calculate successfully.");
       } catch (error) {
-        // toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
+        toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
         setRows([]);
         setOriginalRows([]);
       } finally {
