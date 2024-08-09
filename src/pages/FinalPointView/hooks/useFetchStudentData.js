@@ -46,7 +46,7 @@ const useFetchStudentData = () => {
           toastError("Không có dữ liệu sinh viên.");
         }
       } catch (error) {
-        toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
+        toastError("Đã xảy ra lỗi khi tải dữ liệu.");
       } finally {
         setIsLoading(false);
       }

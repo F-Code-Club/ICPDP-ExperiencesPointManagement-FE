@@ -35,7 +35,7 @@ const useCalculateData = () => {
         setOriginalRows(formattedData);
         toastSuccess("Calculate successfully.");
       } catch (error) {
-        toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
+        toastError("Đã xảy ra lỗi khi tính toán.");
         setRows([]);
         setOriginalRows([]);
       } finally {
