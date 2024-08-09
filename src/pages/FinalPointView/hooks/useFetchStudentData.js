@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback, useEffect } from "react";
+import { useContext, useState, useCallback } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
@@ -15,6 +15,7 @@ const useFetchStudentData = () => {
     originalRows,
     selectedSemester,
     selectedYear,
+    
   } = useContext(FinalPointContext);
 
   const {
@@ -61,12 +62,15 @@ const useFetchStudentData = () => {
     setOriginalRows,
   ]);
   const debouncedFetchData = useDebounce(fetchData, 300);
-  useEffect(() => {
-    setRows([]), setOriginalRows([]);
-    debouncedFetchData();
-  }, [selectedSemester, selectedYear]);
 
-  return { rows, originalRows, isLoading, setIsLoading };
+  return {
+    rows,
+    originalRows,
+    isLoading,
+    setIsLoading,
+    debouncedFetchData,
+    fetchData,
+  };
 };
 
 export default useFetchStudentData;

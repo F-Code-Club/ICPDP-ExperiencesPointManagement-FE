@@ -7,7 +7,6 @@ import { useState } from "react";
 // eslint-disable-next-line react/prop-types
 const EditFinalPointModal = ({ open, handleClose, rowToEdit }) => {
   const [updatedData, setUpdatedData] = useState({});
-
   const { updateRow } = useEditPoint(rowToEdit);
 
   const handleFormData = (formData) => {

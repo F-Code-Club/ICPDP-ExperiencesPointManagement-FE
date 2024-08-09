@@ -4,7 +4,8 @@ import { API_ENDPOINTS } from "../../../utils/api";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import useAuth from "../../../hooks/useAuth";
 import { serverDataFormatter, clientDataFormatter } from "../dataFormatter";
-
+import { toastError, toastSuccess } from "../../../utils/toast";
+import useFetchStudentData from "./useFetchStudentData";
 const useEditPoint = (rowToEdit) => {
   const [rowData, setRowData] = useState(rowToEdit);
   const {
@@ -13,7 +14,7 @@ const useEditPoint = (rowToEdit) => {
   const axios = useAxiosPrivate();
   const { selectedSemester, selectedYear, setOriginalRows, setRows, rows } =
     useContext(FinalPointContext);
-
+  const { fetchData } = useFetchStudentData();
   const updateRow = async (updatedData) => {
     const formattedData = serverDataFormatter(updatedData);
     try {
@@ -33,12 +34,13 @@ const useEditPoint = (rowToEdit) => {
             ? { ...row, ...updatedData, id: row.id }
             : row
         );
-
         setRows(updatedRows);
         setOriginalRows(updatedRows);
+        fetchData();
+        toastSuccess("Update successfully.");
       }
     } catch (error) {
-      console.log(error);
+      toastError("Update fail.");
     }
   };
 
