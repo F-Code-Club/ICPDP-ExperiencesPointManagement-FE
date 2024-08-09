@@ -27,18 +27,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       field: "name",
       headerName: "Họ và Tên",
       headerClassName: "header",
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 18px 12px 0px",
-            gap: "18px",
-          }}
-        >
-          {params.value}
-        </Box>
-      ),
+      renderCell: (params) => <Box>{params.value}</Box>,
       type: "string",
       width: 500,
       align: "left",
