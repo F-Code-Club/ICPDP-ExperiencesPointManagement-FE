@@ -20,7 +20,6 @@ const useSearchStudent = () => {
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows, setRows]);
-
   return debouncedSearchQuery;
 };
 

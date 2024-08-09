@@ -1,11 +1,13 @@
 import { useContext, useState, useCallback, useEffect } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "axios";
 import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
 import useAuth from "../../../hooks/useAuth";
 import useDebounce from "../../../hooks/useDebounce";
 import { toastError } from "../../../utils/toast";
 import { clientDataFormatter } from "../dataFormatter";
+
 const useFetchStudentData = () => {
   const {
     setRows,
@@ -16,11 +18,11 @@ const useFetchStudentData = () => {
     selectedYear,
   } = useContext(FinalPointContext);
 
-  const axios = useAxiosPrivate();
   const {
     auth: { accessToken },
   } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const axios = useAxiosPrivate();
   const fetchData = useCallback(async () => {
     if (selectedSemester && selectedYear) {
       setIsLoading(true);
@@ -32,19 +34,20 @@ const useFetchStudentData = () => {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-        const data = response.data.data || [];
-        const formattedData = data.map((item, index) => ({
-          ...item,
-          id: index + 1,
-          ...clientDataFormatter(item),
-        }));
-
-        setRows(formattedData);
-        setOriginalRows(formattedData);
+        const data = response.data.data ?? [];
+        if (data.length > 0) {
+          const formattedData = data.map((item, index) => ({
+            ...item,
+            id: index + 1,
+            ...clientDataFormatter(item),
+          }));
+          setRows(formattedData);
+          setOriginalRows(formattedData);
+        } else {
+          toastError("Không có dữ liệu sinh viên.");
+        }
       } catch (error) {
         toastError("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.");
-        setRows([]);
-        setOriginalRows([]);
       } finally {
         setIsLoading(false);
       }
@@ -57,13 +60,12 @@ const useFetchStudentData = () => {
     setRows,
     setOriginalRows,
   ]);
+  const debouncedFetchData = useDebounce(fetchData, 300);
   useEffect(() => {
-    setRows([]);
-    setOriginalRows([]);
+    debouncedFetchData();
   }, [selectedSemester, selectedYear]);
 
-  const debouncedFetchData = useDebounce(fetchData, 300);
-  return { rows, originalRows, debouncedFetchData, isLoading, setIsLoading };
+  return { rows, originalRows, isLoading, setIsLoading };
 };
 
 export default useFetchStudentData;

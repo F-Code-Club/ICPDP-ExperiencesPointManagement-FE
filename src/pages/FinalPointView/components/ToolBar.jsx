@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { styles } from "./finalPointViewStyle";
-import useFetchStudentData from "../hooks/useFetchStudentData";
+import useCalculateData from "../hooks/useCalculateData";
 import useSearchStudent from "../hooks/useSearchStudent";
 import { useState, useContext } from "react";
 import { FinalPointContext } from "../context/finalPointContext";
@@ -18,11 +18,11 @@ const ToolBar = () => {
   const [showForm, setShowForm] = useState(false);
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
-  const { debouncedFetchData } = useFetchStudentData();
+  const { debouncedCalculateData } = useCalculateData();
 
   const handleClick = () => {
     if (selectedYear && selectedSemester) {
-      debouncedFetchData();
+      debouncedCalculateData();
     } else {
       console.log("No year or semester selected");
       toastError("Vui lòng chọn năm học và kì học");
