@@ -4,7 +4,7 @@ import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
 import useAuth from "../../../hooks/useAuth";
 import useDebounce from "../../../hooks/useDebounce";
-import { toastError, toastSuccess } from "../../../utils/toast";
+import { toastError } from "../../../utils/toast";
 import { clientDataFormatter } from "../dataFormatter";
 
 const useFetchStudentData = () => {
@@ -15,7 +15,8 @@ const useFetchStudentData = () => {
     originalRows,
     selectedSemester,
     selectedYear,
-    
+    paginationModel,
+    setTotal,
   } = useContext(FinalPointContext);
 
   const {
@@ -30,7 +31,10 @@ const useFetchStudentData = () => {
         const response = await axios.get(
           `${API_ENDPOINTS.FINAL_POINTS.GET}/${selectedYear}&${selectedSemester}`,
           {
-            params: { page: 1, take: 0 },
+            params: {
+              page: paginationModel.page + 1,
+              take: paginationModel.pageSize,
+            },
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
@@ -38,12 +42,15 @@ const useFetchStudentData = () => {
         if (data.length > 0) {
           const formattedData = data.map((item, index) => ({
             ...item,
-            id: index + 1,
+            id:
+              paginationModel.page === 0
+                ? index + 1
+                : index + 1 + paginationModel.page * paginationModel.pageSize,
             ...clientDataFormatter(item),
           }));
           setRows(formattedData);
           setOriginalRows(formattedData);
-          toastSuccess("Get student data successfully.");
+          setTotal(response.data.totalPage);
         } else {
           toastError("Table is empty.");
         }
@@ -60,6 +67,8 @@ const useFetchStudentData = () => {
     accessToken,
     setRows,
     setOriginalRows,
+    paginationModel.page,
+    paginationModel.pageSize,
   ]);
   const debouncedFetchData = useDebounce(fetchData, 300);
 

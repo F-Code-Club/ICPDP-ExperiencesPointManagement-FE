@@ -27,7 +27,7 @@ const useFetchSemesters = () => {
       }
     };
     fetchData();
-  }, [accessToken]);
+  }, [accessToken, axios]);
   const years = useMemo(() => {
     return Array.from(
       new Set(

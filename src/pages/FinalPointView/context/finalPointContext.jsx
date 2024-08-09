@@ -24,12 +24,15 @@ const FinalPointContext = createContext({
 // eslint-disable-next-line react/prop-types
 const FinalPointProvider = ({ children }) => {
   const [rows, setRows] = useState([]);
-
   const [originalRows, setOriginalRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [selectedYear, setSelectedYear] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState([]);
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: PAGE_SIZE,
+    page: 0,
+  });
   const value = {
     rows,
     originalRows,
@@ -43,6 +46,8 @@ const FinalPointProvider = ({ children }) => {
     selectedYear,
     setSelectedSemester,
     setSelectedYear,
+    paginationModel,
+    setPaginationModel,
   };
 
   return (

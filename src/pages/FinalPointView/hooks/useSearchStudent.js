@@ -11,7 +11,6 @@ const useSearchStudent = () => {
   }, []);
 
   const debouncedSearchQuery = useDebounce(handleSearch, 300);
-
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>

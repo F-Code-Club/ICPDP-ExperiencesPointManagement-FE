@@ -2,21 +2,43 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { styles } from "./finalPointViewStyle";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FinalPointContext } from "../context/finalPointContext.jsx";
 import SemesterSelect from "./SemesterSelect";
 import ToolBar from "./ToolBar";
 import useEdit from "../../../components/DataTable/hooks/useEdit.js";
 import EditFinalPointModal from "./EditFinalPointModal.jsx";
-import EmptyTable from "./EmptyTable.jsx";
 import useFetchStudentData from "../hooks/useFetchStudentData.js";
+import { PAGE_SIZE } from "../../../constant/core";
 const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
-  const { rowSelectionModel, setRowSelectionModel, rows } =
-    useContext(FinalPointContext);
+  const {
+    rowSelectionModel,
+    setRowSelectionModel,
+    rows,
+    selectedSemester,
+    selectedYear,
+    setOriginalRows,
+    setRows,
+    total,
+    paginationModel,
+    setPaginationModel,
+  } = useContext(FinalPointContext);
   const { handleEditClick, showEditForm, handleClose, rowToEdit } = useEdit();
   const columns = columnsSchema(handleEditClick);
+  const { isLoading, debouncedFetchData } = useFetchStudentData();
 
-  const { isLoading } = useFetchStudentData();
+  useEffect(() => {
+    debouncedFetchData();
+  }, [
+    paginationModel.page,
+    paginationModel.pageSize,
+    selectedSemester,
+    selectedYear,
+  ]);
+  useEffect(() => {
+    setRows([]);
+    setOriginalRows([]);
+  }, [selectedSemester, selectedYear]);
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -26,9 +48,6 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
         </Box>
         <DataGrid
           loading={isLoading}
-          slots={{
-            noRowsOverlay: EmptyTable,
-          }}
           checkboxSelection
           onRowSelectionModelChange={(newRowSelectionModel) => {
             setRowSelectionModel(newRowSelectionModel);
@@ -45,8 +64,14 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           disableColumnResize
           autoHeight
           scrollbarSize={0}
-          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
           sx={styles.dataGrid}
+          pagination
+          paginationMode="server"
+          pageSizeOptions={[PAGE_SIZE]}
+          rowsPerPageOptions={[10]}
+          paginationModel={paginationModel}
+          onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
+          rowCount={total * PAGE_SIZE}
         />
         {showEditForm && (
           <EditFinalPointModal
