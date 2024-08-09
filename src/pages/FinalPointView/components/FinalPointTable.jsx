@@ -9,7 +9,7 @@ import ToolBar from "./ToolBar";
 import useEdit from "../../../components/DataTable/hooks/useEdit.js";
 import EditFinalPointModal from "./EditFinalPointModal.jsx";
 import useFetchStudentData from "../hooks/useFetchStudentData.js";
-import { PAGE_SIZE } from "../../../constant/core";
+
 const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
   const {
     rowSelectionModel,
@@ -19,9 +19,6 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
     selectedYear,
     setOriginalRows,
     setRows,
-    total,
-    paginationModel,
-    setPaginationModel,
   } = useContext(FinalPointContext);
   const { handleEditClick, showEditForm, handleClose, rowToEdit } = useEdit();
   const columns = columnsSchema(handleEditClick);
@@ -29,12 +26,7 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
 
   useEffect(() => {
     debouncedFetchData();
-  }, [
-    paginationModel.page,
-    paginationModel.pageSize,
-    selectedSemester,
-    selectedYear,
-  ]);
+  }, [selectedSemester, selectedYear]);
   useEffect(() => {
     setRows([]);
     setOriginalRows([]);
@@ -65,13 +57,7 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
           autoHeight
           scrollbarSize={0}
           sx={styles.dataGrid}
-          pagination
-          paginationMode="server"
-          pageSizeOptions={[PAGE_SIZE]}
-          rowsPerPageOptions={[10]}
-          paginationModel={paginationModel}
-          onPaginationModelChange={(newModel) => setPaginationModel(newModel)}
-          rowCount={total * PAGE_SIZE}
+          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
         />
         {showEditForm && (
           <EditFinalPointModal

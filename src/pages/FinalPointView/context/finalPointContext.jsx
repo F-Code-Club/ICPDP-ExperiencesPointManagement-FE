@@ -19,6 +19,8 @@ const FinalPointContext = createContext({
   selectedSemester: null,
   setSelectedYear: () => {},
   setSelectedSemester: () => {},
+  selectedRows: () => {},
+  setSelectedRows: () => {},
 });
 
 // eslint-disable-next-line react/prop-types
@@ -29,6 +31,7 @@ const FinalPointProvider = ({ children }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [selectedYear, setSelectedYear] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
     page: 0,
@@ -48,6 +51,8 @@ const FinalPointProvider = ({ children }) => {
     setSelectedYear,
     paginationModel,
     setPaginationModel,
+    selectedRows,
+    setSelectedRows,
   };
 
   return (

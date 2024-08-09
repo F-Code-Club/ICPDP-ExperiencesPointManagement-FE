@@ -15,7 +15,6 @@ const useFetchStudentData = () => {
     originalRows,
     selectedSemester,
     selectedYear,
-    paginationModel,
     setTotal,
   } = useContext(FinalPointContext);
 
@@ -32,8 +31,8 @@ const useFetchStudentData = () => {
           `${API_ENDPOINTS.FINAL_POINTS.GET}/${selectedYear}&${selectedSemester}`,
           {
             params: {
-              page: paginationModel.page + 1,
-              take: paginationModel.pageSize,
+              page: 1,
+              take: 0,
             },
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -42,10 +41,7 @@ const useFetchStudentData = () => {
         if (data.length > 0) {
           const formattedData = data.map((item, index) => ({
             ...item,
-            id:
-              paginationModel.page === 0
-                ? index + 1
-                : index + 1 + paginationModel.page * paginationModel.pageSize,
+            id: index + 1,
             ...clientDataFormatter(item),
           }));
           setRows(formattedData);
@@ -67,8 +63,6 @@ const useFetchStudentData = () => {
     accessToken,
     setRows,
     setOriginalRows,
-    paginationModel.page,
-    paginationModel.pageSize,
   ]);
   const debouncedFetchData = useDebounce(fetchData, 300);
 

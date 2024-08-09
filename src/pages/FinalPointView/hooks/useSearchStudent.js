@@ -9,7 +9,7 @@ const useSearchStudent = () => {
   const handleSearch = useCallback((e) => {
     setSearchQuery(e.target.value.trim().toLowerCase());
   }, []);
-
+  
   const debouncedSearchQuery = useDebounce(handleSearch, 300);
   useEffect(() => {
     const filteredRows = originalRows.filter(
