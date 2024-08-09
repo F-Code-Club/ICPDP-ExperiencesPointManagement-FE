@@ -4,7 +4,7 @@ import { FinalPointContext } from "../context/finalPointContext";
 import { API_ENDPOINTS } from "../../../utils/api";
 import useAuth from "../../../hooks/useAuth";
 import useDebounce from "../../../hooks/useDebounce";
-import { toastError } from "../../../utils/toast";
+import { toastError, toastSuccess } from "../../../utils/toast";
 import { clientDataFormatter } from "../dataFormatter";
 
 const useFetchStudentData = () => {
@@ -42,11 +42,12 @@ const useFetchStudentData = () => {
           }));
           setRows(formattedData);
           setOriginalRows(formattedData);
+          toastSuccess("Get student data successfully.");
         } else {
-          toastError("Không có dữ liệu sinh viên.");
+          toastError("Table is empty.");
         }
       } catch (error) {
-        toastError("Đã xảy ra lỗi khi tải dữ liệu.");
+        // EMPTY
       } finally {
         setIsLoading(false);
       }
@@ -61,6 +62,7 @@ const useFetchStudentData = () => {
   ]);
   const debouncedFetchData = useDebounce(fetchData, 300);
   useEffect(() => {
+    setRows([]), setOriginalRows([]);
     debouncedFetchData();
   }, [selectedSemester, selectedYear]);
 
