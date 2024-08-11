@@ -4,6 +4,7 @@ import { exportOptions, resolveHeaders } from "../exportOptions";
 
 const useExport = () => {
   const { rows, rowSelectionModel } = useContext(FinalPointContext);
+
   return () => {
     const selectedRows = rowSelectionModel.length
       ? rows.filter((row) => rowSelectionModel.includes(row.id))

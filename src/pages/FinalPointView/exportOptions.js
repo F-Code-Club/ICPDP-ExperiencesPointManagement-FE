@@ -64,7 +64,7 @@ export const exportOptions = {
       field: "organization",
       headerName: "Đánh giá tham gia công tác phụ trách đoàn thể; các tổ chức…",
       children: [
-        { field: "organizationPoint", headerName: "Điểm đánh giá" },
+        { field: "organizationPoint", headerName: "Điểm cộng" },
         { field: "organizationComment", headerName: "Nhận xét" },
         { field: "finalOrganizationPoint", headerName: "Điểm tổng kết" },
       ],
@@ -77,16 +77,12 @@ export const exportOptions = {
 export const resolveHeaders = (headers) => {
   const resolved = [];
 
-  const traverseHeaders = (headerArray, parentHeader = null) => {
+  const traverseHeaders = (headerArray) => {
     headerArray.forEach((header) => {
       if (header.children) {
         traverseHeaders(header.children, header.headerName);
       } else {
-        resolved.push(
-          parentHeader
-            ? `${header.headerName} - ${parentHeader} `
-            : header.headerName
-        );
+        resolved.push(header.headerName);
       }
     });
   };
