@@ -28,6 +28,7 @@ import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
+import AddModal from "./AddModal";
 
 const ExperiencePointTable = ({
   title,
@@ -54,6 +55,7 @@ const ExperiencePointTable = ({
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
+  //eslint-disable-next-line
   const [total, setTotal] = useState(0);
   const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
@@ -78,8 +80,7 @@ const ExperiencePointTable = ({
     const setupTables = (eventsData) => {
       const newTables = eventsData.map((event, index) => ({
         eventID: event.eventID,
-        index:
-          currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
+        index: index + 1,
         eventName: event.eventName,
         rows: [],
       }));
@@ -101,8 +102,8 @@ const ExperiencePointTable = ({
           `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
           {
             params: {
-              page: currentPage + 1,
-              take: PAGE_SIZE,
+              page: 1,
+              take: 0,
             },
             headers: {
               Authorization: `Bearer ${auth?.accessToken}`,
@@ -378,9 +379,9 @@ const ExperiencePointTable = ({
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage.page);
-  };
+  // const handlePageChange = (newPage) => {
+  //   setCurrentPage(newPage.page);
+  // };
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -438,7 +439,12 @@ const ExperiencePointTable = ({
         <Tabs
           value={currentTab !== "" ? currentTab : false}
           onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
           sx={{
+            "& .css-145v6pe-MuiButtonBase-root-MuiTabScrollButton-root": {
+              color: "#000000 !important",
+            },
             marginBottom: 2,
             width: "100%",
             height: 36,
@@ -534,15 +540,9 @@ const ExperiencePointTable = ({
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
                   rowsPerPageOptions={[PAGE_SIZE]}
-                  pagination
-                  paginationMode="server"
-                  pageSizeOptions={[PAGE_SIZE]}
-                  paginationModel={{
-                    pageSize: PAGE_SIZE,
-                    page: currentPage,
+                  initialState={{
+                    pagination: { paginationModel: { pageSize: 10 } },
                   }}
-                  onPaginationModelChange={handlePageChange}
-                  rowCount={PAGE_SIZE * total}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
@@ -605,18 +605,7 @@ const ExperiencePointTable = ({
         handleDelete={handleTabDelete}
         rowId={deleteEvent}
       />
-      <StudentForm
-        open={showEditForm}
-        handleClose={handleClose}
-        title={`Chỉnh sửa ${title}`}
-        handleSave={handleSaveClick}
-        editedRow={rowToEdit}
-        func={"Sửa"}
-        isEdit={isEdit}
-        API_ENDPOINTS={API_ENDPOINTS}
-        accessToken={accessToken}
-        formConfig={config}
-      />
+
       <AddEventModal
         open={showAddEventModal}
         handleClose={handleClose}

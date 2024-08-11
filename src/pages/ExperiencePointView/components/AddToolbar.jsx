@@ -9,6 +9,9 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
+import AddModal from "./AddModal";
+import theme from "../../../theme";
+import { styles } from "../components/pointViewStyle";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -30,6 +33,7 @@ const AddToolbar = ({
     role
   );
   const [showForm, setShowForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const axios = useAxiosPrivate();
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
@@ -40,7 +44,7 @@ const AddToolbar = ({
     }
 
     const studentID = formData.studentID.toUpperCase().trim();
-    if (rows.some(val => val.studentID === studentID)) {
+    if (rows.some((val) => val.studentID === studentID)) {
       toastError("Student is existed in this event");
       return;
     }
@@ -92,7 +96,7 @@ const AddToolbar = ({
 
       setTables(updatedTables);
       setShowForm(false);
-      toastSuccess("Add student successfully")
+      toastSuccess("Add student successfully");
     } catch (error) {
       toastError("Saving failed");
     }
@@ -101,22 +105,88 @@ const AddToolbar = ({
   return (
     <>
       <Button
-        onClick={handleOpenForm}
-        sx={{
-          borderRadius: 1,
-          backgroundColor: "primary.main",
-          color: "text.light",
-          height: 36,
-          width: 73,
-          padding: "10px",
-          fontSize: 12,
-          textTransform: "none",
-        }}
+        onClick={() => setShowModal((prev) => !prev)}
+        sx={styles.addButton}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
 
+      {showModal && (
+        <div
+          style={{
+            position: "absolute",
+            right: "44px",
+            top: "67px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "8px",
+            gap: "6px",
+            borderRadius: "5px",
+            background: "white",
+            boxShadow: "2px 4px 10px 0px rgba(0, 0, 0, 0.40)",
+            zIndex: 2,
+          }}
+        >
+          <Button
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
+          >
+            Thêm từ excel
+          </Button>
+          <Button
+            onClick={handleOpenForm}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
+          >
+            Thêm sinh viên
+          </Button>
+        </div>
+      )}
       <StudentForm
         open={showForm}
         handleClose={handleCloseForm}
