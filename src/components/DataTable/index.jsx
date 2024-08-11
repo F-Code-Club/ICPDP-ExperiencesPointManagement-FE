@@ -39,10 +39,11 @@ const DataTable = ({
   const apiRef = useGridApiRef();
 
   useEffect(() => {
-    const rowsWithIds = initialRows?.map((row, index) => ({
-      ...row,
-      id: index + 1,
-    })) || [];
+    const rowsWithIds =
+      initialRows?.map((row, index) => ({
+        ...row,
+        id: index + 1,
+      })) || [];
     setRows(rowsWithIds);
     setOriginalRows(rowsWithIds);
   }, [initialRows]);
@@ -239,48 +240,7 @@ const DataTable = ({
           getRowId={(row) => row.id}
           scrollbarSize={0}
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-          sx={{
-            ...styles.dataGrid,
-            color: "text.dark",
-            width: "100%",
-            borderColor: "text.dark",
-            borderRadius: "8px",
-            overflowX: "auto",
-            "& .css-1jhlys9-MuiTablePagination-displayedRows": {
-              color: "text.dark",
-            },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-              {
-                color: "text.secondary",
-              },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
-              color: "text.dark",
-            },
-            "& .css-1b9e9gy": {
-              display: "none",
-            },
-            "& .css-1w53k9d-MuiDataGrid-overlay": {
-              backgroundColor: "transparent",
-            },
-            "& .MuiDataGrid-filler": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-1rtad1": {
-              position: "relative",
-            },
-            "& .MuiDataGrid-columnHeaderDraggableContainer": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
-              color: "text.dark",
-            },
-            "& .MuiDataGrid-cell": {
-              borderColor: "text.dark",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderColor: "text.dark",
-            },
-          }}
+          sx={styles.dataGrid}
         />
       </Box>
       <WarningForm

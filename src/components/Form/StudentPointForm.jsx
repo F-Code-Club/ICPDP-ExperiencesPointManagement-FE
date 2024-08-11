@@ -1,34 +1,43 @@
-/* eslint-disable react/prop-types */
-import { useState, useEffect, useMemo } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-
-import useAuth from "../../hooks/useAuth";
-
 import { StudentFormStyles as styles } from "./style";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
-import { ROLE } from "../../constant/core";
 
 function StudentForm({
   open,
   handleClose,
+  title,
   handleSave,
   func,
   isEdit,
   editedRow,
   formConfig,
-  title,
 }) {
-  const { fields } = formConfig;
-  const { role } = useAuth();
-  const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
-
+  const { fields, selectFields } = formConfig;
   // Initialize state dynamically based on formConfig
   const initState = () => {
     const initState = {};
-    fields.forEach((field) => (initState[field.name] = ""));
-
+    fields.forEach((field) => {
+      initState[field.name] = "";
+    });
+    if (selectFields) {
+      selectFields.forEach((selectField) => {
+        initState[selectField.name] = selectField.options[0].value; // selectField.options[0].value is the default value
+      });
+    }
     return initState;
   };
 
@@ -68,13 +77,14 @@ function StudentForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      // Show error based on role
-      if (errors.studentID || (isAdmin && errors?.name))
+      if (errors.studentID || errors.name)
         toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
-    handleSave({ ...info });
+    let finalInfo = { ...info };
+
+    handleSave(finalInfo);
     handleClose();
   };
 
@@ -120,6 +130,32 @@ function StudentForm({
                   sx={styles.inputField}
                 />
               ))}
+              {selectFields &&
+                selectFields.map((selectField) => (
+                  <FormControl
+                    variant="outlined"
+                    sx={styles.inputField}
+                    key={selectField.name}
+                  >
+                    <InputLabel id={`${selectField.name}-label`}>
+                      {selectField.label}
+                    </InputLabel>
+                    <Select
+                      labelId={`${selectField.name}-label`}
+                      id={selectField.name}
+                      value={info[selectField.name]}
+                      label={selectField.label}
+                      name={selectField.name}
+                      onChange={handleChange}
+                    >
+                      {selectField.options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ))}
             </Box>
           </Box>
           <Box sx={styles.buttonContainer}>

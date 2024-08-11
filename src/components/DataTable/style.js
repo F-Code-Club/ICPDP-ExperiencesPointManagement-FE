@@ -52,7 +52,6 @@ export const styles = {
     color: "text.dark",
     borderRadius: "8px",
     height: 650,
-    width: "full",
     overflow: "hidden",
     "& .actions": { color: "text.dark" },
     "& .textPrimary": { color: "text.dark" },
@@ -61,7 +60,42 @@ export const styles = {
       color: "text.light",
     },
     border: "1px solid",
-    
+    width: "100%",
+    borderColor: "text.dark",
+    overflowX: "auto",
+    "& .css-1jhlys9-MuiTablePagination-displayedRows": {
+      color: "text.dark",
+    },
+    "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled": {
+      color: "text.secondary",
+    },
+    "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
+      color: "text.dark",
+    },
+    "& .css-1b9e9gy": {
+      display: "none",
+    },
+    "& .css-1w53k9d-MuiDataGrid-overlay": {
+      backgroundColor: "transparent",
+    },
+    "& .MuiDataGrid-filler": {
+      backgroundColor: "primary.main",
+    },
+    "& .css-1rtad1": {
+      position: "relative",
+    },
+    "& .MuiDataGrid-columnHeaderDraggableContainer": {
+      backgroundColor: "primary.main",
+    },
+    "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
+      color: "text.dark",
+    },
+    "& .MuiDataGrid-cell": {
+      borderColor: "text.dark",
+    },
+    "& .MuiDataGrid-footerContainer": {
+      borderColor: "text.dark",
+    },
   },
   avatar: {
     width: 32,

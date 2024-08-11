@@ -1,16 +1,19 @@
 import useAuth from "./useAuth";
+import useAxiosPrivate from "./useAxiosPrivate";
 import { API_ENDPOINTS } from "../utils/api";
 import { errorToastHandler } from "../utils/toast/actions";
-import { get } from "../utils/apiCaller";
+import { toastSuccess } from "../utils/toast";
 
 const useLogout = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, setRefreshToken } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   const logout = async () => {
+    setRefreshToken(null);
     setAuth(null);
-    // TODO: Integrate API
     try {
-      await get(API_ENDPOINTS.AUTH.LOGOUT);
+      await axiosPrivate(API_ENDPOINTS.AUTH.LOGOUT);
+      toastSuccess("Logout successful");
     } catch (err) {
       errorToastHandler(err.response);
     }
