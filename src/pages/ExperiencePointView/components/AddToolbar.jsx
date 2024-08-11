@@ -3,14 +3,14 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
-import StudentPointForm from "../../../components/Form/StudentPointForm";
+import StudentForm from "../../../components/Form/StudentForm";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
 import theme from "../../../theme";
-import { styles } from "../components/pointViewStyle";
+import { styles } from "./pointViewStyle";
 import useImportExcel from "../hooks/useImportExcel";
 const AddToolbar = ({
   setRows,
@@ -38,19 +38,18 @@ const AddToolbar = ({
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
-  const { uploading, handleFileChange } = useImportExcel(
+  const { handleFileChange, uploading } = useImportExcel(
     currentTable,
     setOriginalRows,
-    rows,
     setShowModal
   );
+
   const handleSave = async (formData) => {
     if (!auth?.accessToken) {
       return;
     }
 
     const studentID = formData.studentID.toUpperCase().trim();
-    if (rows.some((val) => val.studentID === studentID)) {
     if (rows.some((val) => val.studentID === studentID)) {
       toastError("Student is existed in this event");
       return;
@@ -104,7 +103,6 @@ const AddToolbar = ({
       setTables(updatedTables);
       setShowForm(false);
       toastSuccess("Add student successfully");
-      toastSuccess("Add student successfully");
     } catch (error) {
       toastError("Saving failed");
     }
@@ -115,7 +113,6 @@ const AddToolbar = ({
       <Button
         onClick={() => setShowModal((prev) => !prev)}
         sx={styles.addButton}
-        disabled={uploading}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
@@ -203,7 +200,7 @@ const AddToolbar = ({
           </Button>
         </div>
       )}
-      <StudentForm
+      {/* <StudentForm
         open={showForm}
         handleClose={handleCloseForm}
         handleSave={handleSave}
@@ -211,7 +208,7 @@ const AddToolbar = ({
         accessToken={auth?.accessToken}
         func={"Thêm"}
         formConfig={config}
-      />
+      /> */}
     </>
   );
 };

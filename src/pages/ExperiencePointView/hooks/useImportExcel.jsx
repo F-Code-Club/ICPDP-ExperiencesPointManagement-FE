@@ -23,7 +23,6 @@ const useImportExcel = (eventID, setOriginalRows, setShowModal) => {
       if (!VALID_MIME_TYPES.includes(file.type)) {
         return toastError("Vui lòng upload file Excel hợp lệ.");
       }
-      console.log("Selected file:", file);
       const formData = new FormData();
       formData.append("file", file);
 
