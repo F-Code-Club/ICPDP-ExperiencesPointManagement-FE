@@ -111,10 +111,6 @@ const ExperiencePointTable = ({
           }
         );
 
-        if (response.status === 200) {
-          toastSuccess("Get data successfully");
-        }
-
         const data = response.data.data || [];
         const totalPage = response.data.totalPage || 0;
 
