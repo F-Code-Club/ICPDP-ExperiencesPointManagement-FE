@@ -15,7 +15,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
 import WarningForm from "../../../components/Form/WarningModal";
-import StudentForm from "../../../components/Form/StudentForm";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
@@ -28,7 +27,6 @@ import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
-import AddModal from "./AddModal";
 
 const ExperiencePointTable = ({
   title,

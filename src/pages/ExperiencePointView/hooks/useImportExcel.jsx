@@ -5,56 +5,63 @@ import { decodeToken } from "react-jwt";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { useCallback, useState } from "react";
 import { ROLE, VALID_MIME_TYPES } from "../../../constant/core";
-const useImportExcel = ({ eventID, setOriginalRows, rows }) => {
+
+const useImportExcel = (eventID, setOriginalRows, setShowModal) => {
   const [uploading, setUploading] = useState(false);
-  const {
-    auth: { accessToken },
-  } = useAuth();
+  const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
   const role = decoded?.role || "";
   const axios = useAxiosPrivate();
-  const importData = async () => {
-    try {
-      const response = await axios.post(
-        `${API_ENDPOINTS.EVENTS_POINT.ADD}/${eventID}/import`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   const handleFileChange = useCallback(
     async (event) => {
       const file = event.target.files[0];
+
       if (!file) return;
+
+      // Validate file type
       if (!VALID_MIME_TYPES.includes(file.type)) {
         return toastError("Vui lòng upload file Excel hợp lệ.");
       }
-
+      console.log("Selected file:", file);
       const formData = new FormData();
       formData.append("file", file);
 
       try {
         setUploading(true);
-        const response = await api.uploadFile(formData, accessToken);
 
-        const data =
-          role === ROLE.ADMIN
-            ? response.data.data
-            : response.data.data.students;
+        // Make the request to upload the Excel file
+        const response = await axios.post(
+          `${API_ENDPOINTS.EVENTS_POINT}/${eventID}/import`,
+          formData.get("file"),
+          {
+            headers: {
+              Authorization: `Bearer ${auth.accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        // Handle the response
         if (response.status === 200 || response.status === 201) {
+          const data =
+            role === ROLE.ADMIN
+              ? response.data.data
+              : response.data.data.students;
+
+          // Generate IDs for the imported rows
           const id =
-            rows.length > 0 ? Math.max(...rows.map((row) => row.id)) : 0;
+            setOriginalRows.length > 0
+              ? Math.max(...setOriginalRows.map((row) => row.id))
+              : 0;
+
           const rowsWithIds =
             data.map((row, index) => ({
               ...row,
               id: id + index + 1,
             })) || [];
+
+          // Update the original rows state with the new data
           setOriginalRows((prevRows) => [...prevRows, ...rowsWithIds]);
           setShowModal(false);
           toastSuccess("Upload thành công!");
@@ -71,7 +78,10 @@ const useImportExcel = ({ eventID, setOriginalRows, rows }) => {
         setUploading(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, rows]
+    [auth.accessToken, eventID, role, setOriginalRows, setShowModal]
   );
+
+  return { handleFileChange, uploading };
 };
+
+export default useImportExcel;

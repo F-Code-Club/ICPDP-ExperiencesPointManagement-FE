@@ -9,9 +9,9 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
-import AddModal from "./AddModal";
 import theme from "../../../theme";
 import { styles } from "../components/pointViewStyle";
+import useImportExcel from "../hooks/useImportExcel";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -38,6 +38,12 @@ const AddToolbar = ({
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
+  const { uploading, handleFileChange } = useImportExcel(
+    currentTable,
+    setOriginalRows,
+    rows,
+    setShowModal
+  );
   const handleSave = async (formData) => {
     if (!auth?.accessToken) {
       return;
@@ -107,6 +113,7 @@ const AddToolbar = ({
       <Button
         onClick={() => setShowModal((prev) => !prev)}
         sx={styles.addButton}
+        disabled={uploading}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
@@ -131,6 +138,7 @@ const AddToolbar = ({
           }}
         >
           <Button
+            component="label"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -145,17 +153,23 @@ const AddToolbar = ({
               borderRadius: "0",
               "&:hover": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
               "&:active": {
                 borderLeft: `2px solid ${theme.palette.primary.main}`,
-                color: ` ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
                 background: "white",
               },
             }}
           >
-            Thêm từ excel
+            <span>Thêm từ excel</span>
+            <input
+              id="fileInput"
+              onChange={handleFileChange}
+              type="file"
+              hidden
+            />
           </Button>
           <Button
             onClick={handleOpenForm}
