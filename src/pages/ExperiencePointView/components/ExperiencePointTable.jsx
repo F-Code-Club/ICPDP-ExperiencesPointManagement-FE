@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -23,11 +23,10 @@ import useFetchRole from "../hooks/useFetchRole";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
-import useDebounce from "../../../hooks/useDebounce";
-import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
-import StudentForm from "../components/StudentForm"
+import StudentForm from "../components/StudentForm";
+import useFetchStudent from "../hooks/useFetchStudent";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -55,11 +54,9 @@ const ExperiencePointTable = ({
   const [currentPage, setCurrentPage] = useState(null);
   //eslint-disable-next-line
   const [total, setTotal] = useState(0);
-  const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
   const [deleteEvent, setDeleteEvent] = useState(null);
   const [showDeleteEvent, setShowDeleteEvent] = useState(null);
-  const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
@@ -86,63 +83,16 @@ const ExperiencePointTable = ({
     };
     setupTables(events);
   }, [events, currentPage]);
-
-  // Fetch data in each tables
-  const fetchRows = useCallback(
-    async (eventID) => {
-      if (!eventID) {
-        return;
-      }
-
-      try {
-        setPageLoading(true);
-        const response = await axios.get(
-          `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
-          {
-            params: {
-              page: 1,
-              take: 0,
-            },
-            headers: {
-              Authorization: `Bearer ${auth?.accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const data = response.data.data || [];
-        const totalPage = response.data.totalPage || 0;
-
-        const rowsWithIds = data.map((row, index) => ({
-          ...row,
-          name: row?.studentName,
-          id:
-            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
-        }));
-        setOriginalRows(rowsWithIds);
-        setRows(rowsWithIds);
-        const updatedTables = tables.map((table) =>
-          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
-        );
-        setTables(updatedTables);
-        setTotal(totalPage);
-      } catch (err) {
-        // Handle errors
-      } finally {
-        setPageLoading(false);
-      }
-    },
-    [
-      axios,
-      API_ENDPOINTS.EVENTS_POINT.GET,
-      currentPage,
-      auth?.accessToken,
-      tables,
-    ]
-  );
-
   // Add debounce
-  const debouncedFetchRows = useDebounce(fetchRows, 500);
+
+  const { debouncedFetchRows, pageLoading } = useFetchStudent(
+    currentTab,
+    setOriginalRows,
+    setRows,
+    setTables,
+    setTotal,
+    tables
+  );
 
   // Re-render rows when switch tab
   useEffect(() => {
@@ -245,7 +195,6 @@ const ExperiencePointTable = ({
 
   // Handler for delete button click
   const handleDeleteClick = (deleteRow) => {
-    console.log(deleteRow);
     setRowToDelete(deleteRow);
     setShowDeleteForm(true);
   };
@@ -423,6 +372,7 @@ const ExperiencePointTable = ({
                 }
                 currentTable={currentTab}
                 tables={tables}
+                setTotalPage={setTotal}
                 setTables={setTables}
                 title={title}
                 API_ENDPOINTS={API_ENDPOINTS}
