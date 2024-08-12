@@ -14,13 +14,18 @@ const ROLE = {
   USER: "user",
   CLUB: "club",
   DEPARTMENT: "department",
-  STUDENT: "student"
+  STUDENT: "student",
 };
 
 const PAGE_SIZE = 10;
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_US = "MM/DD/YYYY";
+
+const VALID_MIME_TYPES = [
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-excel",
+];
 export {
   STRING_EMPTY,
   HTTP_STATUS,
@@ -28,4 +33,5 @@ export {
   PAGE_SIZE,
   DATE_FORMAT,
   DATE_FORMAT_US,
+  VALID_MIME_TYPES,
 };

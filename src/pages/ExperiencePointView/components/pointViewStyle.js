@@ -70,6 +70,7 @@ export const styles = {
   },
   selectField: {
     width: 130,
+    minWidth: "fit-content",
     borderRadius: 1,
     "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select":
       {
@@ -82,8 +83,6 @@ export const styles = {
       padding: "0",
       top: "-25%",
     },
-    "& #year-select ": {
-      textAlign: "left"
-    }
+    textAlign: "left",
   },
 };

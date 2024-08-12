@@ -1,14 +1,24 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useMemo } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth";
 
-import { StudentFormStyles as styles } from "./style";
-import { toastError } from "../../utils/toast";
-import { ROLE } from "../../constant/core";
+import { StudentFormStyles as styles } from "../../../components/Form/style";
+import { toastError } from "../../../utils/toast";
+import {ROLE} from "../../../constant/core";
 
 function StudentForm({
   open,
@@ -20,14 +30,21 @@ function StudentForm({
   formConfig,
   title,
 }) {
-  const { fields } = formConfig;
+  const { fields, selectFields } = formConfig;
   const { role } = useAuth();
   const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
 
   // Initialize state dynamically based on formConfig
   const initState = () => {
     const initState = {};
-    fields.forEach((field) => (initState[field.name] = ""));
+    fields.forEach((field) => {
+      initState[field.name] = "";
+    });
+    if (selectFields) {
+      selectFields.forEach((selectField) => {
+        initState[selectField.name] = selectField.options[0].value; // selectField.options[0].value is the default value
+      });
+    }
 
     return initState;
   };
@@ -120,6 +137,32 @@ function StudentForm({
                   sx={styles.inputField}
                 />
               ))}
+              {selectFields &&
+                selectFields.map((selectField) => (
+                  <FormControl
+                    variant="outlined"
+                    sx={styles.inputField}
+                    key={selectField.name}
+                  >
+                    <InputLabel id={`${selectField.name}-label`}>
+                      {selectField.label}
+                    </InputLabel>
+                    <Select
+                      labelId={`${selectField.name}-label`}
+                      id={selectField.name}
+                      value={info[selectField.name]}
+                      label={selectField.label}
+                      name={selectField.name}
+                      onChange={handleChange}
+                    >
+                      {selectField.options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ))}
             </Box>
           </Box>
           <Box sx={styles.buttonContainer}>

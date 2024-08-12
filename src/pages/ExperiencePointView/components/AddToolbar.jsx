@@ -3,12 +3,15 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
-import StudentPointForm from "../../../components/Form/StudentPointForm";
+import StudentForm from "../components/StudentForm";
 import { toastError, toastSuccess } from "../../../utils/toast";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
+import axios from "../../../config/axios";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
+import theme from "../../../theme";
+import { styles } from "./pointViewStyle";
+import useImportExcel from "../hooks/useImportExcel";
 const AddToolbar = ({
   setRows,
   setOriginalRows,
@@ -19,6 +22,7 @@ const AddToolbar = ({
   setTables,
   currentTable,
   currentPage,
+  setTotalPage,
 }) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
@@ -30,9 +34,19 @@ const AddToolbar = ({
     role
   );
   const [showForm, setShowForm] = useState(false);
-  const axios = useAxiosPrivate();
+  const [showModal, setShowModal] = useState(false);
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
+
+  const { handleFileChange, uploading } = useImportExcel(
+    currentTable,
+    setOriginalRows,
+    setShowModal,
+    setRows,
+    setTables,
+    setTotalPage,
+    tables
+  );
 
   const handleSave = async (formData) => {
     if (!auth?.accessToken) {
@@ -101,23 +115,97 @@ const AddToolbar = ({
   return (
     <>
       <Button
-        onClick={handleOpenForm}
-        sx={{
-          borderRadius: 1,
-          backgroundColor: "primary.main",
-          color: "text.light",
-          height: 36,
-          width: 73,
-          padding: "10px",
-          fontSize: 12,
-          textTransform: "none",
-        }}
+        onClick={() => setShowModal((prev) => !prev)}
+        sx={styles.addButton}
+        disabled={uploading}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
       </Button>
 
-      <StudentPointForm
+      {showModal && (
+        <div
+          style={{
+            position: "absolute",
+            right: "44px",
+            top: "67px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "8px",
+            gap: "6px",
+            borderRadius: "5px",
+            background: "white",
+            boxShadow: "2px 4px 10px 0px rgba(0, 0, 0, 0.40)",
+            zIndex: 2,
+          }}
+        >
+          <Button
+            component="label"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: `${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
+          >
+            <span>Thêm từ excel</span>
+            <input
+              id="fileInput"
+              onChange={handleFileChange}
+              type="file"
+              hidden
+            />
+          </Button>
+          <Button
+            onClick={handleOpenForm}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              color: "text.dark",
+              textTransform: "none",
+              fontSize: "12px",
+              fontWeight: "400",
+              letterSpacing: "0.048px",
+              borderLeft: "2px solid transparent",
+              borderRadius: "0",
+              "&:hover": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+              "&:active": {
+                borderLeft: `2px solid ${theme.palette.primary.main}`,
+                color: ` ${theme.palette.primary.main}`,
+                background: "white",
+              },
+            }}
+          >
+            Thêm sinh viên
+          </Button>
+        </div>
+      )}
+      <StudentForm
         open={showForm}
         handleClose={handleCloseForm}
         handleSave={handleSave}

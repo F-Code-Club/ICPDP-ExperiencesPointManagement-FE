@@ -1,8 +1,7 @@
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { styles } from "../../components/DataTable/style";
 
 const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
   const columns = [
@@ -28,21 +27,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick, role) => {
       field: "name",
       headerName: "Họ và Tên",
       headerClassName: "header",
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            padding: "12px 18px 12px 0px",
-            gap: "18px",
-          }}
-        >
-          <Avatar src={params.row.avatar} alt="Avatar" sx={styles.avatar} />
-          <Typography variant="body1" className="ml-[12px]">
-            {params.value}
-          </Typography>
-        </Box>
-      ),
+      renderCell: (params) => <Box>{params.value}</Box>,
       type: "string",
       width: 500,
       align: "left",
