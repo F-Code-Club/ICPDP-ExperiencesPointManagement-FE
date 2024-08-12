@@ -1,6 +1,7 @@
 import axios from "axios";
-// import { API_URL } from "..";
-const TEMP_API = "https://epm-be-dev.f-code.tech";
+import { API_URL } from "../index";
+
+const TEMP_API = ""
 export default axios.create({
   baseURL: TEMP_API || API_URL,
   headers: {
