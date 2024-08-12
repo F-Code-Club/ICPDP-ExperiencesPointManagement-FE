@@ -27,7 +27,7 @@ import useDebounce from "../../../hooks/useDebounce";
 import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
-
+import StudentForm from "../components/StudentForm"
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -614,6 +614,18 @@ const ExperiencePointTable = ({
         API_ENDPOINTS={API_ENDPOINTS}
         currentTab={currentTab}
         tables={tables}
+      />
+      <StudentForm
+        open={showEditForm}
+        handleClose={handleClose}
+        title={`Chỉnh sửa ${title}`}
+        handleSave={handleSaveClick}
+        editedRow={rowToEdit}
+        func={"Sửa"}
+        isEdit={isEdit}
+        API_ENDPOINTS={API_ENDPOINTS}
+        accessToken={accessToken}
+        formConfig={config}
       />
     </Box>
   );

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
-import StudentForm from "../../../components/Form/StudentForm";
+import StudentForm from "../components/StudentForm"
 import { toastError, toastSuccess } from "../../../utils/toast";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
@@ -26,6 +26,7 @@ const AddToolbar = ({
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
   const role = decoded?.role || "";
+  console.log(currentTable);
 
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
@@ -113,6 +114,7 @@ const AddToolbar = ({
       <Button
         onClick={() => setShowModal((prev) => !prev)}
         sx={styles.addButton}
+        disabled={uploading}
       >
         Thêm
         <AddIcon sx={{ color: "text.light", width: 15, height: 15 }} />
@@ -200,7 +202,7 @@ const AddToolbar = ({
           </Button>
         </div>
       )}
-      {/* <StudentForm
+      <StudentForm
         open={showForm}
         handleClose={handleCloseForm}
         handleSave={handleSave}
@@ -208,7 +210,7 @@ const AddToolbar = ({
         accessToken={auth?.accessToken}
         func={"Thêm"}
         formConfig={config}
-      /> */}
+      />
     </>
   );
 };
