@@ -65,6 +65,7 @@ export const API_ENDPOINTS = {
     UPDATE: `role-departments`,
     DELETE: `role-departments`,
   },
+
   CLUB_MEMBER: {
     GET: `club-member`,
     ADD: `club-member`,
@@ -78,5 +79,12 @@ export const API_ENDPOINTS = {
     UPDATE: `department-member`,
     DELETE: `department-member`,
     UPLOAD: `department-member/import`,
+  },
+  FINAL_POINTS: {
+    GET_ALL: `/final-point`,
+    GET: `/final-point`,
+    ADD: `/final-point`,
+    UPDATE: `/final-point`,
+    DELETE: `/final-point`,
   },
 };

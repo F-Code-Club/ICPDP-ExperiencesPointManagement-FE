@@ -116,7 +116,8 @@ const Sidebar = ({ setTitle }) => {
 
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
-                      to="/transcripts/final-point"
+                      to="transcripts/final-point"
+                      onClick={() => setTitle("Bảng điểm tổng kết")}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
