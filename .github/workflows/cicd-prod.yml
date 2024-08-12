@@ -53,6 +53,7 @@ jobs:
     env:
         DOCKER_REGISTRY_URL: ${{secrets.F_CODE_DOCKER_REGISTRY_URL}}
         FE_EXPOSED_PORT: ${{secrets.FE_EXPOSED_PORT_PROD}}
+        VITE_REACT_APP_BASE_URL_PROD: ${{secrets.VITE_REACT_APP_BASE_URL_PROD}}
     needs: build
 
     steps:
