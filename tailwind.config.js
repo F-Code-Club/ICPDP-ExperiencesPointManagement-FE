@@ -17,6 +17,8 @@ export default {
           800: "#914417",
           900: "#793914",
         },
+        sidebar: "#FFFFFF",
+        neutral: "#EAEAEA",
         secondary: "#262525",
         "light-text-color": "#FFFFFF",
         "second-text-color": "#737373",
@@ -24,6 +26,9 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+      },
+      screens: {
+        desktop: "1440px",
       },
     },
   },

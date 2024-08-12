@@ -17,22 +17,28 @@ const theme = createTheme({
     },
     secondary: {
       main: "#262525",
+      light: "#F9F9F9",
     },
     text: {
       light: "#FFFFFF",
-      secondary: "#F737373",
+      secondary: "#737373",
       dark: "#000000",
+      neutral: "#EAEAEA"
     },
-    states: {
+    state: {
       success: "#00C851",
-      warning: "#FFBB33",
+      export: "#3A9E29",
+      warning: "#FF5858",
       error: "#FF4444",
       info: "#33B5E5",
     },
+    backgroundImage: {
+      'bg-sidebar': 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%)',
+    },
   },
   typography: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-  }
+    fontFamily: ["Inter", "sans-serif"].join(","),
+  },
 });
 
 export default theme;

@@ -9,5 +9,8 @@ services:
     ports:
       - ${FE_EXPOSED_PORT}:5173
     networks: 
-      - epm-network-${DOCKER_IMAGE_TAG}
+      - epm-fe-prod
     restart: unless-stopped
+
+networks: 
+  epm-fe-prod:

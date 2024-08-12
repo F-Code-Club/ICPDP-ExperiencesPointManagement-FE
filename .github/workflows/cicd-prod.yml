@@ -46,6 +46,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.F_CODE_DOCKER_REGISTRY_URL}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
+          build-args: VITE_REACT_APP_BASE_URL = ${{secrets.VITE_REACT_APP_BASE_URL_PROD}}
 
   deploy:
     runs-on: fcode-japao-runner
