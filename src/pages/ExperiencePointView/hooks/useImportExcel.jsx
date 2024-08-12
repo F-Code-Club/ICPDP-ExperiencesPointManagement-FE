@@ -1,10 +1,9 @@
 import useAuth from "../../../hooks/useAuth";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { API_ENDPOINTS } from "../../../utils/api/index";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { useCallback, useState } from "react";
 import { VALID_MIME_TYPES } from "../../../constant/core";
-// import axios from "../../../config/axios";
+import axios from "../../../config/axios";
 import useFetchStudent from "../hooks/useFetchStudent";
 const useImportExcel = (
   eventID,
@@ -21,7 +20,6 @@ const useImportExcel = (
     role,
   } = useAuth();
 
-  const axios = useAxiosPrivate();
   const { debouncedFetchRows } = useFetchStudent(
     eventID,
     setOriginalRows,
@@ -62,7 +60,8 @@ const useImportExcel = (
         debouncedFetchRows();
         toastSuccess("Upload successfully");
       } catch (error) {
-        toastError(`${error?.response?.data?.message}`);
+        toastError(`${error.response.data.message}`);
+        // console.log(error);
       } finally {
         setUploading(false);
       }

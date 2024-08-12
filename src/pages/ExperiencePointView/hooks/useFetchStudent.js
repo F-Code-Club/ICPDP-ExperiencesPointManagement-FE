@@ -1,4 +1,4 @@
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "../../../config/axios";
 import useAuth from "../../../hooks/useAuth";
 import { API_ENDPOINTS } from "../../../utils/api";
 import { useState } from "react";
@@ -12,7 +12,6 @@ const useFetchStudent = (
   setTotalPage,
   tables
 ) => {
-  const axios = useAxiosPrivate();
   const [pageLoading, setPageLoading] = useState(false);
   const {
     auth: { accessToken },

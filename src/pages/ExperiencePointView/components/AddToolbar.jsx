@@ -3,10 +3,10 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useFetchRole from "../hooks/useFetchRole";
-import StudentForm from "../components/StudentForm"
+import StudentForm from "../components/StudentForm";
 import { toastError, toastSuccess } from "../../../utils/toast";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { PAGE_SIZE } from "../../../constant/core";
+import axios from "../../../config/axios";
 import useAuth from "../../../hooks/useAuth";
 import { decodeToken } from "react-jwt";
 import theme from "../../../theme";
@@ -22,11 +22,11 @@ const AddToolbar = ({
   setTables,
   currentTable,
   currentPage,
+  setTotalPage,
 }) => {
   const { auth } = useAuth();
   const decoded = auth?.accessToken ? decodeToken(auth.accessToken) : undefined;
   const role = decoded?.role || "";
-  console.log(currentTable);
 
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
@@ -35,14 +35,17 @@ const AddToolbar = ({
   );
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const axios = useAxiosPrivate();
   const handleOpenForm = () => setShowForm(true);
   const handleCloseForm = () => setShowForm(false);
 
   const { handleFileChange, uploading } = useImportExcel(
     currentTable,
     setOriginalRows,
-    setShowModal
+    setShowModal,
+    setRows,
+    setTables,
+    setTotalPage,
+    tables
   );
 
   const handleSave = async (formData) => {

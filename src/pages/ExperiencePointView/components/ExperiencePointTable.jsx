@@ -18,7 +18,7 @@ import WarningForm from "../../../components/Form/WarningModal";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "../../../config/axios";
 import useFetchRole from "../hooks/useFetchRole";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
@@ -46,7 +46,6 @@ const ExperiencePointTable = ({
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentTab, setCurrentTab] = useState("");
-  const axios = useAxiosPrivate();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);

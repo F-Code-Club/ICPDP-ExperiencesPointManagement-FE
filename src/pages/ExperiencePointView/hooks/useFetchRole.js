@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "../../../config/axios";
 
 const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
-  const axios = useAxiosPrivate();
   const [config, setConfig] = useState({
     fields: [{ name: "studentID", label: "MSSV", type: "text" }],
     selectFields: [],
