@@ -62,7 +62,7 @@ const useImportExcel = (
         debouncedFetchRows();
         toastSuccess("Upload successfully");
       } catch (error) {
-        toastError("Uploading fail");
+        toastError(`${error?.response?.data?.message}`);
       } finally {
         setUploading(false);
       }
