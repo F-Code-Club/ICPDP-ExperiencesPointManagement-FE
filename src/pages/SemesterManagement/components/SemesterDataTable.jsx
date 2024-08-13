@@ -20,7 +20,8 @@ import useSearch from "../../../components/DataTable/hooks/useSearch";
 // eslint-disable-next-line react/prop-types
 const SemesterDataTable = ({ columnsSchema }) => {
   const { isLoading } = useFetchSemesters();
-  const { showEditForm, rowToEdit, handleEditClick, handleClose } = useEdit();
+  const { showEditForm, rowToEdit, handleEditClick, handleEditClose } =
+    useEdit();
   const {
     paginationModel,
     setPaginationModel,
@@ -92,7 +93,7 @@ const SemesterDataTable = ({ columnsSchema }) => {
       {rowToEdit && (
         <SememsterEditForm
           open={showEditForm}
-          handleClose={handleClose}
+          handleClose={handleEditClose}
           editedRowId={rowToEdit}
         />
       )}
