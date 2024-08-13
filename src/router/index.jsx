@@ -17,14 +17,13 @@ import StudentManagement from "../pages/StudentManagement";
 import ExperiencePointView from "../pages/ExperiencePointView";
 import SemesterManagement from "../pages/SemesterManagement";
 import FinalPointView from "../pages/FinalPointView";
-import Dashboard from "../pages/Dashboard";
+import AdminDashboard from "../pages/AdminDashboard";
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
-
 
     // Protected routes
     {
@@ -38,7 +37,7 @@ const RouterComponent = () => {
             {
               element: <Layout />,
               children: [
-                { index: true, element: <Dashboard /> },
+                { index: true, element: <AdminDashboard /> },
                 {
                   path: "transcripts/experience-point",
                   element: <ExperiencePointView />,
