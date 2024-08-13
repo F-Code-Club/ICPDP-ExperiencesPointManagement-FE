@@ -26,6 +26,18 @@ const VALID_MIME_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
 ];
+
+const EVENT_STATE = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};
+
+const GRADING_STATE = {
+  GRADED: "graded",
+  UNGRADED: "ungraded",
+};
+
 export {
   STRING_EMPTY,
   HTTP_STATUS,
@@ -34,4 +46,6 @@ export {
   DATE_FORMAT,
   DATE_FORMAT_US,
   VALID_MIME_TYPES,
+  EVENT_STATE,
+  GRADING_STATE,
 };
