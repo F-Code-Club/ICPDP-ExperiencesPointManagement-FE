@@ -86,3 +86,163 @@ export const styles = {
     textAlign: "left",
   },
 };
+
+export const ManagementFormStyles = {
+  managementModal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "8px",
+    backgroundColor: "text.light",
+    color: "text.dark",
+  },
+  warningModal: {
+    width: 400,
+    height: 266,
+    borderRadius: "8px",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "text.light",
+    color: "text.dark",
+    position: "absolute",
+  },
+  warningHeader: {
+    width: "100%",
+    height: "96px",
+    padding: "16px 24px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "end",
+  },
+  warningModalContent: {
+    width: "100%",
+    height: "74px",
+    textAlign: "center",
+    padding: "0px 12px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+
+  formHeader: {
+    width: "100%",
+    height: "88px",
+    padding: "16px 0",
+    position: "relative",
+    marginBottom: "16px",
+  },
+  formContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    height: 368,
+    borderTop: "2px solid",
+    borderColor: "text.neutral",
+  },
+  inputField: {
+    width: "321px",
+    "& .MuiInputLabel-root": {
+      fontSize: "16px",
+      color: "text.secondary",
+      position: "absolute",
+      top: "-4px",
+      left: "4px",
+      "&.Mui-focused": {
+        color: "primary.main",
+      },
+    },
+    "& .MuiOutlinedInput-root": {
+      height: "120px",
+      "& fieldset": {
+        borderColor: "text.dark",
+        border: "2px solid",
+      },
+      "&:hover fieldset": {
+        borderColor: "text.dark",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "primary.main",
+      },
+    },
+    "& .MuiOutlinedInput-input": {
+      padding: "10px 14px",
+      fontSize: "16px",
+      color: "text.dark",
+    },
+    "& .MuiFormHelperText-root": {
+      color: "red",
+      width: "max-content",
+    },
+  },
+  formColumn: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    width: 345,
+    height: 288,
+    padding: "12px",
+    justifyContent: "center",
+    margin: "16px",
+  },
+
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "end",
+    gap: "10px",
+    padding: "12px 36px 40px 12px",
+    height: 88,
+  },
+  approveButton: {
+    borderRadius: "5px",
+    backgroundColor: "#3A9E29",
+    color: "text.light",
+    height: 36,
+    width: 102,
+    boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.25)",
+    fontSize: 12,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: "text.light",
+      color: "#3A9E29",
+      border: "2px solid",
+      borderColor: "#3A9E29",
+      "& .MuiSvgIcon-root": {
+        color: "#3A9E29",
+      },
+    },
+  },
+  rejectButton: {
+    borderRadius: "5px",
+    color: "text.light",
+    border: "1px solid",
+    borderColor: "text.neutral",
+    height: 36,
+    width: 102,
+    boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.25)",
+    fontSize: 12,
+    textTransform: "none",
+    backgroundColor: "#FF5858",
+    "&:hover": {
+      backgroundColor: "text.light",
+      color: "#FF5858",
+      border: "2px solid",
+      borderColor: "#FF5858",
+      "& .MuiSvgIcon-root": {
+        color: "#FF5858",
+      },
+    },
+  },
+  addIcon: {
+    color: "text.light",
+    width: "15px",
+    height: "15px",
+  },
+  clearIcon: {
+    color: "text.light",
+    width: "15px",
+    height: "15px",
+  },
+};

@@ -6,7 +6,6 @@ import {
   IconButton,
   Button,
   InputAdornment,
-  FormControl,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -27,6 +26,8 @@ import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
 import StudentForm from "../components/StudentForm";
 import useFetchStudent from "../hooks/useFetchStudent";
+import Approbation from "./Review";
+import Review from "./Review";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -341,28 +342,28 @@ const ExperiencePointTable = ({
             selectedSemester={selectedSemester}
           />
           <Box className="flex gap-3">
-            <FormControl>
-              <TextField
-                className="rounded-sm border-2"
-                placeholder="Tìm kiếm"
-                autoComplete="off"
-                variant="outlined"
-                onChange={handleSearch}
-                sx={styles.searchBar}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton>
-                        <SearchIcon
-                          sx={{ color: "text.dark", width: 15, height: 15 }}
-                        />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-            {role === ROLE.ADMIN ? null : (
+            <TextField
+              className="rounded-sm border-2"
+              placeholder="Tìm kiếm"
+              autoComplete="off"
+              variant="outlined"
+              onChange={handleSearch}
+              sx={styles.searchBar}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton>
+                      <SearchIcon
+                        sx={{ color: "text.dark", width: 15, height: 15 }}
+                      />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {role === ROLE.ADMIN ? (
+              <Review eventID={currentTab} />
+            ) : (
               <AddToolbar
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
