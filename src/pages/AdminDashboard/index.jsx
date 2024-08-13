@@ -1,8 +1,11 @@
+import { AdminDashboardProvider } from "./context/adminDashboardContext";
+import AdminDashboardTable from "./components/AdminDashboardTable";
+import columnsSchema from "./columns";
 const AdminDashboard = () => {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <AdminDashboardProvider>
+      <AdminDashboardTable columnsSchema={columnsSchema} />
+    </AdminDashboardProvider>
   );
 };
 

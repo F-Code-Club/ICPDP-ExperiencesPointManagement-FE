@@ -9,7 +9,7 @@ import RequireAuth from "../components/Auth/RequireAuth";
 import UnauthorizedPage from "../pages/403";
 import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
-// import Home from "../pages/Home";
+import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
@@ -73,7 +73,7 @@ const RouterComponent = () => {
             {
               element: <Layout />,
               children: [
-                { index: true, element: <Dashboard /> },
+                { index: true, element: <Home /> },
                 {
                   path: "transcripts/experience-point",
                   element: <ExperiencePointView />,
