@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { styles } from "./adminDashboardStyle";
+import { styles } from "./dashboardStyle";
 import { useContext } from "react";
-import { AdminDashboardContext } from "../context/adminDashboardContext";
+import { DashboardContext } from "../context/dashboardContext";
 import Toolbar from "./Toolbar";
 //eslint-disable-next-line
-const AdminDashboardTable = ({ columnsSchema }) => {
-  const { rowSelectionModel, rows } = useContext(AdminDashboardContext);
+const DashboardTable = ({ columnsSchema }) => {
+  const { rowSelectionModel, rows } = useContext(DashboardContext);
   console.log(rows);
 
   return (
@@ -35,4 +35,4 @@ const AdminDashboardTable = ({ columnsSchema }) => {
   );
 };
 
-export default AdminDashboardTable;
+export default DashboardTable;

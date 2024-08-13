@@ -9,7 +9,6 @@ import RequireAuth from "../components/Auth/RequireAuth";
 import UnauthorizedPage from "../pages/403";
 import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
-import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
@@ -18,6 +17,7 @@ import ExperiencePointView from "../pages/ExperiencePointView";
 import SemesterManagement from "../pages/SemesterManagement";
 import FinalPointView from "../pages/FinalPointView";
 import AdminDashboard from "../pages/AdminDashboard";
+import Dashboard from "../pages/Dashboard";
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
@@ -73,7 +73,7 @@ const RouterComponent = () => {
             {
               element: <Layout />,
               children: [
-                { index: true, element: <Home /> },
+                { index: true, element: <Dashboard /> },
                 {
                   path: "transcripts/experience-point",
                   element: <ExperiencePointView />,
