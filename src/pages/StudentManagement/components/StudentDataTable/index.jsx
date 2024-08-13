@@ -149,10 +149,7 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
           scrollbarSize={0}
           pagination
           paginationMode="server"
-          pageSizeOptions={[
-            { value: PAGE_SIZE, label: PAGE_SIZE + "" },
-            { value: -1, label: "All" },
-          ]}
+          pageSizeOptions={[PAGE_SIZE]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           rowCount={total}
