@@ -23,7 +23,13 @@ const theme = createTheme({
       light: "#FFFFFF",
       secondary: "#737373",
       dark: "#000000",
-      neutral: "#EAEAEA"
+      neutral: "#EAEAEA",
+      success: "#455E4E",
+      error: "#844745"
+    },
+    tag: {
+      success: "#DBEDDB",
+      error: "#FFE2DD",
     },
     state: {
       success: "#00C851",
@@ -39,6 +45,7 @@ const theme = createTheme({
   typography: {
     fontFamily: ["Inter", "sans-serif"].join(","),
   },
+
 });
 
 export default theme;
