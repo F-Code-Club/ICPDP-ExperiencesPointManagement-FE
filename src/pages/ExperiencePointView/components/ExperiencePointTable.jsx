@@ -26,7 +26,6 @@ import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
 import StudentForm from "../components/StudentForm";
 import useFetchStudent from "../hooks/useFetchStudent";
-import Approbation from "./Review";
 import Review from "./Review";
 const ExperiencePointTable = ({
   title,
