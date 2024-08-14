@@ -1,22 +1,38 @@
 import { useCallback, useEffect, useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
+import { STRING_EMPTY } from "../../../constant/core";
 
-const useSearch = (originalRows, setRows, filter) => {
-  const [searchQuery, setSearchQuery] = useState("");
+const useSearch = (
+  originalRows,
+  setRows,
+  setTotal,
+  paginationModel,
+  filter
+) => {
+  const [searchQuery, setSearchQuery] = useState(STRING_EMPTY);
+  const [filteredRows, setFilteredRows] = useState([]);
 
   const handleSearch = useCallback((e) => {
     setSearchQuery(e.target.value.trim().toLowerCase());
   }, []);
 
-  const debouncedSearchQuery = useDebounce(handleSearch, 300);
+  const debouncedSearchQuery = useDebounce(handleSearch, 500);
 
   useEffect(() => {
     const filteredRows = originalRows.filter((row) => filter(row, searchQuery));
-    setRows(filteredRows);
+    setTotal(filteredRows.length);
+    setFilteredRows(filteredRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, originalRows]);
+  }, [searchQuery.trim()]);
 
-  return debouncedSearchQuery;
+  useEffect(() => {
+    const start = paginationModel.page * paginationModel.pageSize;
+    const end = start + paginationModel.pageSize;
+    setRows(filteredRows.slice(start, end));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredRows, paginationModel.page, paginationModel.pageSize]);
+
+  return { handleSearch: debouncedSearchQuery, searchQuery };
 };
 
 export default useSearch;

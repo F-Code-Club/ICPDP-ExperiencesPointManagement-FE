@@ -6,7 +6,7 @@ import { StudentContext } from "../student.context";
 import { toastError } from "../../../utils/toast";
 import useDebounce from "../../../hooks/useDebounce";
 
-const useFetchStudents = () => {
+const useFetchStudents = (searchQuery) => {
   const { setRows, setOriginalRows, paginationModel, setTotal, api } =
     useContext(StudentContext);
   const [isTotalLoading, setIsTotalLoading] = useState(false);
@@ -50,10 +50,11 @@ const useFetchStudents = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const debouncedFetchTotalData = useDebounce(fetchTotal, 500);
+  const debouncedFetchTotalData = useDebounce(fetchTotal, 300);
 
   const fetchData = useCallback(
     async (signal) => {
+      if (searchQuery.trim().length > 0) return;
       setIsLoading(true);
       if (!accessToken) return setIsLoading(false);
       try {
@@ -69,7 +70,7 @@ const useFetchStudents = () => {
         const rowsWithIds =
           result?.data.map((row, index) => ({
             ...row,
-            id: index + 1,
+            id: paginationModel.page * paginationModel.pageSize + index + 1,
           })) || [];
 
         setRows(rowsWithIds);

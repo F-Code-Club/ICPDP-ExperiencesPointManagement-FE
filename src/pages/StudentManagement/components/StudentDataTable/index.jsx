@@ -25,10 +25,10 @@ import { StudentContext } from "../../student.context";
 
 import { styles } from "../../../../components/DataTable/style";
 import { PAGE_SIZE, ROLE } from "../../../../constant/core";
+import { searchString } from "../../../../utils/stringHelper";
 
 // eslint-disable-next-line react/prop-types
 const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
-  const { isTotalLoading, isLoading } = useFetchStudents();
   const {
     rows,
     setRows,
@@ -38,7 +38,18 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
     paginationModel,
     setPaginationModel,
     total,
+    setTotal,
   } = useContext(StudentContext);
+  const { handleSearch, searchQuery } = useSearch(
+    originalRows,
+    setRows,
+    setTotal,
+    paginationModel,
+    (row, searchQuery) =>
+      searchString(row.studentID, searchQuery) ||
+      searchString(row.name, searchQuery)
+  );
+  const { isTotalLoading, isLoading } = useFetchStudents(searchQuery);
   const {
     rowToEdit,
     showEditForm,
@@ -66,13 +77,6 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
     handleExportClick,
     exportSelectedRow,
   } = useExport();
-  const handleSearch = useSearch(
-    originalRows,
-    setRows,
-    (row, searchQuery) =>
-      row.studentID?.toLowerCase().includes(searchQuery) ||
-      row.name?.toLowerCase().includes(searchQuery)
-  );
   const apiRef = useGridApiRef();
   const { role } = useAuth();
 
