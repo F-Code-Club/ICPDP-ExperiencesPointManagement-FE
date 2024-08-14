@@ -27,6 +27,7 @@ import { ROLE } from "../../../constant/core";
 import StudentForm from "../components/StudentForm";
 import useFetchStudent from "../hooks/useFetchStudent";
 import Review from "./Review";
+import { searchString } from "../../../utils/stringHelper";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -116,8 +117,8 @@ const ExperiencePointTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name?.toLowerCase().includes(searchQuery) ||
-        row.studentID?.toLowerCase().includes(searchQuery)
+        searchString(row.name, searchQuery) ||
+        searchString(row.studentID, searchQuery)
     );
     const updatedTables = tables.map((table) =>
       table.eventID === currentTab ? { ...table, rows: filteredRows } : table
