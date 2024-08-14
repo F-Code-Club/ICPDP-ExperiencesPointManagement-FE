@@ -6,7 +6,7 @@ import semesterApi from "../../../utils/api/semesterApi";
 
 import { errorToastHandler } from "../../../utils/toast/actions";
 
-const useFetchSemesters = () => {
+const useFetchSemesters = (searchQuery) => {
   const { setRows, setOriginalRows, paginationModel, setTotal } =
     useContext(SemesterContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,17 @@ const useFetchSemesters = () => {
           abortController.signal
         );
 
-        result.data.length > 0 && setTotal(result.data.length);
+        const data = result.data ?? [];
+        if (data.length > 0) {
+          const formattedData =
+            data.map((item, index) => ({
+              ...item,
+              id: index + 1,
+            })) || [];
+
+          setOriginalRows(formattedData);
+          setTotal(data.length);
+        }
       } catch (error) {
         if (error.name !== "CanceledError") {
           errorToastHandler({
@@ -48,6 +58,7 @@ const useFetchSemesters = () => {
   }, [accessToken]);
 
   useEffect(() => {
+    if (searchQuery.trim().length > 0) return;
     setIsLoading(true);
     const abortController = new AbortController();
 
@@ -67,11 +78,10 @@ const useFetchSemesters = () => {
         const rowsWithIds =
           result?.data.map((row, index) => ({
             ...row,
-            id: index + 1,
+            id: paginationModel.page * paginationModel.pageSize + index + 1,
           })) || [];
 
         setRows(rowsWithIds);
-        setOriginalRows(rowsWithIds);
       } catch (error) {
         if (error.name !== "CanceledError") {
           errorToastHandler({

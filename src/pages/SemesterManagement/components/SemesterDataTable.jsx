@@ -19,7 +19,6 @@ import useSearch from "../../../components/DataTable/hooks/useSearch";
 
 // eslint-disable-next-line react/prop-types
 const SemesterDataTable = ({ columnsSchema }) => {
-  const { isLoading } = useFetchSemesters();
   const { showEditForm, rowToEdit, handleEditClick, handleEditClose } =
     useEdit();
   const {
@@ -29,16 +28,19 @@ const SemesterDataTable = ({ columnsSchema }) => {
     setRows,
     originalRows,
     total,
+    setTotal,
   } = useContext(SemesterContext);
   const apiRef = useGridApiRef();
-  const handleSearch = useSearch(
+  const { handleSearch, searchQuery } = useSearch(
     originalRows,
     setRows,
+    setTotal,
+    paginationModel,
     (row, searchQuery) =>
       row.year.toString().toLowerCase().includes(searchQuery) ||
       row.semester.toLowerCase().includes(searchQuery)
   );
-
+  const { isLoading } = useFetchSemesters(searchQuery);
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
