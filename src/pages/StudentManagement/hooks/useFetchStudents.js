@@ -4,49 +4,58 @@ import useAuth from "../../../hooks/useAuth";
 import { StudentContext } from "../student.context";
 
 import { toastError } from "../../../utils/toast";
+import useDebounce from "../../../hooks/useDebounce";
 
 const useFetchStudents = () => {
   const { setRows, setOriginalRows, paginationModel, setTotal, api } =
     useContext(StudentContext);
+  const [isTotalLoading, setIsTotalLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {
     auth: { accessToken },
   } = useAuth();
 
-  useEffect(() => {
-    const abortController = new AbortController();
+  const fetchTotal = useCallback(async (signal) => {
+    try {
+      setIsTotalLoading(true);
+      if (!accessToken) return setIsTotalLoading(false);
+      const result = await api.fetchPagination(
+        {
+          page: 0,
+          pageSize: 0,
+        },
+        accessToken,
+        signal
+      );
 
-    if (!accessToken) return;
+      const data = result.data ?? [];
 
-    const fetchRemote = async () => {
-      try {
-        const result = await api.fetchPagination(
-          {
-            page: 0,
-            pageSize: 0,
-          },
-          accessToken,
-          abortController.signal
-        );
+      if (data.length > 0) {
+        const formattedData =
+          data.map((item, index) => ({
+            ...item,
+            id: index + 1,
+          })) || [];
 
-        result.data.length > 0 && setTotal(result.data.length);
-      } catch (error) {
-        if (error.name !== "CanceledError") {
-          toastError("Failed to fetch total students. Please try again later.");
-        }
+        setOriginalRows(formattedData);
+        setTotal(data.length);
       }
-    };
-
-    fetchRemote();
-
-    return () => abortController.abort();
-
+    } catch (error) {
+      if (error.name !== "CanceledError") {
+        toastError("Failed to fetch total students. Please try again later.");
+      }
+    } finally {
+      setIsTotalLoading(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken]);
+  }, []);
+
+  const debouncedFetchTotalData = useDebounce(fetchTotal, 500);
 
   const fetchData = useCallback(
     async (signal) => {
-      if (!accessToken) return;
+      setIsLoading(true);
+      if (!accessToken) return setIsLoading(false);
       try {
         const result = await api.fetchPagination(
           {
@@ -64,7 +73,6 @@ const useFetchStudents = () => {
           })) || [];
 
         setRows(rowsWithIds);
-        setOriginalRows(rowsWithIds);
       } catch (error) {
         if (error.name !== "CanceledError") {
           toastError("Error fetching data. Please try again later.");
@@ -78,7 +86,14 @@ const useFetchStudents = () => {
   );
 
   useEffect(() => {
-    setIsLoading(true);
+    const abortController = new AbortController();
+
+    debouncedFetchTotalData(abortController.signal);
+
+    return () => abortController.abort();
+  }, [debouncedFetchTotalData]);
+
+  useEffect(() => {
     const abortController = new AbortController();
 
     fetchData(abortController.signal);
@@ -86,7 +101,7 @@ const useFetchStudents = () => {
     return () => abortController.abort();
   }, [fetchData]);
 
-  return { isLoading };
+  return { isLoading, isTotalLoading };
 };
 
 export default useFetchStudents;

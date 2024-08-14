@@ -28,7 +28,7 @@ import { PAGE_SIZE, ROLE } from "../../../../constant/core";
 
 // eslint-disable-next-line react/prop-types
 const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
-  const { isLoading } = useFetchStudents();
+  const { isTotalLoading, isLoading } = useFetchStudents();
   const {
     rows,
     setRows,
@@ -153,7 +153,7 @@ const StudentDataTable = ({ columnsSchema, exportOptions, formConfig }) => {
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           rowCount={total}
-          loading={isLoading}
+          loading={isTotalLoading || isLoading}
           sx={styles.dataGrid}
         />
       </Box>
