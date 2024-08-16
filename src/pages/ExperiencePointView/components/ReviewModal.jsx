@@ -8,13 +8,15 @@ import { toastError } from "../../../utils/toast";
 // eslint-disable-next-line react/prop-types
 function ReviewModal({ open, handleClose, eventID }) {
   const [isApproved, setIsApproved] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [formData, setFormData] = useState({
     note: "",
     status: isApproved,
   });
   useEffect(() => {
     if (!open) {
-      setFormData({});
+      setFormData({});  
+      setIsError(false);
     }
   }, [setFormData, open]);
 
@@ -26,6 +28,7 @@ function ReviewModal({ open, handleClose, eventID }) {
   const handleDenied = async () => {
     setIsApproved(false);
     if (formData.note === "") {
+      setIsError(true);
       toastError("Please input your note to deny the event");
       return;
     }
@@ -75,11 +78,13 @@ function ReviewModal({ open, handleClose, eventID }) {
               width: "100%",
               margin: "0px 24px 0px 24px",
             }}
+            multiline
             onChange={handleChange}
             autoComplete="off"
             variant="outlined"
             label="Lí do"
             name="note"
+            error={isError}
             value={formData.note}
           />
         </Box>

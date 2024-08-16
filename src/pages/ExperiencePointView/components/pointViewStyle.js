@@ -145,11 +145,8 @@ export const ManagementFormStyles = {
   inputField: {
     width: "321px",
     "& .MuiInputLabel-root": {
-      fontSize: "16px",
+      fontSize: "14px",
       color: "text.secondary",
-      position: "absolute",
-      top: "-4px",
-      left: "4px",
       "&.Mui-focused": {
         color: "primary.main",
       },
@@ -168,8 +165,7 @@ export const ManagementFormStyles = {
       },
     },
     "& .MuiOutlinedInput-input": {
-      padding: "10px 14px",
-      fontSize: "16px",
+      fontSize: "14px",
       color: "text.dark",
     },
     "& .MuiFormHelperText-root": {
