@@ -59,7 +59,7 @@ const columnsSchema = [
             }}
           />
         )}
-        {params.value === EVENT_STATE.REJECTED && (
+        {params.value === EVENT_STATE.DENIED && (
           <Chip
             label="Từ chối"
             sx={{
@@ -90,7 +90,7 @@ const columnsSchema = [
     editable: false,
   },
   {
-    field: "reason",
+    field: "note",
     headerName: "Lý do",
     headerClassName: "header",
     flex: 2,
