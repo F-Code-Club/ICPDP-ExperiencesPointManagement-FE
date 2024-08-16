@@ -204,7 +204,12 @@ const ExperiencePointTable = ({
     const studentID = deleteRow.studentID;
     try {
       const response = await axios.delete(
-        `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`
+        `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       if (response.status === 200 || response.status === 204) {
         const newRows = rows.filter((row) => row.studentID !== studentID);
