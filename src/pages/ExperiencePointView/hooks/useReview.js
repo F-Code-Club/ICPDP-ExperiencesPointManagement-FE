@@ -1,17 +1,18 @@
 import useAuth from "../../../hooks/useAuth";
 import { API_ENDPOINTS } from "../../../utils/api";
 import axios from "../../../config/axios";
-import { toastSuccess } from "../../../utils/toast";
-const useReview = (formData, eventID) => {
+import { toastError, toastSuccess } from "../../../utils/toast";
+
+const useReview = (eventID) => {
   const {
     auth: { accessToken },
   } = useAuth();
 
-  const handleReview = async () => {
+  const handleReview = async (isApproved, note) => {
     try {
       const formattedData = {
-        note: formData.note,
-        status: formData.isApproved === true ? "approved" : "denied",
+        note: note,
+        status: isApproved ? "approved" : "denied",
       };
       await axios.patch(
         `${API_ENDPOINTS.EVENTS.REVIEW}/${eventID}`,
@@ -22,10 +23,9 @@ const useReview = (formData, eventID) => {
           },
         }
       );
-
       toastSuccess("Review event successfully");
     } catch (err) {
-      console.log(err);
+      toastError("Review failed");
     }
   };
   return { handleReview };

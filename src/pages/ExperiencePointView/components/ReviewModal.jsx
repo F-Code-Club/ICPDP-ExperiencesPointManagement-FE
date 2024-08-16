@@ -7,37 +7,33 @@ import useReview from "../hooks/useReview";
 import { toastError } from "../../../utils/toast";
 // eslint-disable-next-line react/prop-types
 function ReviewModal({ open, handleClose, eventID }) {
-  const [isApproved, setIsApproved] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [formData, setFormData] = useState({
-    note: "",
-    status: isApproved,
-  });
+  const [note, setNote] = useState("");
   useEffect(() => {
     if (!open) {
-      setFormData({});  
+      setNote({});
       setIsError(false);
     }
-  }, [setFormData, open]);
+  }, [setNote, open]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setNote(e.target.value);
   };
-  const { handleReview } = useReview(formData, eventID);
+
+  const { handleReview } = useReview(eventID);
   const handleDenied = async () => {
-    setIsApproved(false);
-    if (formData.note === "") {
+    const isApproved = false;
+    if (note === "") {
       setIsError(true);
       toastError("Please input your note to deny the event");
       return;
     }
-    await handleReview();
+    await handleReview(isApproved, note);
     handleClose();
   };
   const handleApproved = async () => {
-    setIsApproved(true);
-    await handleReview();
+    const isApproved = true;
+    await handleReview(isApproved, note);
     handleClose();
   };
   return (
@@ -85,7 +81,7 @@ function ReviewModal({ open, handleClose, eventID }) {
             label="Lí do"
             name="note"
             error={isError}
-            value={formData.note}
+            value={note}
           />
         </Box>
         <Box sx={styles.buttonContainer}>
