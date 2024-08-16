@@ -3,22 +3,40 @@ import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ManagementFormStyles as styles } from "./pointViewStyle";
 import DoneIcon from "@mui/icons-material/Done";
+import useReview from "../hooks/useReview";
+import { toastError } from "../../../utils/toast";
 // eslint-disable-next-line react/prop-types
-function ReviewModal({ open, handleClose, handleReject }) {
-  const [info, setInfo] = useState({});
+function ReviewModal({ open, handleClose, eventID }) {
   const [isApproved, setIsApproved] = useState(false);
+  const [formData, setFormData] = useState({
+    note: "",
+    status: isApproved,
+  });
   useEffect(() => {
     if (!open) {
-      setInfo({});
+      setFormData({});
     }
-  }, [setInfo, open]);
+  }, [setFormData, open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInfo((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  console.log(info);
-
+  const { handleReview } = useReview(formData, eventID);
+  const handleDenied = async () => {
+    setIsApproved(false);
+    if (formData.note === "") {
+      toastError("Please input your note to deny the event");
+      return;
+    }
+    await handleReview();
+    handleClose();
+  };
+  const handleApproved = async () => {
+    setIsApproved(true);
+    await handleReview();
+    handleClose();
+  };
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={styles.managementModal}>
@@ -61,16 +79,16 @@ function ReviewModal({ open, handleClose, handleReject }) {
             autoComplete="off"
             variant="outlined"
             label="Lí do"
-            name="reason"
-            value={info.reason}
+            name="note"
+            value={formData.note}
           />
         </Box>
         <Box sx={styles.buttonContainer}>
-          <Button onClick={() => setIsApproved(false)} sx={styles.rejectButton}>
+          <Button onClick={handleDenied} sx={styles.rejectButton}>
             Từ chối
             <ClearIcon sx={styles.clearIcon} />
           </Button>
-          <Button sx={styles.approveButton} onClick={() => setIsApproved(true)}>
+          <Button sx={styles.approveButton} onClick={handleApproved}>
             Chấp nhận
             <DoneIcon sx={styles.addIcon} />
           </Button>

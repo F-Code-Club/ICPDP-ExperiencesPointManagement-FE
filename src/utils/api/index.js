@@ -43,6 +43,7 @@ export const API_ENDPOINTS = {
     ADD: `/events`,
     UPDATE: `/events`,
     DELETE: `/events`,
+    REVIEW: `/events/grant-permission`,
   },
   EVENTS_POINT: {
     GET_ALL: `/event-point`,

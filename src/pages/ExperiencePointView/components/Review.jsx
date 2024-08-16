@@ -9,8 +9,7 @@ const Review = ({ eventID }) => {
   const handleClose = () => {
     setShowModal(false);
   };
-  console.log(eventID);
-  
+
   return (
     <Box>
       <Button
@@ -26,7 +25,11 @@ const Review = ({ eventID }) => {
         Duyệt
       </Button>
       {showModal && (
-        <ReviewModal open={showModal} handleClose={handleClose} />
+        <ReviewModal
+          open={showModal}
+          handleClose={handleClose}
+          eventID={eventID}
+        />
       )}
     </Box>
   );
