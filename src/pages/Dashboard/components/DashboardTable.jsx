@@ -1,14 +1,17 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { styles } from "./dashboardStyle";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { DashboardContext } from "../context/dashboardContext";
 import Toolbar from "./Toolbar";
+import useFetchCurrentEvent from "../hooks/useFetchCurrentEvent";
 //eslint-disable-next-line
 const DashboardTable = ({ columnsSchema }) => {
   const { rowSelectionModel, rows } = useContext(DashboardContext);
-  console.log(rows);
-
+  const { fetchCurrentEvent } = useFetchCurrentEvent();
+  useEffect(() => {
+    fetchCurrentEvent();
+  }, [fetchCurrentEvent]);
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>

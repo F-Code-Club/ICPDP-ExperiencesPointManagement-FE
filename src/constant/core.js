@@ -30,12 +30,12 @@ const VALID_MIME_TYPES = [
 const EVENT_STATE = {
   PENDING: "pending",
   APPROVED: "approved",
-  REJECTED: "rejected",
+  DENIED: "denied",
 };
 
 const GRADING_STATE = {
-  GRADED: "graded",
-  UNGRADED: "ungraded",
+  GRADED: true,
+  UNGRADED: false,
 };
 
 export {

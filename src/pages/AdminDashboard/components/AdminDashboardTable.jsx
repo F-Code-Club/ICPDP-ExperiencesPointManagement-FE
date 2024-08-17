@@ -1,13 +1,17 @@
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { styles } from "./adminDashboardStyle";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AdminDashboardContext } from "../context/adminDashboardContext";
 import Toolbar from "./Toolbar";
+import useFetchEvent from "../hooks/useFetchEvent";
 //eslint-disable-next-line
 const AdminDashboardTable = ({ columnsSchema }) => {
   const { rowSelectionModel, rows } = useContext(AdminDashboardContext);
-  console.log(rows);
+  const { fetchEventData } = useFetchEvent();
+  useEffect(() => {
+    fetchEventData();
+  }, [fetchEventData]);
 
   return (
     <Box sx={styles.pageContainer}>

@@ -44,6 +44,7 @@ export const API_ENDPOINTS = {
     UPDATE: `/events`,
     DELETE: `/events`,
     REVIEW: `/events/grant-permission`,
+    CURRENT: "/events/current-semester",
   },
   EVENTS_POINT: {
     GET_ALL: `/event-point`,
@@ -87,5 +88,12 @@ export const API_ENDPOINTS = {
     ADD: `/final-point`,
     UPDATE: `/final-point`,
     DELETE: `/final-point`,
+  },
+  EVENT_DASHBOARD: {
+    GET_ALL: `/event-dash-board`,
+    GET: `/event-dash-board`,
+    ADD: `/event-dash-board`,
+    UPDATE: `/event-dash-board`,
+    DELETE: `/event-dash-board`,
   },
 };

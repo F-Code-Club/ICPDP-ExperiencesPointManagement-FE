@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { DashboardContext } from "../context/dashboardContext";
 import useDebounce from "../../../hooks/useDebounce";
-
+import { searchString } from "../../../utils/stringHelper";
 const useSearchStudent = () => {
   const { originalRows, setRows } = useContext(DashboardContext);
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,7 +13,7 @@ const useSearchStudent = () => {
   const debouncedSearchQuery = useDebounce(handleSearch, 300);
   useEffect(() => {
     const filteredRows = originalRows.filter((row) =>
-      row.eventName.toString().toLowerCase().includes(searchQuery)
+      searchString(row.eventName, searchQuery)
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows, setRows]);

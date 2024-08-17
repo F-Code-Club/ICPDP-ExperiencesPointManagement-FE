@@ -1,5 +1,6 @@
 import { Box, Typography, Chip } from "@mui/material";
 import { GRADING_STATE } from "../../constant/core";
+
 const columnsSchema = [
   {
     field: "id",
@@ -36,7 +37,7 @@ const columnsSchema = [
     editable: false,
   },
   {
-    field: "events",
+    field: "eventCount",
     headerName: "Số sự kiện",
     headerClassName: "header",
     flex: 2,
@@ -82,6 +83,7 @@ const columnsSchema = [
         )}
       </Box>
     ),
+
     flex: 2,
     type: "string",
     align: "left",
