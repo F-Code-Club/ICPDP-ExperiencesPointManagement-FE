@@ -11,7 +11,7 @@ const useReview = (eventID) => {
   const handleReview = async (isApproved, note) => {
     try {
       const formattedData = {
-        note: note,
+        note: note.trim(),
         status: isApproved ? "approved" : "denied",
       };
       await axios.patch(
