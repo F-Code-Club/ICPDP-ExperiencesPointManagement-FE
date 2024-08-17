@@ -23,7 +23,15 @@ const theme = createTheme({
       light: "#FFFFFF",
       secondary: "#737373",
       dark: "#000000",
-      neutral: "#EAEAEA"
+      neutral: "#EAEAEA",
+      success: "#455E4E",
+      error: "#844745",
+      warning: "#402C1B",
+    },
+    tag: {
+      success: "#DBEDDB",
+      error: "#FFE2DD",
+      warning: "#FDECC8",
     },
     state: {
       success: "#00C851",
@@ -33,7 +41,8 @@ const theme = createTheme({
       info: "#33B5E5",
     },
     backgroundImage: {
-      'bg-sidebar': 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%)',
+      "bg-sidebar":
+        "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(252,227,212,1) 59%, rgba(247,170,125,1) 100%)",
     },
   },
   typography: {
