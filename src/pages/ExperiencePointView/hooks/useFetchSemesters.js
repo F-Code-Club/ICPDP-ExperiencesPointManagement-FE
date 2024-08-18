@@ -131,7 +131,7 @@ const useFetchSemester = (
       )
     );
   }, [semesters]);
-  return { semesters, events, organizations, years };
+  return { semesters, events, organizations, years, setEvents };
 };
 
 export default useFetchSemester;

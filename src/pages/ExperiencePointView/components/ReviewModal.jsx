@@ -71,10 +71,15 @@ function ReviewModal({ open, handleClose, eventID }) {
           <TextField
             sx={{
               ...styles.inputField,
-              width: "100%",
-              margin: "0px 24px 0px 24px",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "478px",
             }}
+            color="primary"
             multiline
+            rows={4}
             onChange={handleChange}
             autoComplete="off"
             variant="outlined"

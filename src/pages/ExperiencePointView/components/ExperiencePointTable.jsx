@@ -64,7 +64,7 @@ const ExperiencePointTable = ({
     role
   );
 
-  const { events, semesters, organizations } = useFetchSemesters(
+  const { events, semesters, organizations, setEvents } = useFetchSemesters(
     selectedSemester,
     selectedYear,
     selectedOrganization,
@@ -275,6 +275,7 @@ const ExperiencePointTable = ({
           rows: [],
         };
         setTables((prevTables) => [...prevTables, newTab]);
+        setEvents((prevEvents) => [...prevEvents, newTab]);
         setCurrentTab(newTab.eventID);
         toastSuccess("Add event successfully");
       }
@@ -309,31 +310,30 @@ const ExperiencePointTable = ({
   // Delete Tab
   const handleTabDelete = async (eventID) => {
     try {
-      const response = await axios.delete(
-        `${API_ENDPOINTS.EVENTS.DELETE}/${eventID}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (response.status === 200 || response.status === 204) {
-        const newTables = tables.filter((table) => table.eventID !== eventID);
+      await axios.delete(`${API_ENDPOINTS.EVENTS.DELETE}/${eventID}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-        setTables(newTables);
-        setCurrentTab(newTables[newTables.length - 1].eventID || null);
-      }
+      const newTables = tables.filter((table) => table.eventID !== eventID);
+      setTables(newTables);
+      setEvents(newTables);
+      setCurrentTab(newTables[newTables.length - 1]?.eventID || 0);
+
       handleClose();
       toastSuccess("Delete successfully");
     } catch (err) {
       toastError("Deleting event fail");
+      handleClose();
     }
   };
 
   // const handlePageChange = (newPage) => {
   //   setCurrentPage(newPage.page);
   // };
+
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -390,7 +390,7 @@ const ExperiencePointTable = ({
           </Box>
         </Box>
         <Tabs
-          value={currentTab !== "" ? currentTab : false}
+          value={currentTab !== null ? currentTab : false}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
