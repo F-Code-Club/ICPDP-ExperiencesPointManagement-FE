@@ -20,7 +20,8 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
     setOriginalRows,
     setRows,
   } = useContext(FinalPointContext);
-  const { handleEditClick, showEditForm, handleClose, rowToEdit } = useEdit();
+  const { handleEditClick, showEditForm, handleEditClose, rowToEdit } =
+    useEdit();
   const columns = columnsSchema(handleEditClick);
   const { isLoading, debouncedFetchData } = useFetchStudentData();
 
@@ -61,7 +62,7 @@ const FinalPointTable = ({ columnsSchema, columnGroupingModel }) => {
         />
         {showEditForm && (
           <EditFinalPointModal
-            handleClose={handleClose}
+            handleClose={handleEditClose}
             open={showEditForm}
             rowToEdit={rowToEdit}
           />

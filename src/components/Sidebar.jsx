@@ -13,7 +13,6 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
 import useAuth from "../hooks/useAuth";
 import useLogout from "../hooks/useLogout";
 
@@ -26,7 +25,7 @@ const Sidebar = ({ setTitle }) => {
   const { role } = useAuth();
   const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
   const logout = useLogout();
-
+  const [isHome, setIsHome] = useState(false);
   return (
     <>
       <div
@@ -52,10 +51,13 @@ const Sidebar = ({ setTitle }) => {
           <ul className="flex flex-col justify-center gap-3 text-sm text-black">
             <li className=" border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 ">
               <NavLink
-                to=""
-                onClick={() => setTitle("Trang chủ")}
+                to={`/${role}`}
+                onClick={() => {
+                  setIsHome(true);
+                  return setTitle("Trang chủ");
+                }}
                 className={({ isActive }) =>
-                  isActive
+                  isActive && isHome
                     ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
                     : "flex items-center py-3 px-2"
                 }
@@ -98,7 +100,10 @@ const Sidebar = ({ setTitle }) => {
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="transcripts/experience-point"
-                      onClick={() => setTitle("Bảng điểm phong trào")}
+                      onClick={() => {
+                        setIsHome(false);
+                        return setTitle("Bảng điểm phong trào");
+                      }}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
@@ -115,25 +120,30 @@ const Sidebar = ({ setTitle }) => {
                     </NavLink>
                   </li>
 
-                  <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
-                    <NavLink
-                      to="transcripts/final-point"
-                      onClick={() => setTitle("Bảng điểm tổng kết")}
-                      className={({ isActive }) =>
-                        isActive
-                          ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
-                          : "flex items-center py-3 px-2"
-                      }
-                    >
-                      <AssignmentIcon
-                        className="flex gap-2 mr-2"
-                        sx={{ fontSize: "19px" }}
-                      />
-                      <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
-                        Bảng điểm tổng kết
-                      </div>
-                    </NavLink>
-                  </li>
+                  {isAdmin && (
+                    <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
+                      <NavLink
+                        to="transcripts/final-point"
+                        onClick={() => {
+                          setIsHome(false);
+                          return setTitle("Bảng điểm tổng kết");
+                        }}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
+                            : "flex items-center py-3 px-2"
+                        }
+                      >
+                        <AssignmentIcon
+                          className="flex gap-2 mr-2"
+                          sx={{ fontSize: "19px" }}
+                        />
+                        <div className="flex flex-col justify-center text-base not-italic leading-5 tracking-[0.016px]">
+                          Bảng điểm tổng kết
+                        </div>
+                      </NavLink>
+                    </li>
+                  )}
                 </ul>
               )}
             </li>
@@ -163,7 +173,10 @@ const Sidebar = ({ setTitle }) => {
                   <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                     <NavLink
                       to="settings/students"
-                      onClick={() => setTitle("Quản lí sinh viên")}
+                      onClick={() => {
+                        setIsHome(false);
+                        return setTitle("Quản lí sinh viên");
+                      }}
                       className={({ isActive }) =>
                         isActive
                           ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
@@ -184,7 +197,10 @@ const Sidebar = ({ setTitle }) => {
                       <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                         <NavLink
                           to="settings/clubs"
-                          onClick={() => setTitle("Quản lí câu lạc bộ")}
+                          onClick={() => {
+                            setIsHome(false);
+                            return setTitle("Quản lí câu lạc bộ");
+                          }}
                           className={({ isActive }) =>
                             isActive
                               ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
@@ -203,7 +219,10 @@ const Sidebar = ({ setTitle }) => {
                       <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                         <NavLink
                           to="settings/departments"
-                          onClick={() => setTitle("Quản lí phòng ban")}
+                          onClick={() => {
+                            setIsHome(false);
+                            return setTitle("Quản lí phòng ban");
+                          }}
                           className={({ isActive }) =>
                             isActive
                               ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
@@ -222,7 +241,10 @@ const Sidebar = ({ setTitle }) => {
                       <li className="border border-transparent hover:bg-primary-100 hover:border-black hover:shadow-xl rounded cursor-pointer gap-2 self-stretch">
                         <NavLink
                           to="settings/semesters"
-                          onClick={() => setTitle("Quản lí kì học")}
+                          onClick={() => {
+                            setIsHome(false);
+                            return setTitle("Quản lí kì học");
+                          }}
                           className={({ isActive }) =>
                             isActive
                               ? "flex items-center bg-primary-100 text-primary-500 cursor-pointer hover:bg-primary-100 hover:border-black hover:text-black rounded py-3 px-2"
