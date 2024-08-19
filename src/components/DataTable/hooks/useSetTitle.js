@@ -32,7 +32,7 @@ const useSetTitle = () => {
     if (path.endsWith("/students")) {
       setPageTitle(PAGE_TITLE.STUDENTS);
     }
-  }, [location, setPageTitle, pageTitle]);
+  }, [location]);
   return { pageTitle };
 };
 
