@@ -37,6 +37,16 @@ const GRADING_STATE = {
   GRADED: true,
   UNGRADED: false,
 };
+const PAGE_TITLE = {
+  HOME: "Trang chủ",
+  EXPERIENCE_POINT: "Bảng điểm phong trào",
+  FINAL_POINT: "Bảng điểm tổng kết",
+  CLUBS: "Quản lí câu lạc bộ",
+  DEPARTMENTS: "Quản lí phòng ban",
+  SEMESTERS: "Quản lí kì học",
+  STUDENTS: "Quản lí sinh viên",
+  NOT_FOUND: "Trang không xác định",
+};
 
 export {
   STRING_EMPTY,
@@ -48,4 +58,5 @@ export {
   VALID_MIME_TYPES,
   EVENT_STATE,
   GRADING_STATE,
+  PAGE_TITLE,
 };
