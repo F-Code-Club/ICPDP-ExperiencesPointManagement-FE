@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Background from "../components/Background";
@@ -6,16 +6,11 @@ import Sidebar from "../components/Sidebar";
 
 const Layout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [title, setTitle] = useState(localStorage.getItem("title") || "");
+  const [title, setTitle] = useState("Trang chủ");
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-
-  useEffect(() => {
-    localStorage.setItem("title", title);
-  }, [title]);
-
   return (
     <div className="relative flex min-h-[100%] w-full gap-4">
       <Background />
