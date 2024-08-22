@@ -11,20 +11,32 @@ import SememsterEditForm from "./SemesterEditForm";
 
 import useEdit from "../../../components/DataTable/hooks/useEdit";
 import useFetchSemesters from "../hooks/useFetchSemesters";
-import useSearchSemester from "../hooks/useSearchSemseter";
 
 import { PAGE_SIZE } from "../../../constant/core";
 import { styles } from "../../../components/DataTable/style";
 import { SemesterContext } from "../semester.context";
+import useSearch from "../../../components/DataTable/hooks/useSearch";
 
 // eslint-disable-next-line react/prop-types
 const SemesterDataTable = ({ columnsSchema }) => {
   const { isLoading } = useFetchSemesters();
   const { showEditForm, rowToEdit, handleEditClick, handleClose } = useEdit();
-  const { paginationModel, setPaginationModel, rows, total } =
-    useContext(SemesterContext);
+  const {
+    paginationModel,
+    setPaginationModel,
+    rows,
+    setRows,
+    originalRows,
+    total,
+  } = useContext(SemesterContext);
   const apiRef = useGridApiRef();
-  const handleSearch = useSearchSemester();
+  const handleSearch = useSearch(
+    originalRows,
+    setRows,
+    (row, searchQuery) =>
+      row.year.toString().toLowerCase().includes(searchQuery) ||
+      row.semester.toLowerCase().includes(searchQuery)
+  );
 
   return (
     <Box sx={styles.pageContainer}>
@@ -67,55 +79,14 @@ const SemesterDataTable = ({ columnsSchema }) => {
           pagination
           paginationMode="server"
           pageSizeOptions={[
-            { value: PAGE_SIZE, label: PAGE_SIZE },
+            { value: PAGE_SIZE, label: PAGE_SIZE + "" },
             { value: -1, label: "All" },
           ]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           rowCount={total}
           loading={isLoading}
-          sx={{
-            ...styles.dataGrid,
-            color: "text.dark",
-            width: "100%",
-            borderColor: "text.dark",
-            borderRadius: "8px",
-            overflowX: "auto",
-            "& .css-1jhlys9-MuiTablePagination-displayedRows": {
-              color: "text.dark",
-            },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root.Mui-disabled":
-              {
-                color: "text.secondary",
-              },
-            "& .css-zylse7-MuiButtonBase-root-MuiIconButton-root": {
-              color: "text.dark",
-            },
-            "& .css-1b9e9gy": {
-              display: "none",
-            },
-            "& .css-1w53k9d-MuiDataGrid-overlay": {
-              backgroundColor: "transparent",
-            },
-            "& .MuiDataGrid-filler": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-1rtad1": {
-              position: "relative",
-            },
-            "& .MuiDataGrid-columnHeaderDraggableContainer": {
-              backgroundColor: "primary.main",
-            },
-            "& .css-6w2epi-MuiButtonBase-root-MuiCheckbox-root.Mui-checked": {
-              color: "text.dark",
-            },
-            "& .MuiDataGrid-cell": {
-              borderColor: "text.dark",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderColor: "text.dark",
-            },
-          }}
+          sx={styles.dataGrid}
         />
       </Box>
       {rowToEdit && (

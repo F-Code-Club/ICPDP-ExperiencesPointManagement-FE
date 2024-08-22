@@ -43,6 +43,8 @@ export const API_ENDPOINTS = {
     ADD: `/events`,
     UPDATE: `/events`,
     DELETE: `/events`,
+    REVIEW: `/events/grant-permission`,
+    CURRENT: "/events/current-semester",
   },
   EVENTS_POINT: {
     GET_ALL: `/event-point`,
@@ -64,5 +66,34 @@ export const API_ENDPOINTS = {
     ADD: `role-departments`,
     UPDATE: `role-departments`,
     DELETE: `role-departments`,
-  }
+  },
+
+  CLUB_MEMBER: {
+    GET: `club-member`,
+    ADD: `club-member`,
+    UPDATE: `club-member`,
+    DELETE: `club-member`,
+    UPLOAD: `club-member/import`,
+  },
+  DEPARTMENT_MEMBER: {
+    GET: `department-member`,
+    ADD: `department-member`,
+    UPDATE: `department-member`,
+    DELETE: `department-member`,
+    UPLOAD: `department-member/import`,
+  },
+  FINAL_POINTS: {
+    GET_ALL: `/final-point`,
+    GET: `/final-point`,
+    ADD: `/final-point`,
+    UPDATE: `/final-point`,
+    DELETE: `/final-point`,
+  },
+  EVENT_DASHBOARD: {
+    GET_ALL: `/event-dash-board`,
+    GET: `/event-dash-board`,
+    ADD: `/event-dash-board`,
+    UPDATE: `/event-dash-board`,
+    DELETE: `/event-dash-board`,
+  },
 };

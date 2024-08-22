@@ -9,46 +9,26 @@ import RequireAuth from "../components/Auth/RequireAuth";
 import UnauthorizedPage from "../pages/403";
 import ErrorPage from "../pages/404";
 import LoginPage from "../pages/Login";
-import Home from "../pages/Home";
 import Layout from "../layouts/Layout";
 import ClubManagement from "../pages/ClubManagement";
 import DepartmentManagement from "../pages/DepartmentManagement";
 import StudentManagement from "../pages/StudentManagement";
 import ExperiencePointView from "../pages/ExperiencePointView";
 import SemesterManagement from "../pages/SemesterManagement";
-
+import FinalPointView from "../pages/FinalPointView";
+import AdminDashboard from "../pages/AdminDashboard";
+import Dashboard from "../pages/Dashboard";
 const RouterComponent = () => {
   const router = createBrowserRouter([
     // Public routes
     { path: "login", element: <LoginPage /> },
     { path: "unauthorized", element: <UnauthorizedPage /> },
     { path: "*", element: <ErrorPage /> },
-    // {
-    //   path: "transcripts/experience-point",
-    //   element: <ExperiencePointView />,
-    // },
 
     // Protected routes
     {
       element: <PersistLogin />,
       children: [
-        {
-          // User routes
-          path: "user",
-          element: <RequireAuth allowedRoles={[ROLE.USER]} />,
-          children: [
-            {
-              element: <Layout />,
-              children: [
-                { index: true, element: <Home /> },
-                // {
-                //   path: "transcripts/experience-point",
-                //   element: <ExperiencePointView />,
-                // },
-              ],
-            },
-          ],
-        },
         {
           // Admin routes
           path: "admin",
@@ -57,26 +37,26 @@ const RouterComponent = () => {
             {
               element: <Layout />,
               children: [
-                { index: true, element: <Home /> },
+                { index: true, element: <AdminDashboard /> },
                 {
                   path: "transcripts/experience-point",
                   element: <ExperiencePointView />,
                 },
                 {
                   path: "transcripts/final-point",
-                  element: <div>Điểm tổng kết</div>,
+                  element: <FinalPointView />,
                 },
                 {
                   path: "settings/students",
-                  element: <StudentManagement title="Quản lí sinh viên" />,
+                  element: <StudentManagement />,
                 },
                 {
                   path: "settings/clubs",
-                  element: <ClubManagement title="Quản lí câu lạc bộ" />,
+                  element: <ClubManagement />,
                 },
                 {
                   path: "settings/departments",
-                  element: <DepartmentManagement title="Quản lí phòng ban" />,
+                  element: <DepartmentManagement />,
                 },
                 {
                   path: "settings/semesters",
@@ -86,15 +66,14 @@ const RouterComponent = () => {
             },
           ],
         },
-        {
-          // club
-          path: "club",
-          element: <RequireAuth allowedRoles={[ROLE.CLUB]} />,
+        ...["club", "department"].map((path) => ({
+          path,
+          element: <RequireAuth allowedRoles={[ROLE.CLUB, ROLE.DEPARTMENT]} />,
           children: [
             {
               element: <Layout />,
               children: [
-                { index: true, element: <Home /> },
+                { index: true, element: <Dashboard /> },
                 {
                   path: "transcripts/experience-point",
                   element: <ExperiencePointView />,
@@ -107,22 +86,10 @@ const RouterComponent = () => {
                   path: "settings/students",
                   element: <StudentManagement title="Quản lí sinh viên" />,
                 },
-                {
-                  path: "settings/clubs",
-                  element: <ClubManagement title="Quản lí câu lạc bộ" />,
-                },
-                {
-                  path: "settings/departments",
-                  element: <DepartmentManagement title="Quản lí phòng ban" />,
-                },
-                {
-                  path: "settings/semesters",
-                  element: <SemesterManagement />,
-                },
               ],
             },
           ],
-        },
+        })),
       ],
     },
   ]);

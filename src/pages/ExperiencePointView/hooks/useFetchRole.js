@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { toastError } from "../../../utils/toast";
+import axios from "../../../config/axios";
 
 const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
-  const axios = useAxiosPrivate();
   const [config, setConfig] = useState({
     fields: [{ name: "studentID", label: "MSSV", type: "text" }],
     selectFields: [],
@@ -46,10 +44,7 @@ const useFetchRole = (API_ENDPOINTS, accessToken, role) => {
 
         setHasError(false);
       } catch (err) {
-        if (!hasError) {
-          toastError("Failed to fetch roles. Please try again later.");
-          setHasError(true);
-        }
+        // Handle error
       }
     };
     fetchRole();

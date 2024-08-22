@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { SemesterContext } from "../semester.context";
+import { AdminDashboardContext } from "../context/adminDashboardContext";
 import useDebounce from "../../../hooks/useDebounce";
-
-const useSearchSemester = () => {
-  const { originalRows, setRows } = useContext(SemesterContext);
+import { searchString } from "../../../utils/stringHelper";
+const useSearchStudent = () => {
+  const { originalRows, setRows } = useContext(AdminDashboardContext);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = useCallback((e) => {
@@ -11,17 +11,13 @@ const useSearchSemester = () => {
   }, []);
 
   const debouncedSearchQuery = useDebounce(handleSearch, 300);
-
   useEffect(() => {
-    const filteredRows = originalRows.filter(
-      (row) =>
-        row.year.toString().toLowerCase().includes(searchQuery) ||
-        row.semester.toLowerCase().includes(searchQuery)
+    const filteredRows = originalRows.filter((row) =>
+      searchString(row.organizationName, searchQuery)
     );
     setRows(filteredRows);
   }, [searchQuery, originalRows, setRows]);
-
   return debouncedSearchQuery;
 };
 
-export default useSearchSemester;
+export default useSearchStudent;

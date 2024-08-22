@@ -1,23 +1,28 @@
-import { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useMemo } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
+
+import useAuth from "../../hooks/useAuth";
+
 import { StudentFormStyles as styles } from "./style";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toastError } from "../../utils/toast";
+import { ROLE } from "../../constant/core";
 
 function StudentForm({
   open,
   handleClose,
-  title,
   handleSave,
   func,
   isEdit,
   editedRow,
   formConfig,
+  title,
 }) {
-
   const { fields } = formConfig;
+  const { role } = useAuth();
+  const isAdmin = useMemo(() => role === ROLE.ADMIN, [role]);
 
   // Initialize state dynamically based on formConfig
   const initState = () => {
@@ -36,7 +41,6 @@ function StudentForm({
 
   const [info, setInfo] = useState(initState);
   const [isEmpty, setIsEmpty] = useState(initializeErrors);
-  const axios = useAxiosPrivate();
 
   // Handle input changes for text fields
   const handleChange = (e) => {
@@ -64,13 +68,13 @@ function StudentForm({
     setIsEmpty(errors);
 
     if (Object.values(errors).some((error) => error)) {
-      if (errors.studentID || errors.name)
+      // Show error based on role
+      if (errors.studentID || (isAdmin && errors?.name))
         toastError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
-    let finalInfo = { ...info };
-    handleSave(finalInfo);
+    handleSave({ ...info });
     handleClose();
   };
 

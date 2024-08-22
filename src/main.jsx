@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@emotion/react";
 
@@ -12,11 +11,8 @@ import Toast from "./components/Toast/index.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ThemeProvider theme={theme}>
     <AuthProvider>
-      <React.StrictMode>
-        <App />
-        <Toast />
-      </React.StrictMode>
+      <App />
+      <Toast />
     </AuthProvider>
   </ThemeProvider>
 );
-

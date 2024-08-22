@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   TextField,
   IconButton,
   Button,
   InputAdornment,
-  FormControl,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -15,20 +14,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
 import WarningForm from "../../../components/Form/WarningModal";
-import StudentPointForm from "../../../components/Form/StudentPointForm";
 import { styles } from "./pointViewStyle";
 import AddToolbar from "./AddToolbar";
 import AddEventModal from "./AddEventModal";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axios from "../../../config/axios";
 import useFetchRole from "../hooks/useFetchRole";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { PAGE_SIZE } from "../../../constant/core";
 import useFetchSemesters from "../hooks/useFetchSemesters";
-import useDebounce from "../../../hooks/useDebounce";
-import useAuth from "../../../hooks/useAuth";
 import SemesterSelect from "./SemesterSelect";
 import { ROLE } from "../../../constant/core";
-
+import StudentForm from "../components/StudentForm";
+import useFetchStudent from "../hooks/useFetchStudent";
+import Review from "./Review";
+import { searchString } from "../../../utils/stringHelper";
 const ExperiencePointTable = ({
   title,
   columnsSchema,
@@ -48,18 +47,16 @@ const ExperiencePointTable = ({
   const [isEdit, setIsEdit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentTab, setCurrentTab] = useState("");
-  const axios = useAxiosPrivate();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [tables, setTables] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
+  //eslint-disable-next-line
   const [total, setTotal] = useState(0);
-  const [pageLoading, setPageLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
   const [deleteEvent, setDeleteEvent] = useState(null);
   const [showDeleteEvent, setShowDeleteEvent] = useState(null);
-  const { auth } = useAuth();
 
   const { config, participantRole } = useFetchRole(
     API_ENDPOINTS,
@@ -67,7 +64,7 @@ const ExperiencePointTable = ({
     role
   );
 
-  const { events, semesters, organizations } = useFetchSemesters(
+  const { events, semesters, organizations, setEvents } = useFetchSemesters(
     selectedSemester,
     selectedYear,
     selectedOrganization,
@@ -78,8 +75,7 @@ const ExperiencePointTable = ({
     const setupTables = (eventsData) => {
       const newTables = eventsData.map((event, index) => ({
         eventID: event.eventID,
-        index:
-          currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
+        index: index + 1,
         eventName: event.eventName,
         rows: [],
       }));
@@ -87,67 +83,16 @@ const ExperiencePointTable = ({
     };
     setupTables(events);
   }, [events, currentPage]);
-
-  // Fetch data in each tables
-  const fetchRows = useCallback(
-    async (eventID) => {
-      if (!eventID) {
-        return;
-      }
-
-      try {
-        setPageLoading(true);
-        const response = await axios.get(
-          `${API_ENDPOINTS.EVENTS_POINT.GET}/${eventID}`,
-          {
-            params: {
-              page: currentPage + 1,
-              take: PAGE_SIZE,
-            },
-            headers: {
-              Authorization: `Bearer ${auth?.accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          toastSuccess("Get data successfully");
-        }
-
-        const data = response.data.data || [];
-        const totalPage = response.data.totalPage || 0;
-
-        const rowsWithIds = data.map((row, index) => ({
-          ...row,
-          name: row?.studentName,
-          id:
-            currentPage !== 0 ? index + 1 + currentPage * PAGE_SIZE : index + 1,
-        }));
-        setOriginalRows(rowsWithIds);
-        setRows(rowsWithIds);
-        const updatedTables = tables.map((table) =>
-          table.eventID === eventID ? { ...table, rows: rowsWithIds } : table
-        );
-        setTables(updatedTables);
-        setTotal(totalPage);
-      } catch (err) {
-        // Handle errors
-      } finally {
-        setPageLoading(false);
-      }
-    },
-    [
-      axios,
-      API_ENDPOINTS.EVENTS_POINT.GET,
-      currentPage,
-      auth?.accessToken,
-      tables,
-    ]
-  );
-
   // Add debounce
-  const debouncedFetchRows = useDebounce(fetchRows, 500);
+
+  const { debouncedFetchRows, pageLoading } = useFetchStudent(
+    currentTab,
+    setOriginalRows,
+    setRows,
+    setTables,
+    setTotal,
+    tables
+  );
 
   // Re-render rows when switch tab
   useEffect(() => {
@@ -172,8 +117,8 @@ const ExperiencePointTable = ({
   useEffect(() => {
     const filteredRows = originalRows.filter(
       (row) =>
-        row.name?.toLowerCase().includes(searchQuery) ||
-        row.studentID?.toLowerCase().includes(searchQuery)
+        searchString(row.name, searchQuery) ||
+        searchString(row.studentID, searchQuery)
     );
     const updatedTables = tables.map((table) =>
       table.eventID === currentTab ? { ...table, rows: filteredRows } : table
@@ -250,7 +195,6 @@ const ExperiencePointTable = ({
 
   // Handler for delete button click
   const handleDeleteClick = (deleteRow) => {
-    console.log(deleteRow);
     setRowToDelete(deleteRow);
     setShowDeleteForm(true);
   };
@@ -260,7 +204,12 @@ const ExperiencePointTable = ({
     const studentID = deleteRow.studentID;
     try {
       const response = await axios.delete(
-        `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`
+        `${API_ENDPOINTS.EVENTS_POINT.DELETE}/${currentTab}&${studentID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       if (response.status === 200 || response.status === 204) {
         const newRows = rows.filter((row) => row.studentID !== studentID);
@@ -326,6 +275,7 @@ const ExperiencePointTable = ({
           rows: [],
         };
         setTables((prevTables) => [...prevTables, newTab]);
+        setEvents((prevEvents) => [...prevEvents, newTab]);
         setCurrentTab(newTab.eventID);
         toastSuccess("Add event successfully");
       }
@@ -360,31 +310,30 @@ const ExperiencePointTable = ({
   // Delete Tab
   const handleTabDelete = async (eventID) => {
     try {
-      const response = await axios.delete(
-        `${API_ENDPOINTS.EVENTS.DELETE}/${eventID}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (response.status === 200 || response.status === 204) {
-        const newTables = tables.filter((table) => table.eventID !== eventID);
+      await axios.delete(`${API_ENDPOINTS.EVENTS.DELETE}/${eventID}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-        setTables(newTables);
-        setCurrentTab(newTables[newTables.length - 1].eventID || null);
-      }
+      const newTables = tables.filter((table) => table.eventID !== eventID);
+      setTables(newTables);
+      setEvents(newTables);
+      setCurrentTab(newTables[newTables.length - 1]?.eventID || 0);
+
       handleClose();
       toastSuccess("Delete successfully");
     } catch (err) {
       toastError("Deleting event fail");
+      handleClose();
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage.page);
-  };
+  // const handlePageChange = (newPage) => {
+  //   setCurrentPage(newPage.page);
+  // };
+
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.innerContainer}>
@@ -398,28 +347,28 @@ const ExperiencePointTable = ({
             selectedSemester={selectedSemester}
           />
           <Box className="flex gap-3">
-            <FormControl>
-              <TextField
-                className="rounded-sm border-2"
-                placeholder="Tìm kiếm"
-                autoComplete="off"
-                variant="outlined"
-                onChange={handleSearch}
-                sx={styles.searchBar}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton>
-                        <SearchIcon
-                          sx={{ color: "text.dark", width: 15, height: 15 }}
-                        />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-            {role === ROLE.ADMIN ? null : (
+            <TextField
+              className="rounded-sm border-2"
+              placeholder="Tìm kiếm"
+              autoComplete="off"
+              variant="outlined"
+              onChange={handleSearch}
+              sx={styles.searchBar}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton>
+                      <SearchIcon
+                        sx={{ color: "text.dark", width: 15, height: 15 }}
+                      />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {role === ROLE.ADMIN ? (
+              <Review eventID={currentTab} />
+            ) : (
               <AddToolbar
                 setRows={setRows}
                 setOriginalRows={setOriginalRows}
@@ -428,6 +377,7 @@ const ExperiencePointTable = ({
                 }
                 currentTable={currentTab}
                 tables={tables}
+                setTotalPage={setTotal}
                 setTables={setTables}
                 title={title}
                 API_ENDPOINTS={API_ENDPOINTS}
@@ -440,9 +390,14 @@ const ExperiencePointTable = ({
           </Box>
         </Box>
         <Tabs
-          value={currentTab !== "" ? currentTab : false}
+          value={currentTab !== null ? currentTab : false}
           onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
           sx={{
+            "& .css-145v6pe-MuiButtonBase-root-MuiTabScrollButton-root": {
+              color: "#000000 !important",
+            },
             marginBottom: 2,
             width: "100%",
             height: 36,
@@ -538,15 +493,9 @@ const ExperiencePointTable = ({
                   getRowId={(row) => row.id}
                   scrollbarSize={0}
                   rowsPerPageOptions={[PAGE_SIZE]}
-                  pagination
-                  paginationMode="server"
-                  pageSizeOptions={[PAGE_SIZE]}
-                  paginationModel={{
-                    pageSize: PAGE_SIZE,
-                    page: currentPage,
+                  initialState={{
+                    pagination: { paginationModel: { pageSize: 10 } },
                   }}
-                  onPaginationModelChange={handlePageChange}
-                  rowCount={PAGE_SIZE * total}
                   loading={pageLoading}
                   sx={{
                     ...styles.dataGrid,
@@ -609,18 +558,7 @@ const ExperiencePointTable = ({
         handleDelete={handleTabDelete}
         rowId={deleteEvent}
       />
-      <StudentPointForm
-        open={showEditForm}
-        handleClose={handleClose}
-        title={`Chỉnh sửa ${title}`}
-        handleSave={handleSaveClick}
-        editedRow={rowToEdit}
-        func={"Sửa"}
-        isEdit={isEdit}
-        API_ENDPOINTS={API_ENDPOINTS}
-        accessToken={accessToken}
-        formConfig={config}
-      />
+
       <AddEventModal
         open={showAddEventModal}
         handleClose={handleClose}
@@ -631,6 +569,18 @@ const ExperiencePointTable = ({
         API_ENDPOINTS={API_ENDPOINTS}
         currentTab={currentTab}
         tables={tables}
+      />
+      <StudentForm
+        open={showEditForm}
+        handleClose={handleClose}
+        title={`Chỉnh sửa ${title}`}
+        handleSave={handleSaveClick}
+        editedRow={rowToEdit}
+        func={"Sửa"}
+        isEdit={isEdit}
+        API_ENDPOINTS={API_ENDPOINTS}
+        accessToken={accessToken}
+        formConfig={config}
       />
     </Box>
   );

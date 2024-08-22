@@ -1,16 +1,18 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-const columnsSchema = (handleEditClick, handleDeleteClick) => [
+
+import { ROLE } from "../../constant/core";
+
+const columnsSchema = (role, handleEditClick, handleDeleteClick) => [
   {
     field: "id",
     headerName: "ID",
     headerClassName: "header",
     headerAlign: "left",
     type: "number",
-    width: 120,
+    flex: 0.35,
     align: "left",
     editable: false,
   },
@@ -18,6 +20,7 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
     field: "studentID",
     headerName: "MSSV",
     headerClassName: "header",
+    flex: 1,
     renderCell: (params) => (
       <Box
         sx={{
@@ -32,12 +35,10 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
         </Typography>
       </Box>
     ),
-
     type: "string",
-    width: 200,
     align: "left",
     headerAlign: "left",
-    editable: true,
+    editable: false,
   },
   {
     field: "name",
@@ -57,35 +58,42 @@ const columnsSchema = (handleEditClick, handleDeleteClick) => [
         </Typography>
       </Box>
     ),
-
+    flex: 2,
     type: "string",
-    width: 900,
     align: "left",
     headerAlign: "left",
-    editable: true,
+    editable: false,
   },
   {
     field: "actions",
     type: "actions",
     headerClassName: "header",
     headerName: "Hành động",
-    width: 180,
+    flex: 0.75,
     cellClassName: "actions",
-    getActions: ({ row }) => [
-      <GridActionsCellItem
-        icon={<EditIcon />}
-        label="Edit"
-        className="textPrimary"
-        onClick={() => handleEditClick(row)}
-        color="inherit"
-      />,
-      <GridActionsCellItem
-        icon={<DeleteIcon />}
-        label="Delete"
-        onClick={handleDeleteClick(row.id)}
-        color="inherit"
-      />,
-    ],
+    getActions: ({ row }) => {
+      const actions = [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          key="delete"
+          label="Delete"
+          onClick={() => handleDeleteClick(row.id)}
+          color="inherit"
+        />,
+      ];
+      if (role === ROLE.ADMIN)
+        actions.unshift(
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            key="edit"
+            label="Edit"
+            className="textPrimary"
+            onClick={() => handleEditClick(row.id)}
+            color="inherit"
+          />
+        );
+      return actions;
+    },
   },
 ];
 
