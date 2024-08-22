@@ -1,8 +1,7 @@
-import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-
-const Header = ({ toggleSidebar, isSidebarOpen, title }) => {
+//eslint-disable-next-line
+const Header = ({ toggleSidebar, title }) => {
   return (
     <div
       className={`bg-light-text-color flex h-[91px] rounded-lg justify-start items-center p-6 gap-2 self-stretch w-full mt-[16px] mx-[16px]`}
