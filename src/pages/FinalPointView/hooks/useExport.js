@@ -15,10 +15,12 @@ const useExport = () => {
     const csvRows = selectedRows.map((row) =>
       fieldsToExport.map((field) => row[field]).join(",")
     );
-    const csvContent = `data:text/csv;charset=utf-8,${csvHeader}\n${csvRows.join("\n")}`;
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = `${csvHeader}\n${csvRows.join("\n")}`;
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "href",
+      "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(csvContent)
+    );
     link.setAttribute("download", "selected_rows.csv");
     document.body.appendChild(link);
     link.click();
