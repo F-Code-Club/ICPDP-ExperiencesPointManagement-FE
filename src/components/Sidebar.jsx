@@ -19,7 +19,7 @@ import useLogout from "../hooks/useLogout";
 import { ROLE } from "../constant/core";
 
 // eslint-disable-next-line react/prop-types
-const Sidebar = ({ setTitle }) => {
+const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const { role } = useAuth();
@@ -54,7 +54,7 @@ const Sidebar = ({ setTitle }) => {
                 to={`/${role}`}
                 onClick={() => {
                   setIsHome(true);
-                  return setTitle("Trang chủ");
+                  return;
                 }}
                 className={({ isActive }) =>
                   isActive && isHome
@@ -102,7 +102,7 @@ const Sidebar = ({ setTitle }) => {
                       to="transcripts/experience-point"
                       onClick={() => {
                         setIsHome(false);
-                        return setTitle("Bảng điểm phong trào");
+                        return;
                       }}
                       className={({ isActive }) =>
                         isActive
@@ -126,7 +126,7 @@ const Sidebar = ({ setTitle }) => {
                         to="transcripts/final-point"
                         onClick={() => {
                           setIsHome(false);
-                          return setTitle("Bảng điểm tổng kết");
+                          return;
                         }}
                         className={({ isActive }) =>
                           isActive
@@ -175,7 +175,7 @@ const Sidebar = ({ setTitle }) => {
                       to="settings/students"
                       onClick={() => {
                         setIsHome(false);
-                        return setTitle("Quản lí sinh viên");
+                        return;
                       }}
                       className={({ isActive }) =>
                         isActive
@@ -199,7 +199,7 @@ const Sidebar = ({ setTitle }) => {
                           to="settings/clubs"
                           onClick={() => {
                             setIsHome(false);
-                            return setTitle("Quản lí câu lạc bộ");
+                            return;
                           }}
                           className={({ isActive }) =>
                             isActive
@@ -221,7 +221,7 @@ const Sidebar = ({ setTitle }) => {
                           to="settings/departments"
                           onClick={() => {
                             setIsHome(false);
-                            return setTitle("Quản lí phòng ban");
+                            return;
                           }}
                           className={({ isActive }) =>
                             isActive
@@ -243,7 +243,7 @@ const Sidebar = ({ setTitle }) => {
                           to="settings/semesters"
                           onClick={() => {
                             setIsHome(false);
-                            return setTitle("Quản lí kì học");
+                            return;
                           }}
                           className={({ isActive }) =>
                             isActive
